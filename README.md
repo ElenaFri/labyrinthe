@@ -1,7 +1,7 @@
 A31 - Projet "Labyrinthe"
 =========================
 
-![](img/labyrinthe.jpg)![](img/labyrinthe2.jpg)
+![](res/img/labyrinthe.jpg)![](res/img/labyrinthe2.jpg)
 
 À vous de développer une application multi-joueurs du jeu de société Labyrinthe !
 
@@ -108,7 +108,7 @@ L'écran principal doit afficher :
 - Pousser une ligne ou colonne avec la tuile supplémentaire
 - Se déplacer de case en case sur les tuiles voisines où le déplacement est possible.
 
-Vous avez à votre disposition le fichier [`ImageHelper.java`](helpers/ImageHelper.java) pour manipuler les images, notamment :
+Vous avez à votre disposition le fichier [`ImageHelper.java`](src/main/views/helpers/ImageHelper.java) pour manipuler les images, notamment :
 
 - combiner plusieurs images en une seule
 - appliquer une rotation de 90 degrés à une image

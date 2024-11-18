@@ -1,0 +1,33 @@
+@startuml Labyrinthe
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+
+class Labyrinthe
+{
+    + {static} main(args: String[])
+}
+
+package views
+{
+
+}
+
+package controllers
+{
+
+}
+
+package models
+{
+
+}
+
+Labyrinthe ..> views
+controllers ..> models
+views ..> models
+views .> controllers
+
+@enduml

@@ -22,12 +22,24 @@ package controllers
 
 package models
 {
+    abstract class Tile {}
+    class AngledTile extends Tile {}
+    class StraigntTile extends Tile {}
+    class TShapedTile extends Tile {}
 
+    class Gameboard {}
+    class Hallway {}
+    class Card {}
+
+    class Player {}
 }
 
 Labyrinthe ..> views
-controllers ..> models
+controllers ...> models
 views ..> models
 views .> controllers
+Gameboard "1" *--> "6\n _hallways" Hallway
+Hallway "1" *--> "7\n _tiles_aligned" Tile
+Player "1" o--> "6\n _hand" Card
 
 @enduml

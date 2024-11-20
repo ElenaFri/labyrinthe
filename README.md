@@ -144,7 +144,7 @@ Le rendu est à faire sur votre dépôt Git **sur une branche nommée `rendu1`**
 
 ### 2ème rendu
 
-Date limite : le dimanche **20/12 à 23h59**
+Date limite : le dimanche **22/12 à 23h59**
 
 Documents :
 

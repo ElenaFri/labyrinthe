@@ -37,6 +37,7 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 
 ### Choix retenus à la phase 1 du développement
 
+- Le _design pattern_ **_Factory_** a été utilisé pour créér des tuiles, possédant déjà une position (_i.e._ tuiles sur le plateau, dont certaines fixes) ou pas (tuile libre).
 - Nous avons abandonné la classe `Hallway`, car le couloir n'existe que pendant le jeu, il ne résulte pas d'un rassemblement mécanique de tuiles.
 - dfqdf
 - dfq

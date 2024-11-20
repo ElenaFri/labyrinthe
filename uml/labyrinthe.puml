@@ -12,7 +12,15 @@ class Labyrinthe
 
 package views
 {
-
+	package helpers {
+		'classe fournie :
+		class ImageHelper {
+			+ merge(backgroundPath : String, foregroundPaths : String[*]) : BufferedImage
+			+ rotate(original : BufferedImage, angle : Double) : BufferedImage
+			+ rotateClockwise(original : BufferedImage) : BufferedImage
+			+ rotateCounterClockwise(original : BufferedImage) : BufferedImage
+		}
+	}
 }
 
 package controllers
@@ -32,41 +40,40 @@ package models
 		}
 
 		abstract class Tile {
-			- _type : String
-			- _hasTreasure : Boolean
-			- _treasure : Integer[0..23]
-			- _freeWays : Boolean[*]
-			- _canMove : Boolean
-			+ {abstract}getFreeWays() : Boolean[*]
+			# _type : String
+			# _hasTreasure : Boolean
+			# _treasure : Integer[0..23]
+			# _canMove : Boolean
+			'récupérer les voies de passage :
+			+ {abstract}getOpenSides() : Sides
 			+ {abstract}setOrientation()
-			+ move(dir : Direction)
 		}
 		class AngledTile extends Tile {
 			- _orientation : Integer[0..3]
 			+ « Create » AngledTile()
-			+ getFreeWays() : Boolean[*]
-			+ setOrientation()
+			+ getOpenSides() : Sides {implements}
+			+ setOrientation() {implements}
 		}
 		class StraightTile extends Tile {
 			- _orientation : Integer[0,1]
 			+ « Create » StraightTile()
-			+ getFreeWays() : Boolean[*]
-			+ setOrientation()
+			+ getOpenSides() : Sides {implements}
+			+ setOrientation() {implements}
 		}
 		class TShapedTile extends Tile {
 			- _orientation : Integer[0..3]
 			+ « Create » TShapedTile()
-			+ getFreeWays() : Boolean[*]
-			+ setOrientation()
+			+ getOpenSides() : Sides {implements}
+			+ setOrientation() {implements}
 		}
 	}
 
 	package geometry {
-		enum Direction {
-			UP
-			DOWN
-			LEFT
-			RIGHT
+		class Sides {
+			- _openSides : Boolean[*]
+			+ « Create » Sides()
+			+ getSides() : Sides
+			+ setSides(new : Boolean[*])
 		}
 
 		class Position {
@@ -75,35 +82,73 @@ package models
 			+ « Create » Position(x: Integer, y: Integer)
 			+ getPosition() : Position
 			+ setPosition(x: Integer, y: Integer)
-			+ up()
-			+ down()
-			+ left()
-			+ right()
 		}
 	}
 
 	package game {
+		class GameSession {}
 		class Gameboard {}
 		'class Hallway {}
-		class Card {}
-		class Player {}
-		class Piece {}
+		class Card {
+			- _isFound : Boolean
+		}
+		class Player {
+			- _id : Integer[0..3]
+			- _name : String
+			- _piece : Piece
+		}
+		class Piece {
+		}
     }
+
+    package data {
+		class ImageStore {
+			'pour chaque tuile, ses positions :
+			- _tileImages : BufferedImage[*][*]
+			 'recto et verso de la carte, sans dessin :
+			- _cardImages : BufferedImage[*]
+			'à superposer avec les tuiles et les cartes :
+			- _treasureImages : BufferedImage[*]
+			'4 pions de couleurs différentes :
+			- _pieceImages : BufferedImage[*]
+			'zone joueur :
+			- _handBackground : BufferedImage
+			+ « Create » ImageStore()
+			+ getTileImage(index : Integer, orientation : Integer, withTreasure : Boolean) : BufferedImage
+			+ getCardImage(index : Integer, isOpen : Boolean) : BufferedImage
+			+ getPieceImage(index : Integer) : BufferedImage
+			+ getHandBackground() : BufferedImage
+			+ getScreen(isRunning : Boolean) : BufferedImage
+		}
+
+		class Screen {
+			- _mainScreen : BufferedImage
+			- _gameoverScreen : BufferedImage
+			+ « Create » Screen()
+			'si le jeu est toujours en cours, retourner l'écran principal :
+			+ getScreenImage(isRunning : Boolean) : BufferedImage
+		}
+	}
 }
 
 Labyrinthe ..> views
 controllers ...> models
-views ..> models
+views ....> ImageStore
+views ....> GameSession
 views .> controllers
 'Gameboard "1" *--> "6\n _hallways" Hallway
 Gameboard "1" *---> "7\n _tiles" Tile
 'Hallway "1" *--> "7\n _tiles_aligned" Tile
 Player "1" o--> "6\n _hand" Card
 Player "1" *--> "1\n _piece" Piece
-Tile "1" o---> "1\n _pos" Position
+Piece "1" *--> "1\n _position" Tile
+GameSession "1" *--> "4\n _players" Player
+GameSession "1" *--> "1\n _gameboard" Gameboard
+ImageStore "1" *--> "1\n _screen" Screen
+Tile "1" o-> "1\n # _position" Position
+Tile "1" *-> "1\n # _openSides" Sides
 TileFactory ..> AngledTile
 TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
-Tile ...> Direction
 @enduml

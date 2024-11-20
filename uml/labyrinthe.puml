@@ -32,6 +32,7 @@ package models
     class Card {}
 
     class Player {}
+    class Piece {}
 }
 
 Labyrinthe ..> views

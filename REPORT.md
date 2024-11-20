@@ -37,6 +37,10 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 
 ### Choix retenus à la phase 1 du développement
 
-1. dfq
-2. dfqdf
-3. dfq
+- Nous avons abandonné la classe `Hallway`, car le couloir n'existe que pendant le jeu, il ne résulte pas d'un rassemblement mécanique de tuiles.
+- dfqdf
+- dfq
+
+### Questionnements
+
+- La différence entre les tuiles n'est visible qu'au niveau de la vue et du contrôleur, mais il faut savoir en garder trace dans `Tile`.

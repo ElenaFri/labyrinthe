@@ -38,10 +38,12 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 ### Choix retenus à la phase 1 du développement
 
 - Le _design pattern_ **_Factory_** a été utilisé pour créér des tuiles, possédant déjà une position (_i.e._ tuiles sur le plateau, dont certaines fixes) ou pas (tuile libre).
-- Nous avons abandonné la classe `Hallway`, car le couloir n'existe que pendant le jeu, il ne résulte pas d'un rassemblement mécanique de tuiles.
 - dfqdf
 - dfq
 
-### Questionnements
+### Questionnements divers
 
 - La différence entre les tuiles n'est visible qu'au niveau de la vue et du contrôleur, mais il faut savoir en garder trace dans `Tile`.
+	- Solution : modéliser les voies de passage d'une tuile comme un ensemble de booléens constituant son périmètre.
+- Comment modéliser les couloirs, devrait-on faire une classe dédiée ?
+	- Solution : abandon de la classe `Hallway` initialement envisagée, car le couloir n'existe que pendant le jeu (<= au niveau du contrôleur), il ne résulte pas d'un rassemblement mécanique de tuiles (<= au niveau du modèle)

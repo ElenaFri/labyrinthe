@@ -72,8 +72,8 @@ package models
 		class Sides {
 			- _openSides : Boolean[*]
 			+ « Create » Sides()
-			+ getSides() : Sides
-			+ setSides(new : Boolean[*])
+			+ getSides() : Boolean[*]
+			+ setSide(i : Integer, isOpen : Boolean)
 		}
 
 		class Position {

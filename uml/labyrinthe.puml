@@ -80,7 +80,8 @@ package models
 			- _x: Integer[0..6]
 			- _y: Integer[0..6]
 			+ « Create » Position(x: Integer, y: Integer)
-			+ getPosition() : Position
+			+ getX() : Integer
+			+ getY() : Integer
 			+ setPosition(x: Integer, y: Integer)
 		}
 	}

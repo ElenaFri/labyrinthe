@@ -12,10 +12,11 @@ a-31-labyrinthe
 │   └── sfx/                    # Effets sonores
 ├── src/                     # Dossier source
 │   ├── main/                   # Code source principal, développé suivant le patron MVC
-│   │   ├── controllers/            # Classes controleurs
-│   │   ├── models/                 # Classes modèles
-│   │   ├── views/                  # Classes vue
-│   │   └── Labyrinthe.java         # Classe « main »
+│   │   └── labyrinth/				# Package racine
+│   │   	├── controllers/            # Classes controleurs
+│   │   	├── models/                 # Classes modèles
+│   │   	├── views/                  # Classes vue
+│   │   	└── Labyrinth.java         # Classe « main »
 │   └── test/                   # Tests unitaires
 ├── uml/                     # Diagrammes de classes
 ├── .gitignore               # Fichiers à ignorer par Git

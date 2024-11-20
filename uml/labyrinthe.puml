@@ -1,46 +1,174 @@
-@startuml Labyrinthe
+@startuml
 
-skinparam style strictuml
-skinparam classAttributeIconSize 0
-skinparam classFontStyle Bold
-hide enum methods
+package "Modèle" {
 
-class Labyrinthe
-{
-    + {static} main(args: String[])
+    class Partie {
+        - joueurs: List<Joueur>
+        - plateau: Plateau
+        - joueurActuel: int
+        - status: String
+        - observers: List<Observer>
+        + demarrer(): void
+        + terminer(): void
+        + changerTour(): void
+        + finTour(): void
+        + afficherResultat(): void
+        + finPartie(): boolean
+        + setStatus(status: String): void
+        + addObserver(observer: Observer): void
+        + removeObserver(observer: Observer): void
+        + notifyObservers(): void
+    }
+
+    class Joueur {
+        - nom: String
+        - position: Position
+        - objectifsRecuperes: int
+        - carteObjectif: CarteObjectif
+        + deplacer(): void
+        + accomplirObjectif(): void
+        + obtenirCarteObjectif(): void
+        + afficherStatistiques(): void
+        + verifierObjectifs(): void
+    }
+
+    class CarteObjectif {
+        - objectif: String
+        - objectifAccompli: boolean
+        + verifierObjectif(): boolean
+    }
+
+    class Plateau {
+        - tuiles: List<Tuile>
+        - taille: int
+        - modeGeneration: ModeGeneration
+        - objectifs: List<CarteObjectif>
+        - lignesColonnes: List<LigneColonne>
+        + initialiser(): void
+        + placerTuiles(): void
+        + afficherPlateau(): void
+        + genererTuiles(): void
+        + ajouterObjectifs(): void
+        + genererPlateauFixe(): void
+        + genererPlateauAleatoire(): void
+        + genererPlateauFixeOuAleatoire(): void
+        + placerObjectifsFixes(): void
+        + placerObjectifsAleatoires(): void
+        + deplacerLigneColonne(): void
+    }
+
+    enum ModeGeneration {
+        Fixe
+        Aleatoire
+        FixeOuAleatoire
+    }
+
+    abstract class Tuile {
+        - type: String
+        - orientation: int
+        - orientationFixe: boolean
+        - estFixe: boolean
+        - objectif: CarteObjectif
+        + tourner(): void
+        + afficher(): void
+        + genererOrientation(): void
+        + ajouterObjectif(c: CarteObjectif): void
+    }
+
+    class TuileAngle {
+        + tourner(): void
+        + genererOrientation(): void
+    }
+
+    class TuileDroite {
+        + tourner(): void
+        + genererOrientation(): void
+    }
+
+    class TuileT {
+        + tourner(): void
+        + genererOrientation(): void
+    }
+
+    class Position {
+        - x: int
+        - y: int
+        + deplacer(): void
+    }
+
+    interface Observer {
+        + update(status: String): void
+    }
+
+    interface StrategieDeplacement {
+        + deplacerLigneColonne(plateau: Plateau, ligneColonne: int): void
+    }
+
+    class StrategieDeplacementStandard implements StrategieDeplacement {
+        + deplacerLigneColonne(plateau: Plateau, ligneColonne: int): void
+    }
+
+    class StrategieDeplacementImpaires implements StrategieDeplacement {
+        + deplacerLigneColonne(plateau: Plateau, ligneColonne: int): void
+    }
+
+    class StrategieDeplacementInverseInterdit implements StrategieDeplacement {
+        + deplacerLigneColonne(plateau: Plateau, ligneColonne: int): void
+    }
+
 }
 
-package views
-{
+package "Vue" {
+    class VueJeu {
+        - panneauPlateau: JPanel
+        - panneauJoueurs: JPanel
+        - panneauInformations: JPanel
+        + afficherPlateau(): void
+        + afficherJoueurs(): void
+        + afficherTuileSupplementaire(): void
+        + afficherObjectifs(): void
+        + update(status: String): void
+    }
 
+    class VueFinPartie {
+        - messageFin: String
+        + afficherMessageFin(): void
+        + recommencerPartie(): void
+    }
 }
 
-package controllers
-{
-
+package "Contrôleur" {
+    class ControleurJeu {
+        - jeu: Partie
+        - vueJeu: VueJeu
+        + actionJoueur(): void
+        + deplacerPion(): void
+        + faireTournerTuile(): void
+        + pousserLigneColonne(): void
+        + verifierFinDeTour(): void
+        + verifierFinPartie(): void
+        + setStrategieDeplacement(strategie: StrategieDeplacement): void
+    }
 }
 
-package models
-{
-    abstract class Tile {}
-    class AngledTile extends Tile {}
-    class StraigntTile extends Tile {}
-    class TShapedTile extends Tile {}
+Partie "1" -- "4" Joueur : gère
+Partie "1" -- "1" Plateau : contient
+Plateau "1" -- "*" Tuile : est composé de
+Joueur "1" -- "1" CarteObjectif : possède
+Joueur "1" -- "1" Position : a
+CarteObjectif "1" -- "1" Objectif : consiste en
+ControleurJeu "1" -- "1" Partie : contrôle
+VueJeu "1" -- "1" Partie : affiche
+VueFinPartie "1" -- "1" Partie : affiche fin
+ControleurJeu "1" -- "1" StrategieDeplacement : utilise
+VueJeu "1" -- "*" Observer : observe
 
-    class Gameboard {}
-    class Hallway {}
-    class Card {}
+Tuile <|-- TuileAngle : Hérite
+Tuile <|-- TuileDroite : Hérite
+Tuile <|-- TuileT : Hérite
+StrategieDeplacementStandard ..|> StrategieDeplacement
+StrategieDeplacementImpaires ..|> StrategieDeplacement
+StrategieDeplacementInverseInterdit ..|> StrategieDeplacement
 
-    class Player {}
-    class Piece {}
-}
-
-Labyrinthe ..> views
-controllers ...> models
-views ..> models
-views .> controllers
-Gameboard "1" *--> "6\n _hallways" Hallway
-Hallway "1" *--> "7\n _tiles_aligned" Tile
-Player "1" o--> "6\n _hand" Card
 
 @enduml

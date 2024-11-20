@@ -34,7 +34,7 @@ Côté matériel, le jeu de société comporte **50 tuiles** de 3 sortes :
 
 - 20 angles dont 4 sont fixes et 16 sont déplaçables,
 - 12 sections droites toutes déplaçables,
-- 18 en forme de "T" dont 12 sont fixes et 10 sont déplaçables.
+- 18 en forme de "T" dont 12 sont fixes et 6 sont déplaçables.
 
 Il y a également **24 objectifs**.
 
@@ -43,7 +43,7 @@ Nous nous limiterons à un nombre fixe de **4 joueurs**.
 Les fonctionnalités
 -------------------
 
-Vous devez modéliser et implémenter les fonctionalités ci-dessou.
+Vous devez modéliser et implémenter les fonctionalités ci-dessous.
 
 1 - La **génératon des tuiles**
 
@@ -53,14 +53,14 @@ Vous devez modéliser et implémenter les fonctionalités ci-dessou.
 2 - Le **génération du plateau** avec les tuiles :
 
 - Niveau 1 : placées de façon fixe (toujours le même plateau de départ)
-- Niveau 2 : placées toutes de façon aléatoires
-- Niveau 3 : placées de façon fixe ou aléatoires comme dans le jeu de société
+- Niveau 2 : placées toutes de façon aléatoire
+- Niveau 3 : placées de façon fixe ou aléatoire comme dans le jeu de société
 
-3 - L'**ajout des obbjectifs** sur les tuiles :
+3 - L'**ajout des objectifs** sur les tuiles :
 
 - Niveau 1 : placés de façon fixe
 - Niveau 2 : placés de façon totalement aléatoire, 1 seul maximum par tuile
-- Niveau 3 : placées de façon aléatoire mais pas sur les cases du départ des joueurs
+- Niveau 3 : placés de façon aléatoire mais pas sur les cases du départ des joueurs
 
 4 - La **distribution des "cartes objectifs"** aux joueurs :
 
@@ -73,7 +73,7 @@ Vous devez modéliser et implémenter les fonctionalités ci-dessou.
 
 - Niveau 1 : Toutes les lignes et colonnes
 - Niveau 2 : Uniquement les lignes et colonnes impaires
-- Niveau 3 : En gérant le passage d'un joueur éjecté au côté oposé de la ligne/colonne actuelle
+- Niveau 3 : En gérant le passage d'un joueur éjecté au côté opposé de la ligne/colonne actuelle
 - Niveau 4 : En interdisant le déplacement inverse du précédent
 
 7 - La **détection d'un objectif atteint** par un joueur et le passage à l'objectif suivant
@@ -82,7 +82,7 @@ Vous devez modéliser et implémenter les fonctionalités ci-dessou.
 
 9 - La **détection de la fin de partie** lorsqu'un joueur a trouvé tous ses objectifs et est revenu à sa position de départ
 
-> ***Conseil** : Faites la conception UML qui tiens en compte tous les niveaux mais implémentez d'abord le jeu en entier avec tous les niveaux 1 avant d'implémenter les autres niveaux.*
+> ***Conseil** : Faites la conception UML qui tient en compte tous les niveaux mais implémentez d'abord le jeu en entier avec tous les niveaux 1 avant d'implémenter les autres niveaux.*
 
 L'interface graphique
 ---------------------

@@ -47,3 +47,5 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 	- Solution : modéliser les voies de passage d'une tuile comme un ensemble de booléens constituant son périmètre.
 - Comment modéliser les couloirs, devrait-on faire une classe dédiée ?
 	- Solution : abandon de la classe `Hallway` initialement envisagée, car le couloir n'existe que pendant le jeu (<= au niveau du contrôleur), il ne résulte pas d'un rassemblement mécanique de tuiles (<= au niveau du modèle)
+- Au niveau des graphismes, il est évident qu'on devra utiliser le format png pour les éléments de l'interface, mais quid des deux écrans - qui, par définition, seront toujours en bas de la pile des couches ?
+	- Solution : tout faire en png, pour faciliter la gestion et assurer une qualité d'affichage uniforme.

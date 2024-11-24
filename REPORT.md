@@ -29,9 +29,9 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 	- **_Factory_** pour la création des tuiles de différents types ?
 	- ... et **_Builder_** pour créer le plateau.
 	- Éviter ou préférer le **_Singleton_**, le plateau étant, par définition, unique ?
+	- **_Flyweight_** pour générer les cartes ? (À creuser, car nous ne l'avons pas vu en cours.)
 - Patrons de structure :
 	- **_Composite_** pour créer le chemin et/ou la rangée de tuiles (qui sont tous les deux des objets complexes pouvant être composés de certains types d'éléments, pas toujours les mêmes) ?
-	- **_Flyweight_** pour générer les cartes ? (À creuser, car nous ne l'avons pas vu en cours.)
 - Patrons de comportement :
 	- **_State_** pour gérer les états du jeu ? (À creuser, car nous ne l'avons pas vu en cours, non plus.)
 

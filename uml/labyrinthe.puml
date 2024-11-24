@@ -45,25 +45,22 @@ package models
 			# _treasure : Integer[0..23]
 			# _canMove : Boolean
 			'récupérer les voies de passage :
-			+ {abstract}getOpenSides() : Sides
+			+ getOpenSides() : Sides
 			+ {abstract}setOrientation()
 		}
 		class AngledTile extends Tile {
 			- _orientation : Integer[0..3]
 			+ « Create » AngledTile()
-			+ getOpenSides() : Sides {implements}
 			+ setOrientation() {implements}
 		}
 		class StraightTile extends Tile {
 			- _orientation : Integer[0,1]
 			+ « Create » StraightTile()
-			+ getOpenSides() : Sides {implements}
 			+ setOrientation() {implements}
 		}
 		class TShapedTile extends Tile {
 			- _orientation : Integer[0..3]
 			+ « Create » TShapedTile()
-			+ getOpenSides() : Sides {implements}
 			+ setOrientation() {implements}
 		}
 	}

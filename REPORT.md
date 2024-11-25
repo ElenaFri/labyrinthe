@@ -49,3 +49,8 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 	- Solution : abandon de la classe `Hallway` initialement envisagée, car le couloir n'existe que pendant le jeu (<= au niveau du contrôleur), il ne résulte pas d'un rassemblement mécanique de tuiles (<= au niveau du modèle)
 - Au niveau des graphismes, il est évident qu'on devra utiliser le format png pour les éléments de l'interface, mais quid des deux écrans - qui, par définition, seront toujours en bas de la pile des couches ?
 	- Solution : tout faire en png, pour faciliter la gestion et assurer une qualité d'affichage uniforme.
+- Où stocker les entiers correspondants aux trésors ? Au niveau des modèles, c'est juste un tableau (de chemins vers le fichier png ?) indexé de 0 à 23.
+    - Solution intermédiaire : nulle part pour simplifier, mais il faut trouver moyen de déduire les numéros attribués.
+      - Solution pratique : on va les attribuer de manière aléatoire en boucle dans la méthode de génération. Le chemin, lui :
+        - Devrait se trouver dans les vues et non pas dans les modèles ;
+        - Peut être factorisé et calculé de manière automatique si les fichiers d'images suivent un nommage cohérent.

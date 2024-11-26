@@ -1,5 +1,4 @@
-package models.game;
-
+package main.labyrinth.models.game;
 import models.tiles.*;
 
 public class Gameboard {

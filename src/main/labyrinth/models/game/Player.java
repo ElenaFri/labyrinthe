@@ -1,4 +1,5 @@
-package models.game;
+package main.labyrinth.models.game;
+
 
 import models.game.Card;
 import models.geometry.Position;

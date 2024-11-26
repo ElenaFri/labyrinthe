@@ -82,7 +82,13 @@ public abstract class Tile {
     /**
      * Abstract method for random orientation reinitialization.
      */
-    public abstract void setOrientation();
+    public abstract void initOrientation();
+
+    /**
+     * Abstract orientation setter.
+     * @param orientation : orientation code
+     */
+    public abstract void setOrientation(int orientation);
 
     /**
      * Abstract method for side management.

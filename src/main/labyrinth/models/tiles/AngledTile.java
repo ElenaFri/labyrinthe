@@ -10,7 +10,7 @@ public class AngledTile extends Tile {
     public AngledTile() {
         super();
         this._type = "angled";
-        setOrientation();
+        initOrientation();
         setOpenSides();
     }
 
@@ -18,9 +18,18 @@ public class AngledTile extends Tile {
      * Randomly changes orientation.
      */
     @Override
-    public void setOrientation() {
+    public void initOrientation() {
         Random rand = new Random();
         this._orientation = rand.nextInt(4); // as there are four side configuration possible
+    }
+
+    /**
+     * Orientation setter.
+     * @param orientation : orientation code
+     */
+    @Override
+    public void setOrientation(int orientation) {
+        this._orientation = orientation;
     }
 
     /**

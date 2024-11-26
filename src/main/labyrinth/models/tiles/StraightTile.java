@@ -10,7 +10,7 @@ public class StraightTile extends Tile {
     public StraightTile() {
         super();
         this._type = "straight";
-        setOrientation();
+        initOrientation();
         setOpenSides();
     }
 
@@ -18,9 +18,18 @@ public class StraightTile extends Tile {
      * Randomly changes orientation.
      */
     @Override
-    public void setOrientation() {
+    public void initOrientation() {
         Random rand = new Random();
         this._orientation = rand.nextInt(2); // There are only two orientations possible for straight-shaped tiles, vertical and horizontal
+    }
+
+    /**
+     * Orientation setter.
+     * @param orientation : orientation code
+     */
+    @Override
+    public void setOrientation(int orientation) {
+        this._orientation = orientation;
     }
 
     /**

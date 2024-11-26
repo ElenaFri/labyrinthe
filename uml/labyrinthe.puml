@@ -26,28 +26,20 @@ package views
 package controllers
 {
 
-   class TileController {
-
-
-           + getAvailableMoves(playerId: Integer): List<Tile>
+   class GameboardController {
+       + getAvailableMoves(playerId: Integer): List<Tile>
        - _freeTile : Tile
        + shiftRow(index : Integer, direction : String)
        + shiftColumn(index : Integer, direction : String)
        + rotateTile(tile : Tile, orientation : Integer)
    }
-   class PlayerController {
-
-       + movePlayer(playerId: Integer, destination: Tile): Boolean
-           + rotatePlayer(playerId: Integer, direction: Integer): Boolean
-   }
-   class CollectorObjectiveController {
-
-
-
+   class GameFacadeController {
        + checkObjectiveCompletion(playerId: Integer): Boolean
-       + updateObjectives(playerId: Integer)
+       + movePlayer(playerId: Integer, destination: Tile): Boolean
        + collectItem(playerId: Integer, itemId: Integer): Boolean
+       + updateObjectives(playerId: Integer)
    }
+
    class UIController {
        - _view: GameView
        - _gameController: GameController
@@ -57,9 +49,6 @@ package controllers
        + updateView(): void
        + displayGameOver(winner: Player)
    }
-
-
-    class GameboardController {}
 }
 
 package models
@@ -88,22 +77,26 @@ package models
 			+ checkIfTreasure() : Integer
 			+ checkIfMoves() : Boolean
 			+ setTreasure(treasure : Integer)
-			+ {abstract} setOrientation()
+			+ {abstract} initOrientation()
+			+ {abstract} setOrientation(orientation : Integer)
 			+ {abstract} setOpenSides()
 		}
 		class AngledTile extends Tile {
 			+ « Create » AngledTile()
-			+ setOrientation() {implements}
+			+ initOrientation() {implements}
+			+ setOrientation(orientation : Integer) {implements}
 			+ setOpenSides() {implements}
 		}
 		class StraightTile extends Tile {
 			+ « Create » StraightTile()
-			+ setOrientation() {implements}
+			+ initOrientation() {implements}
+			+ setOrientation(orientation : Integer) {implements}
 			+ setOpenSides() {implements}
 		}
 		class TShapedTile extends Tile {
 			+ « Create » TShapedTile()
-			+ setOrientation() {implements}
+			+ initOrientation() {implements}
+			+ setOrientation(orientation : Integer) {implements}
 			+ setOpenSides() {implements}
 		}
 	}
@@ -202,13 +195,12 @@ views ....> ImageStore
 views o--> GameFacade
 views o--> Gameboard
 views .> controllers
-PlayersController "1" o--> "1\n - _gamefacade" GameFacade
+GameFacadeController "1" o--> "1\n - _gamefacade" GameFacade
 GameboardController "1" o--> "1\n - _gameboard" Gameboard
-
 'Gameboard "1" *--> "6\n _hallways" Hallway
 Gameboard "1" *---> "1\n - _tileFactory" TileFactory
 Player "1" *-> "6\n - _hand" Card
-Player "1" *--> "1\n - _position" Position
+Player "1" o--> "1\n - _position" Position
 GameFacade "1" *--> "4\n - _players" Player
 GameFacade ..> Card
 ImageStore "1" *--> "1\n - _screen" Screen
@@ -218,8 +210,6 @@ TileFactory ..> AngledTile
 TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
-TileController "1" *--> "1\n _GameBoard" Gameboard
-TileController "1" *--> "1\n _GameFacade" GameFacade
-PlayerController "1" *--> "1\n _GameFacade" GameFacade
-CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
+'GameboardController "1" *--> "1\n _GameFacade" GameFacade
+'CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
 @enduml

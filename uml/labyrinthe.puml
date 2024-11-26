@@ -25,6 +25,7 @@ package views
 
 package controllers
 {
+
    class TileController {
 
 
@@ -58,6 +59,7 @@ package controllers
    }
 
 
+    class GameboardController {}
 }
 
 package models
@@ -76,31 +78,33 @@ package models
 			# _treasure : Integer[0..23]
 			# _canMove : Boolean
 			# _isOnBoard : Boolean
+			# _orientation : Integer[0..3]
 			+ « Create » Tile()
 			+ « Create » Tile(position : Position)
 			+ getType() : String
 			'récupérer les voies de passage :
 			+ getOpenSides() : Sides
-			+ getIfTreasure() : Boolean
+			+ getTreasure() : Integer
 			+ checkIfTreasure() : Integer
 			+ checkIfMoves() : Boolean
 			+ setTreasure(treasure : Integer)
 			+ {abstract} setOrientation()
+			+ {abstract} setOpenSides()
 		}
 		class AngledTile extends Tile {
-			- _orientation : Integer[0..3]
 			+ « Create » AngledTile()
 			+ setOrientation() {implements}
+			+ setOpenSides() {implements}
 		}
 		class StraightTile extends Tile {
-			- _orientation : Integer[0,1]
 			+ « Create » StraightTile()
 			+ setOrientation() {implements}
+			+ setOpenSides() {implements}
 		}
 		class TShapedTile extends Tile {
-			- _orientation : Integer[0..3]
 			+ « Create » TShapedTile()
 			+ setOrientation() {implements}
+			+ setOpenSides() {implements}
 		}
 	}
 
@@ -195,18 +199,19 @@ package models
 
 Labyrinthe ..> views
 views ....> ImageStore
-views ....> GameFacade
-views ....> Gameboard
+views o--> GameFacade
+views o--> Gameboard
 views .> controllers
-controllers ..> models
+PlayersController "1" o--> "1\n - _gamefacade" GameFacade
+GameboardController "1" o--> "1\n - _gameboard" Gameboard
 
 'Gameboard "1" *--> "6\n _hallways" Hallway
-Gameboard "1" *---> "1\n _tileFactory" TileFactory
-Player "1" *-> "6\n _hand" Card
-Player "1" *--> "1\n _position" Position
-GameFacade "1" *--> "4\n _players" Player
+Gameboard "1" *---> "1\n - _tileFactory" TileFactory
+Player "1" *-> "6\n - _hand" Card
+Player "1" *--> "1\n - _position" Position
+GameFacade "1" *--> "4\n - _players" Player
 GameFacade ..> Card
-ImageStore "1" *--> "1\n _screen" Screen
+ImageStore "1" *--> "1\n - _screen" Screen
 Tile "1" o-> "1\n # _position" Position
 Tile "1" *-> "1\n # _openSides" Sides
 TileFactory ..> AngledTile

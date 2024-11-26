@@ -25,6 +25,38 @@ package views
 
 package controllers
 {
+   class TileController {
+
+
+           + getAvailableMoves(playerId: Integer): List<Tile>
+       - _freeTile : Tile
+       + shiftRow(index : Integer, direction : String)
+       + shiftColumn(index : Integer, direction : String)
+       + rotateTile(tile : Tile, orientation : Integer)
+   }
+   class PlayerController {
+
+       + movePlayer(playerId: Integer, destination: Tile): Boolean
+           + rotatePlayer(playerId: Integer, direction: Integer): Boolean
+   }
+   class CollectorObjectiveController {
+
+
+
+       + checkObjectiveCompletion(playerId: Integer): Boolean
+       + updateObjectives(playerId: Integer)
+       + collectItem(playerId: Integer, itemId: Integer): Boolean
+   }
+   class UIController {
+       - _view: GameView
+       - _gameController: GameController
+
+       + handleTileClick(position: Position)
+       + handleObjectiveFound(player: Player)
+       + updateView(): void
+       + displayGameOver(winner: Player)
+   }
+
 
 }
 
@@ -181,4 +213,8 @@ TileFactory ..> AngledTile
 TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
+TileController "1" *--> "1\n _GameBoard" Gameboard
+TileController "1" *--> "1\n _GameFacade" GameFacade
+PlayerController "1" *--> "1\n _GameFacade" GameFacade
+CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
 @enduml

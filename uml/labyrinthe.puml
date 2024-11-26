@@ -21,6 +21,8 @@ package views
 			+ rotateCounterClockwise(original : BufferedImage) : BufferedImage
 		}
 	}
+
+
 }
 
 package controllers
@@ -53,6 +55,17 @@ package controllers
 
 package models
 {
+    package observers {
+        interface GameFacadeObserver {
+            + updatePlayerPosition(newPosition : Position)
+            + updatePlayerObjective(objective : Integer)
+        }
+
+        interface GameboardObserver {
+            + updateGameboard(gameboard : Gameboard)
+        }
+    }
+
 	package tiles {
 		class TileFactory {
 			+ « Create » TileFactory()
@@ -121,17 +134,23 @@ package models
 
 	package game {
 
+
 		class GameFacade {
             + « Create » GameFacade()
             'On instancie les cartes et on fait l'attribution ici
             + getPlayer(n : Integer) : Player
             + deal()
+            + addObserverPosition(observer : GameFacadeObserver)
+		    + notifyPlayerPosition(newPosition : Position)
+		    + notifyPLayerObjective(objective : Integer)
 		}
 
 		class Gameboard {
             + « Create » Gameboard
             'Et pour la tuile libre ? (-1, -1) ?
             + getTile(position : Position)
+            + addObserver(observer : GameboardObserver)
+            + notify(gameboard : Gameboard)
 		}
 		'class Hallway {}
 
@@ -151,11 +170,12 @@ package models
 		class Player {
 			- _id : Integer[0..3]
 			- _name : String
+			- _currentObjective()
 			+ « Create » Player
 			+ getName() : String
 			+ getCurrentTile() : Position
 			+ getCards() : Card[*]
-			+ setCurrentTile(x : Integer, y : Integer)
+			+ setCurrentTile(position : Position)
 			+ setCards()
 		}
     }
@@ -194,6 +214,8 @@ Labyrinthe ..> views
 views ....> ImageStore
 views o--> GameFacade
 views o--> Gameboard
+views ..> GameboardObserver
+views ..> GameFacadeObserver
 views .> controllers
 GameFacadeController "1" o--> "1\n - _gamefacade" GameFacade
 GameboardController "1" o--> "1\n - _gameboard" Gameboard
@@ -210,6 +232,8 @@ TileFactory ..> AngledTile
 TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
+GameFacade "1" o--> "1\n _observers" GameFacadeObserver
+Gameboard "1" o--> "1\n _observer" GameboardObserver
 'GameboardController "1" *--> "1\n _GameFacade" GameFacade
 'CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
 @enduml

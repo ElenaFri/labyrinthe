@@ -1,4 +1,7 @@
-package labyrinth.models.tiles;
+package main.labyrinth.models.tiles;
+
+
+
 
 public class TileFactory {
 

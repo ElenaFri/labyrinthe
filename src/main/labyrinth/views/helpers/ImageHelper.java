@@ -1,4 +1,4 @@
-package labyrinth.views.helpers;
+package main.labyrinth.views.helpers;
 
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
@@ -72,4 +72,5 @@ public class ImageHelper {
 	public static BufferedImage rotateCounterClockwise( final BufferedImage original ) throws IllegalArgumentException {
 		return rotate( original, 1.5*Math.PI );
 	}
+
 }

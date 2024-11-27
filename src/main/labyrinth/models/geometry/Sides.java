@@ -1,4 +1,4 @@
-package labyrinth.models.geometry;
+package main.labyrinth.models.geometry;
 
 import java.util.ArrayList;
 

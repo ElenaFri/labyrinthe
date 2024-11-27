@@ -1,4 +1,4 @@
-package labyrinth.models.geometry;
+package main.labyrinth.models.geometry;
 
 public class Position {
 	private int _x;

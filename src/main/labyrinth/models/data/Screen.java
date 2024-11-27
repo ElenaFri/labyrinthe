@@ -1,20 +1,29 @@
-package data;
+package main.labyrinth.models.data;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-class Screen {
-    private BufferedImage _mainScreen;  // Image pour l'écran principal
-    private BufferedImage _gameoverScreen; // Image pour l'écran de fin de jeu
+public class Screen {
+    private BufferedImage _mainScreen;      // Écran principal du jeu
+    private BufferedImage _gameoverScreen; // Écran de fin de jeu
 
-    // Constructeur
-    public Screen() {
-        // Initialisation des images pour les écrans
-        _mainScreen = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);  // Exemple d'écran principal
-        _gameoverScreen = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);  // Exemple d'écran de fin de jeu
+    /**
+     * Constructeur : charge les images des écrans
+     */
+    public Screen() throws IOException {
+        _mainScreen = ImageIO.read(new File("assets/images/screens/main_screen.png"));
+        _gameoverScreen = ImageIO.read(new File("assets/images/screens/gameover_screen.png"));
     }
 
-    // Méthode pour récupérer l'image de l'écran en fonction de l'état du jeu
+    /**
+     * Retourne l'image appropriée selon l'état du jeu.
+     *
+     * @param isRunning true si le jeu est en cours, false si le jeu est terminé.
+     * @return l'image de l'écran correspondant
+     */
     public BufferedImage getScreenImage(boolean isRunning) {
-        return isRunning ? _mainScreen : _gameoverScreen;  // Si le jeu est en cours, renvoyer l'écran principal, sinon l'écran de fin de jeu
+        return isRunning ? _mainScreen : _gameoverScreen;
     }
 }

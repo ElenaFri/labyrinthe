@@ -1,7 +1,7 @@
-package labyrinth.models.tiles;
+package main.labyrinth.models.tiles;
 
-import labyrinth.models.geometry.Position;
-import labyrinth.models.geometry.Sides;
+import main.labyrinth.models.geometry.Position;
+import main.labyrinth.models.geometry.Sides;
 
 public abstract class Tile {
     protected String _type;
@@ -77,6 +77,10 @@ public abstract class Tile {
     public void setTreasure(int treasure) {
         this._hasTreasure = true;
         this._treasure = treasure;
+    }
+    public void setCanMove() {
+        this._canMove = true;
+
     }
 
     /**

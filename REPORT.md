@@ -2,13 +2,17 @@
 
 ## Phase 1 : Conception
 
-### Premières remarques
+### Rapport au 01/12/24
 
-#### Grosses questions à brainstormer
+Le texte qui suit explique nos [choix de conception](#Choix-retenus-à-la-phase-1-du-développement), mais reflète également le raisonnement qui les a précédés [
+(_« Brainstorming »_)](#Brainstorming) et accompagnés [(_« Questionnements divers »_)](#Questionnements-divers)
+
+#### Brainstorming
 
 - Comment modéliser le chemin parcouru par un joueur ?
 - Quelles données mémorise-t-on et dans quel(s) conteneur(s) ?
 - Comment gérer les différents états du jeu ?
+- Comment assurer la communication entre les joueurs et le plateau ?
 
 #### Principes de conception à respecter
 
@@ -22,12 +26,9 @@ Les principes étant généraux, ils devraient être respectés dans n'importe q
 
 Les patrons de conception sont là pour fournir une solution éprouvé à un problème spécifique récurrent, concernant l'instanciation d'objets (=> patrons de création), leurs agencements (=> patrons de structure) ou leurs échanges (=> patrons de comportements). C'est une question à se poser en adéquation avec, d'une part, ce qui est demandé (un jeu qui fonctionne de telle manière ; cela a été un avantage d'y avoir beaucoup joué) et, d'autre part, ce qu'on peut imaginer comme modélisation simple, concise en termes de code et respectant le principe de l'incapsulation.
 
-- Le _design pattern_ incontournable reste le **_MVC_** (+ **_Observer_** pour garantir une mise à jour dynamique), d'autant plus qu'il s'agit d'un jeu doté d'une GUI. Il est, d'ailleurs, explicitement nommé dans la consigne ; il va de soi.
-	- Du côté application, on va commencer par identifier et étoffer les classes modèles, ce qui nous amènera à leur associer des contrôleurs ;
-	- Du côté utilisateur, on va imaginer les vues nécessaires pour jouer, regardant quelles données des modèles ces dernières devront consulter et quelles instructions transmettre au contrôleur, pour ce faire.
 - Patrons de création :
 	- **_Factory_** pour la création des tuiles de différents types ?
-	- ... et **_Builder_** pour créer le plateau.
+	- ... et **_Builder_** pour créer le plateau ?
 	- Éviter ou préférer le **_Singleton_**, le plateau étant, par définition, unique ?
 	- **_Flyweight_** pour générer les cartes ? (À creuser, car nous ne l'avons pas vu en cours.)
 - Patrons de structure :
@@ -37,16 +38,29 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 
 ### Choix retenus à la phase 1 du développement
 
-- Le _design pattern_ **_Factory_** a été utilisé pour créér des tuiles, possédant déjà une position (_i.e._ tuiles sur le plateau, dont certaines fixes) ou pas (tuile libre).
-- dfqdf
-- dfq
+- Le _design pattern_ incontournable reste le **_MVC_** (+ **_Observer_** pour garantir une mise à jour dynamique), d'autant plus qu'il s'agit d'un jeu doté d'une GUI. Il est, d'ailleurs, explicitement nommé dans la consigne ; il va de soi. On disposera de plusieurs observateurs, afin de pouvoir retracer la position et l'objectif poursuivit par le joueur, ainsi que les changements du plateau. Pour nous simplifier la tâche dans la première version, nous rechargerons le plateau en entier à chaque tour, plutôt que de détecter le changement et de le transcrire ; ce serait une amélioration à apporter.
+- Une _ **_Factory_** sera utilisé pour créér des tuiles, possédant déjà une position (_i.e._ tuiles sur le plateau, dont certaines fixes) ou pas (tuile libre). La seule tuile sans position est celle libre, qui permet de décaler le labyrinthe ; par convention, sa position vaut (-1, -1).
+- Une **_Facade_** renfermera tout ce que possède le joueur (position sur le plateau, cartes, objectif(s) visé(s) - les cartes et les objectifs étant, à leur tour, associés à des « trésors ».). Cela permettra de créer facilement les quatre joueurs, de leur distribuer les cartes sans introduire de système de traçage pour assurer qu'elles sont uniques, d'occulter, pour les vues et les contrôleurs, la façon dont sont gérés les cartes et les joueurs au bas niveau. En plus, cette Façade encapsule les joueurs, qui ne connaissent pas le plateau - et inversement, le tableau, représenté par la classe `Gameboard`, ne connaît pas les joueurs, réduisant ainsi les dépendances.
+- **_Composite_** sera utilisé dans les vues, afin de gérer plus facilement les superpositions (trésor + carte, trésor + tuile, tuile + plateau + pions, plateau avec tout ces éléments + cartes des joueurs + écran du jeu...)
+
+#### Préparation de l'interface graphique
+
+Bien que nous n'ayons pas entamé l'implémentation de la GUI, nous l'avons bien imaginée et commencé à rassembler des éléments graphiques qui la constitueront :
+
+- Nous avons préparé les images trésors numérotées de 0 à 23, qui reproduisent fidèlement les graphismes du jeu physique. Elles ont été normalisées en taille 128x128px (par précaution, pour assurer la bonne qualité du rendu même sur un grand écran, même si, au moment de la sélection de l'objectif par exemple, on choisit de zoomer sur l'image ; à ajuster au besoin), format PNG pour avoir un fond transparent qui permettrait de les superposer aux cartes et aux tuiles. Stockées dans `res/img/treasures`.
+- Les cartes sont représentées par juste deux images, le recto et le verso ; les trésors seront « collés » dessus. Stockées dans `res/img/cards`.
+- Les tuiles sont au nombre de trois, en fonction de leur forme, toutes les configurations possibles étant obtenues par rotation (assurée par les fonctions helpers fournies). De taille 160x160px, pour bien positionner le trésor au milieu en laissant un bord ; stockées dans `res/img/tiles`. Dans un premier temps, nous nous contenterons de disposer les tuiles correctement sur le plateau, en suivant les contraintes de la forme (angles tournés dans le bon sens aux quatre coins du plateau, 8 tuiles en T suivant le bord, les quatre tuiles restantes positionnées sans contraintes au milieu) mais en leur attribuant des trésors aléatoirement - alors que dans le jeu d'origine, les trésors sont bien entendu fixés d'avance. On pourrait juste interdire l'application de trésors aux tuiles droites, car cela a un sens pour la stratégie du jeu. 
+- Bien que les pions ne seront modélisés que par les coordonnées du joueur sur le plateau, il faudra bien les afficher aux bons endroits ! Nous avons donc préparé les quatre images PNG identiques sauf pour la couleur, 32x32px, stockées dans `res/img/pieces`.
+- Il nous faudra également un fond du plateau et un fond d'écran du jeu. Comme suggéré plus loin, tous les fichiers images utilisés seront en format PNG, pour uniformiser la qualité du rendu. Par contre, il faudra vérifier, à la fin du projet, que tous les éléments superposés sont bien regroupés et redimensionnés ensemble au besoin.
 
 ### Questionnements divers
 
 - La différence entre les tuiles n'est visible qu'au niveau de la vue et du contrôleur, mais il faut savoir en garder trace dans `Tile`.
-	- Solution : modéliser les voies de passage d'une tuile comme un ensemble de booléens constituant son périmètre.
+	- Solution : modéliser les voies de passage d'une tuile comme un ensemble de booléens constituant son périmètre (dans la classe `Sides`).
 - Comment modéliser les couloirs, devrait-on faire une classe dédiée ?
 	- Solution : abandon de la classe `Hallway` initialement envisagée, car le couloir n'existe que pendant le jeu (<= au niveau du contrôleur), il ne résulte pas d'un rassemblement mécanique de tuiles (<= au niveau du modèle)
+- Que doivent observer les Observers ? Les éléments du jeu directement (lesquels, avec quelle granularité ?) ou bien `GameFacade` et `Gameboard`, qui sont au sommet des modèles ?
+	- Solution : c'est bien `GameFacade` et `Gameboard` qui seront observés, à savoir la position du joueur et l'objectif qu'il poursuit, d'une part ;  
 - Au niveau des graphismes, il est évident qu'on devra utiliser le format png pour les éléments de l'interface, mais quid des deux écrans - qui, par définition, seront toujours en bas de la pile des couches ?
 	- Solution : tout faire en png, pour faciliter la gestion et assurer une qualité d'affichage uniforme.
 - Où stocker les entiers correspondants aux trésors ? Au niveau des modèles, c'est juste un tableau (de chemins vers le fichier png ?) indexé de 0 à 23.

@@ -250,7 +250,7 @@ TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
 GameFacade "1" o--> "1\n _observers" GameFacadeObserver
-Gameboard "1" o--> "1\n _observer" GameboardObservers
+Gameboard "1" o--> "1\n _observer" GameboardObserver
 'GameboardController "1" *--> "1\n _GameFacade" GameFacade
 'CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
 @enduml

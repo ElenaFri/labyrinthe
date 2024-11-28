@@ -22,8 +22,50 @@ package views
 		}
 	}
 
-	class GameView {}
+	interface TileComponent {
+        + {abstract} render()
+    }
 
+    class GameView {
+        + render()
+    }
+
+    class GameOverView extends GameView {
+        + render()
+        + displayGameOver()
+    }
+
+    class HandView {
+        + render()
+    }
+
+    class PieceView {
+        + render()
+    }
+
+    class TileRow {
+        + addTile(position : Position)
+        + render()
+    }
+
+    class TileView implements TileComponent {
+        + render()
+    }
+
+    class FreeTileView extends TileView {
+        + render()
+    }
+
+    class HallwayView extends TileRow {
+        + render()
+    }
+
+    class GameboardView {
+        + render()
+        + addRow(row : TileRow)
+        + addPiece(piece : PieceView)
+    }
+	
 }
 
 package controllers
@@ -45,8 +87,6 @@ package controllers
 
    class UIController {
        - _view: GameView
-       - _gameController: GameController
-
        + handleTileClick(position: Position)
        + handleObjectiveFound(player: Player)
        + updateView(): void
@@ -228,9 +268,12 @@ package models
 	}
 }
 
-Labyrinthe ...> GameView
-GameView o--> GameFacade
-GameView o--> Gameboard
+Labyrinthe ....> GameView
+Labyrinthe ....> GameboardView
+GameboardView ..> GameboardController
+GameboardView ..> GameFacadeController
+GameView "1" *--> "4\n - _playerCards" HandView
+GameView ..> GameFacade
 GameView ..> GameboardObserver
 GameView ..> GameFacadeObserver
 GameFacadeController "1" o--> "1\n - _gamefacade" GameFacade
@@ -248,12 +291,16 @@ TileFactory ..> AngledTile
 TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
-GameFacade "1" o--> "1\n _observers" GameFacadeObserver
-Gameboard "1" o--> "1\n _observer" GameboardObserver
-'GameboardController "1" *--> "1\n _GameFacade" GameFacade
-'CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
-UIController ..> GameFacade
-UIController "1" *-> GameView
+GameFacade "1" o--> "1\n - _observers" GameFacadeObserver
+Gameboard "1" o--> "1\n - _observer" GameboardObserver
+'GameboardController "1" *--> "1\n -_GameFacade" GameFacade
+'CollectorObjectiveController "1" *-> "1\n - _GameFacade" GameFacade
+UIController .> GameFacade
+UIController "1" o--> "1\n - _gameView" GameView
 GameView .> ImageHelper
-GameView .....> ImageStore
+TileRow .> TileComponent
+GameboardView "1" *---> "6\n - _tileRows" TileRow
+GameboardView "1" *---> "4\n - _pieces" PieceView
+ImageHelper ..> ImageStore
+UIController "1" o---> "1\n - _boardController" GameboardController
 @enduml

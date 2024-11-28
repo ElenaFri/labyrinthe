@@ -32,7 +32,7 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 	- Éviter ou préférer le **_Singleton_**, le plateau étant, par définition, unique ?
 	- **_Flyweight_** pour générer les cartes ? (À creuser, car nous ne l'avons pas vu en cours.)
 - Patrons de structure :
-	- **_Composite_** pour créer le chemin et/ou la rangée de tuiles (qui sont tous les deux des objets complexes pouvant être composés de certains types d'éléments, pas toujours les mêmes) ?
+	- **_Composite_** pour créer le chemin et/ou la rangée de tuiles (qui peuvent tous les deux être représentés comme des arborescences) ?
 - Patrons de comportement :
 	- **_State_** pour gérer les états du jeu ? (À creuser, car nous ne l'avons pas vu en cours, non plus.)
 
@@ -41,7 +41,11 @@ Les patrons de conception sont là pour fournir une solution éprouvé à un pro
 - Le _design pattern_ incontournable reste le **_MVC_** (+ **_Observer_** pour garantir une mise à jour dynamique), d'autant plus qu'il s'agit d'un jeu doté d'une GUI. Il est, d'ailleurs, explicitement nommé dans la consigne ; il va de soi. On disposera de plusieurs observateurs, afin de pouvoir retracer la position et l'objectif poursuivit par le joueur, ainsi que les changements du plateau. Pour nous simplifier la tâche dans la première version, nous rechargerons le plateau en entier à chaque tour, plutôt que de détecter le changement et de le transcrire ; ce serait une amélioration à apporter.
 - Une _ **_Factory_** sera utilisé pour créér des tuiles, possédant déjà une position (_i.e._ tuiles sur le plateau, dont certaines fixes) ou pas (tuile libre). La seule tuile sans position est celle libre, qui permet de décaler le labyrinthe ; par convention, sa position vaut (-1, -1).
 - Une **_Facade_** renfermera tout ce que possède le joueur (position sur le plateau, cartes, objectif(s) visé(s) - les cartes et les objectifs étant, à leur tour, associés à des « trésors ».). Cela permettra de créer facilement les quatre joueurs, de leur distribuer les cartes sans introduire de système de traçage pour assurer qu'elles sont uniques, d'occulter, pour les vues et les contrôleurs, la façon dont sont gérés les cartes et les joueurs au bas niveau. En plus, cette Façade encapsule les joueurs, qui ne connaissent pas le plateau - et inversement, le tableau, représenté par la classe `Gameboard`, ne connaît pas les joueurs, réduisant ainsi les dépendances.
-- **_Composite_** sera utilisé dans les vues, afin de gérer plus facilement les superpositions (trésor + carte, trésor + tuile, tuile + plateau + pions, plateau avec tout ces éléments + cartes des joueurs + écran du jeu...)
+- De manière plus générale, nous nous sommes efforcés de créer une **_architecture verticale_** pour notre application, où les classes d'un même package n'ont pas nécessairement de relations directes entre elles, mais interagissent plutôt avec des classes d'autres packages, d'un niveau logique supérieur. À notre sens, cela doit permettre d'assurer :
+	- l'encapsulation ;
+	- des responsabilités claires (principe SRP) ;
+	- une meilleure lisibilité et possibilité de réutilisation du code ;
+	- une conception évolutive.
 
 #### Préparation de l'interface graphique
 

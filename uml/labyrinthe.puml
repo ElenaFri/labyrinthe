@@ -22,6 +22,7 @@ package views
 		}
 	}
 
+	class GameView {}
 
 }
 
@@ -227,13 +228,11 @@ package models
 	}
 }
 
-Labyrinthe ..> views
-views ....> ImageStore
-views o--> GameFacade
-views o--> Gameboard
-views ..> GameboardObserver
-views ..> GameFacadeObserver
-views .> controllers
+Labyrinthe ...> GameView
+GameView o--> GameFacade
+GameView o--> Gameboard
+GameView ..> GameboardObserver
+GameView ..> GameFacadeObserver
 GameFacadeController "1" o--> "1\n - _gamefacade" GameFacade
 GameboardController "1" o--> "1\n - _gameboard" Gameboard
 'Gameboard "1" *--> "6\n _hallways" Hallway
@@ -253,4 +252,8 @@ GameFacade "1" o--> "1\n _observers" GameFacadeObserver
 Gameboard "1" o--> "1\n _observer" GameboardObserver
 'GameboardController "1" *--> "1\n _GameFacade" GameFacade
 'CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
+UIController ..> GameFacade
+UIController "1" *-> GameView
+GameView .> ImageHelper
+GameView .....> ImageStore
 @enduml

@@ -68,3 +68,5 @@ Bien que nous n'ayons pas entamé l'implémentation de la GUI, nous l'avons bien
       - Solution pratique : on va les attribuer de manière aléatoire en boucle dans la méthode de génération. Le chemin, lui :
         - Devrait se trouver dans les vues et non pas dans les modèles ;
         - Peut être factorisé et calculé de manière automatique si les fichiers d'images suivent un nommage cohérent.
+- Nous sommes en plein cycle conception -> développement -> résultat intermédiaire / retour -> adaptation -> conception, en ce qui concerne le package `game`. Plus tard, nous reverrons probablement l'organisation de la classe `Gameboard`, par exemple, qui est, pour l'instant, assez encombrée (mais c'est une première approche, et tous les éléments existants nous semblent pertinents, c'est juste une question d'agencement).
+	- Solution : la meilleure solution serait de trouver un algo plus élégant, mais nous préférons, surtout à ce stade où nous ne pouvons pas encore proposer de prototype du jeu, la fonctionnalité au raffinement.

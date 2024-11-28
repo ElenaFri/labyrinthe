@@ -138,19 +138,32 @@ package models
 		class GameFacade {
             + « Create » GameFacade()
             'On instancie les cartes et on fait l'attribution ici
-            + getPlayer(n : Integer) : Player
+            + addGameFacadeObserver(observer : GameFacadeObserver)
+            + notifyPlayerPositionChange(newPosition : Position)
+            + notifyPlayerObjectiveChange(objective : Integer)
+            + nextPlayer()
+            - notifyCurrentPlayerChange()
+            + getCurrentPlayer() : Player
+            + getPlayer(index : Integer) : Player
             + deal()
-            + addObserverPosition(observer : GameFacadeObserver)
-		    + notifyPlayerPosition(newPosition : Position)
-		    + notifyPLayerObjective(objective : Integer)
 		}
 
 		class Gameboard {
             + « Create » Gameboard
-            'Et pour la tuile libre ? (-1, -1) ?
+			+ addGameboardObserver(observer : GameBoardObserver)
+			- notifyGameboardChange()
+			+ getFreeTile() : Tile
+			+ setFreeTile(freeTile : Tile)
+			- initializeBoard()
+			- placeFixedTiles()
+			- placeMovableTiles()
+			- placeMovableTileAngled()
+			- placeMovableTileTShaped()
+			- placeMovableTileStraight()
+			- placeMovableTile(Tile tile)
+			'Et pour la tuile libre ? (-1, -1)
             + getTile(position : Position)
-            + addObserver(observer : GameboardObserver)
-            + notify(gameboard : Gameboard)
+            - placeObjectives()
 		}
 		'class Hallway {}
 
@@ -159,24 +172,28 @@ package models
 		    ' si l'objectif est rempli
 			- _isFound : Boolean
 			' génération du trésor aléatoire, dans la limite des trésors encore disponibles
-			+ « Create » Card()
-			+ generateTreasure()
-            + getTreasure() : Integer
-            + checkIfFound() : Boolean
-            ' Un trésor trouvé ne peut pas être re-caché, on ne peut donc pas remettre isFound à false
-            + setFound()
+			+ « Create » Card(treasure : Integer)
+			+ getTreasure() : Integer
+			+ checkIfFound() : Boolean
+			' Un trésor trouvé ne peut pas être re-caché, on ne peut donc pas remettre isFound à false :
+			+ setFound()
+			+ isBackCard() : Boolean
+            + {static} createDeck(): Card[*])
 		}
 
 		class Player {
 			- _id : Integer[0..3]
 			- _name : String
+			- _currentObjectiveIndex : Integer
 			- _currentObjective()
-			+ « Create » Player
+			+ « Create » Player(id : Integer, name : String)
 			+ getName() : String
 			+ getCurrentTile() : Position
 			+ getCards() : Card[*]
-			+ setCurrentTile(position : Position)
-			+ setCards()
+			+ setCurrentTile(x : Integer, y : Integer)
+			+ setCards(Card[*])
+			+ getCurrentObjective()
+			+ completeCurrentObjective()
 		}
     }
 
@@ -233,7 +250,7 @@ TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
 GameFacade "1" o--> "1\n _observers" GameFacadeObserver
-Gameboard "1" o--> "1\n _observer" GameboardObserver
+Gameboard "1" o--> "1\n _observer" GameboardObservers
 'GameboardController "1" *--> "1\n _GameFacade" GameFacade
 'CollectorObjectiveController "1" *--> "1\n _GameFacade" GameFacade
 @enduml

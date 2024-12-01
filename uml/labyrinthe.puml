@@ -259,29 +259,23 @@ package models
 	}
 }
 
-Labyrinthe ...> GameView
-Labyrinthe ..> GameboardView
-GameboardView ..> GameboardController
-GameView "1" *--> "4\n - _playerCards" HandView
-'GameView ..> GameFacade
-GameView ..> GameboardObserver
-GameView ..> GameFacadeObserver
-GameFacadeController "1" o----> "1\n - _gamefacade" GameFacade
+Labyrinthe ...> GameFacadeTextView
+Labyrinthe ...> GameboardTextView
+GameFacadeController "1" o--> "1\n - _gamefacade" GameFacade
 GameFacadeController ..> Position
 GameboardController "1" o--> "1\n - _gameboard" Gameboard
 GameboardController ..> Position
 GameboardController ..> Tile
-'Gameboard "1" *---> "6\n _hallways" Hallway
 Gameboard "1" *--> "1\n - _tileFactory" TileFactory
 Gameboard "1" *--> "1\n - _freetile" Tile
 Player "1" *-> "6\n - _cards" Card
-Player "1" o----> "1\n - _currentTile" Position
+Player "1" o--> "1\n - _currentTile" Position
 GameFacade "1" *--> "4\n - _players" Player
 GameFacade ..> Card
 GameFacade ..> Position
 ImageStore "1" *--> "1\n - _screen" Screen
 Tile "1" o-> "1\n # _position" Position
-Tile "1" *--> "1\n # _openSides" Sides
+Tile "1" *---> "1\n # _openSides" Sides
 TileFactory ..> AngledTile
 TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
@@ -289,15 +283,9 @@ TileFactory ..> Tile
 GameFacade "1" o-> "1\n - _gamefacadeobservers" GameFacadeObserver
 Gameboard "1" o--> "1\n - _gameboardobservers" GameboardObserver
 UIController .> GameFacade
-UIController "1" o--> "1\n - _gameView" GameView
-GameView .> ImageHelper
-TileRow .> TileComponent
-
-GameboardView "1" *---> "6\n - _tileRows" TileRow
-GameView "1" *-> "4\n - _pieces" PieceView
 ImageHelper ..> ImageStore
 UIController "1" o--> "1\n - _boardController" GameboardController
-GameBoardTextView ..|> GameBoardObserver
+GameboardTextView ..|> GameboardObserver
 GameFacadeTextView ..|> GameFacadeObserver
 GameboardTextView "1" o--> "1\n - _gameboard" Gameboard
 GameFacadeTextView "1" o--> "1\n - _gamefacade" GameFacade

@@ -5,14 +5,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import main.labyrinth.models.data.Screen;
 
 public class ImageStore {
 
-    private BufferedImage[] _tileImages;       // Pour chaque tuile, ses positions
+    private BufferedImage[] _tileImages;
     private BufferedImage[] _cardImages;       // Recto et verso des cartes
     private BufferedImage[] _treasureImages;   // Trésors à superposer
     private BufferedImage[] _pieceImages;      // 4 pions de couleurs différentes
     private BufferedImage _handBackground;     // Zone joueur
+    private Screen _screen;
 
     // Constructeur
     public ImageStore() {
@@ -21,10 +23,19 @@ public class ImageStore {
         _treasureImages = chargerImagesPourTresors();
         _pieceImages = chargerImagesPourPions();
         _handBackground = chargerImageDeFond();
+        try {
+            _screen = new Screen();
+        } catch (IOException e) {
+            e.printStackTrace();
+            _screen = null; // Optionnel, selon le comportement attendu.
+        }
     }
 
     // Obtenir une image de tuile avec une rotation et éventuellement un trésor
     public BufferedImage getTileImage(int index, int orientation, boolean withTreasure, int treasureIndex) throws IOException {
+        if (index < 0 || index >= _tileImages.length) {
+            throw new IllegalArgumentException("Index de tuile invalide.");
+        }
         // Charger la base de la tuile
         BufferedImage baseTile = _tileImages[index]; // Correction: Accès direct à l'index
 
@@ -66,10 +77,14 @@ public class ImageStore {
     }
 
     // Obtenir l'écran principal ou de fin de jeu
-    public BufferedImage getScreen(boolean isRunning) throws IOException {
-        return ImageHelper.merge(
-                isRunning ? "assets/images/screens/main_screen.png" : "assets/images/screens/gameover_screen.png"
-        );
+    /**
+     * Obtenir l'écran principal ou de fin de jeu
+     *
+     * @param isRunning True si le jeu est en cours, false si le jeu est terminé
+     * @return L'image de l'écran correspondant
+     */
+    public BufferedImage getScreen(boolean isRunning) {
+        return _screen.getScreenImage(isRunning);
     }
 
     // Charger les images des tuiles

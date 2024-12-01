@@ -231,30 +231,33 @@ package models
 
     package data {
 		class ImageStore {
-			'pour chaque tuile, ses positions :
-			- _tileImages : BufferedImage[*][*]
-			 'recto et verso de la carte, sans dessin :
-			- _cardImages : BufferedImage[*]
-			'à superposer avec les tuiles et les cartes :
-			- _treasureImages : BufferedImage[*]
-			'4 pions de couleurs différentes :
-			- _pieceImages : BufferedImage[*]
-			'zone joueur :
-			- _handBackground : BufferedImage
-			+ « Create » ImageStore()
-			+ getTileImage(index : Integer, orientation : Integer, withTreasure : Boolean) : BufferedImage
-			+ getCardImage(index : Integer, isOpen : Boolean) : BufferedImage
-			+ getPieceImage(index : Integer) : BufferedImage
-			+ getHandBackground() : BufferedImage
-			+ getScreen(isRunning : Boolean) : BufferedImage
+			    -  _tileImages : BufferedImage[]
+                -  _cardImages : BufferedImage[]
+                -  _treasureImages:BufferedImage[]
+                -  _pieceImages : BufferedImage[]
+                -  _handBackground : BufferedImage
+
+                + <<create>> ImageStore()
+                + getTileImage(index: integer,direction: integer, withtreasure: boolean,indextreasure: integer) : BufferedImage
+                + getCardImage(index :integer, isOpen: boolean) : BufferedImage
+                + getPieceImage(index : Integer) : BufferedImage
+                + getHandBackground() : BufferedImage
+                + getScreen(isRunning : boolean) : BufferedImage
+                - chargerImagesPourTuiles() : BufferedImage[]
+                - chargerImagesPourCartes() : BufferedImage[]
+                - chargerImagesPourTresors() : BufferedImage[]
+                - chargerImagesPourPions() : BufferedImage[]
+                - chargerImageDeFond() : BufferedImage
+                - loadImage( chemin: String) : BufferedImage
 		}
 
 		class Screen {
-			- _mainScreen : BufferedImage
-			- _gameoverScreen : BufferedImage
-			+ « Create » Screen()
+		    - _mainScreen : BufferedImage
+            -  _gameoverScreen : BufferedImage
+            + << create>> Screen()
+            + getScreenImage(isRunning: boolean) : BufferedImage
 			'si le jeu est toujours en cours, retourner l'écran principal :
-			+ getScreenImage(isRunning : Boolean) : BufferedImage
+
 		}
 	}
 }

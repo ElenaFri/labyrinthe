@@ -1,4 +1,4 @@
-package labyrinth.models.tiles;
+package main.labyrinth.models.tiles;
 
 
 import static org.junit.jupiter.api.Assertions.*;

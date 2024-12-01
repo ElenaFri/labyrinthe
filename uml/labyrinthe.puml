@@ -22,49 +22,25 @@ package views
 		}
 	}
 
-	interface TileComponent {
-        + {abstract} render()
-    }
+	package ViewsForObservers{
+	  class GameboardTextView{
 
-    class GameView {
-        + render()
-    }
+               +<<create>> GameBoardTextView(gameboard: Gameboard)
+               + update(updatedGameboard: Gameboard)
+               + displayBoard()
+               - formatTile(tile: Tile): String
+	  }
+	  class GameFacadeTextView{
 
-    class GameOverView extends GameView {
-        + render()
-        + displayGameOver()
-    }
+              + <<create>> GameFacadeTextView(gameFacade: GameFacade)
+              + displayGameState()
+              - displayPlayers()
+              + onCurrentPlayerChanged(currentPlayer: Player)
+              + onPlayerPositionChanged(newPosition: Position)
+              + onPlayerObjectiveChanged(objective: integer)
 
-    class HandView {
-        + render()
-    }
-
-    class PieceView {
-        + render()
-    }
-
-    class TileRow {
-        + addTile(position : Position)
-        + render()
-    }
-
-    class TileView implements TileComponent {
-        + render()
-    }
-
-    class FreeTileView extends TileView {
-        + render()
-    }
-
-    class HallwayView extends TileRow {
-        + render()
-    }
-
-    class GameboardView {
-        + render()
-        + addRow(row : TileRow)
-        + addPiece(piece : PieceView)
-    }
+	  }
+	}
 	
 }
 
@@ -72,17 +48,23 @@ package controllers
 {
 
    class GameboardController {
-       + getAvailableMoves(playerId: Integer): List<Tile>
-       - _freeTile : Tile
-       + shiftRow(index : Integer, direction : String)
-       + shiftColumn(index : Integer, direction : String)
-       + rotateTile(tile : Tile, orientation : Integer)
+
+          + <<create>> GameboardController(gameboard : Gameboard)
+          + getAvailableMoves(position : Position) : Map<String, Boolean>
+          + shiftRow(index : Integer, direction : Integer)
+          + shiftColumn(index : Integer, direction : Integer)
+          + rotateTile(tile: Tile, direction: integer)
    }
    class GameFacadeController {
-       + checkObjectiveCompletion(playerId: Integer): Boolean
-       + movePlayer(playerId: Integer, destination: Tile): Boolean
-       + collectItem(playerId: Integer, itemId: Integer): Boolean
-       + updateObjectives(playerId: Integer)
+
+          +<<create>> GameFacadeController(gameFacade:GameFacade)
+          + getCurrentPlayerPosition() : Position
+          + getCurrentPlayerObjective() : String
+          + notifyPlayerPosition(position : Position)
+          + notifyPlayerObjective(objective: integer)
+          + nextPlayer()
+          + getCurrentPlayer() : Player
+
    }
 
    class UIController {
@@ -98,8 +80,9 @@ package models
 {
     package observers {
         interface GameFacadeObserver {
-            + updatePlayerPosition(newPosition : Position)
-            + updatePlayerObjective(objective : Integer)
+            +UpdateCurrentPlayerChanged( currentPlayer : Player);
+            +UpdatePlayerPositionChanged(newPosition : Position );
+           + UpdatePlayerObjectiveChanged(objective: integer);
         }
 
         interface GameboardObserver {
@@ -177,34 +160,41 @@ package models
 
 
 		class GameFacade {
-            + « Create » GameFacade()
-            'On instancie les cartes et on fait l'attribution ici
-            + addGameFacadeObserver(observer : GameFacadeObserver)
-            + notifyPlayerPositionChange(newPosition : Position)
-            + notifyPlayerObjectiveChange(objective : Integer)
-            + nextPlayer()
-            - notifyCurrentPlayerChange()
-            + getCurrentPlayer() : Player
-            + getPlayer(index : Integer) : Player
-            + deal()
+
+               -  _currentPlayerIndex:integer
+               + <<create>> GameFacade()
+               + addGameFacadeObserver(gameFacadeObserver:GameFacadeObserver)
+               + PlayernextObjective()
+               + movePlayer(position :Position)
+               + notifyPlayerPositionChange(position :Position)
+               + notifyPlayerObjectiveChange(index : Integer)
+               + nextPlayer()
+               + notifyCurrentPlayerChange()
+               + getCurrentPlayer() : Player
+               + get_players() : Player[]
+               + deal()
+               + getPlayer(index : Integer)) : Player
 		}
 
 		class Gameboard {
-            + « Create » Gameboard
-			+ addGameboardObserver(observer : GameBoardObserver)
-			- notifyGameboardChange()
-			+ getFreeTile() : Tile
-			+ setFreeTile(freeTile : Tile)
-			- initializeBoard()
-			- placeFixedTiles()
-			- placeMovableTiles()
-			- placeMovableTileAngled()
-			- placeMovableTileTShaped()
-			- placeMovableTileStraight()
-			- placeMovableTile(Tile tile)
-			'Et pour la tuile libre ? (-1, -1)
-            + getTile(position : Position)
-            - placeObjectives()
+               -  _tiles:Tile[][]
+               -  random:Random
+               +<<create>> Gameboard()
+               + addGameboardObserver(GameBoardObserver)
+               + notifyGameboardChange()
+               + getFreeTile() : Tile
+               + setFreeTile(tile: Tile))
+               - initializeBoard()
+               - placeFixedTiles()
+               - placeMovableTiles()
+               - placeMovableTileAngled()
+               - placeMovableTileTShaped()
+               - placeMovableTileStraight()
+               - placeMovableTile(tile:Tile)
+               + getTile(position : Position) : Tile
+               - placeObjectives()
+               + checkNeighbors(position: Position) : Map<String, Boolean>
+               - canConnect((tile1: Tile, (tile2: Tile, (index : Integer) : boolean
 		}
 		'class Hallway {}
 
@@ -223,18 +213,19 @@ package models
 		}
 
 		class Player {
-			- _id : Integer[0..3]
-			- _name : String
-			- _currentObjectiveIndex : Integer
-			- _currentObjective()
-			+ « Create » Player(id : Integer, name : String)
-			+ getName() : String
-			+ getCurrentTile() : Position
-			+ getCards() : Card[*]
-			+ setCurrentTile(x : Integer, y : Integer)
-			+ setCards(Card[*])
-			+ getCurrentObjective()
-			+ completeCurrentObjective()
+			        - _id: integer[[0..3]
+                    - _name: String
+
+                    - _currentObjectiveIndex: integer
+                    + <<create>> Player(id: integer, name: String)
+                    + getName(): String
+                    + get_currentObjectiveIndex(): integer
+                    + getCurrentTile(): Position
+                    + getCards(): Card[]
+                    + setCurrentTile(position: Position)
+                    + setCards(cards: Card[])
+                    + getCurrentObjective(): Card
+                    + completeCurrentObjective()
 		}
     }
 
@@ -276,13 +267,18 @@ GameView "1" *--> "4\n - _playerCards" HandView
 GameView ..> GameboardObserver
 GameView ..> GameFacadeObserver
 GameFacadeController "1" o----> "1\n - _gamefacade" GameFacade
+GameFacadeController ..> Position
 GameboardController "1" o--> "1\n - _gameboard" Gameboard
+GameboardController ..> Position
+GameboardController ..> Tile
 'Gameboard "1" *---> "6\n _hallways" Hallway
 Gameboard "1" *--> "1\n - _tileFactory" TileFactory
-Player "1" *-> "6\n - _hand" Card
-Player "1" o----> "1\n - _position" Position
+Gameboard "1" *--> "1\n - _freetile" Tile
+Player "1" *-> "6\n - _cards" Card
+Player "1" o----> "1\n - _currentTile" Position
 GameFacade "1" *--> "4\n - _players" Player
 GameFacade ..> Card
+GameFacade ..> Position
 ImageStore "1" *--> "1\n - _screen" Screen
 Tile "1" o-> "1\n # _position" Position
 Tile "1" *--> "1\n # _openSides" Sides
@@ -290,14 +286,19 @@ TileFactory ..> AngledTile
 TileFactory ..> StraightTile
 TileFactory ..> TShapedTile
 TileFactory ..> Tile
-GameFacade "1" o-> "1\n - _observers" GameFacadeObserver
-Gameboard "1" o--> "1\n - _observer" GameboardObserver
+GameFacade "1" o-> "1\n - _gamefacadeobservers" GameFacadeObserver
+Gameboard "1" o--> "1\n - _gameboardobservers" GameboardObserver
 UIController .> GameFacade
 UIController "1" o--> "1\n - _gameView" GameView
 GameView .> ImageHelper
 TileRow .> TileComponent
+
 GameboardView "1" *---> "6\n - _tileRows" TileRow
 GameView "1" *-> "4\n - _pieces" PieceView
 ImageHelper ..> ImageStore
 UIController "1" o--> "1\n - _boardController" GameboardController
+GameBoardTextView ..|> GameBoardObserver
+GameFacadeTextView ..|> GameFacadeObserver
+GameboardTextView "1" o--> "1\n - _gameboard" Gameboard
+GameFacadeTextView "1" o--> "1\n - _gamefacade" GameFacade
 @enduml

@@ -16,10 +16,16 @@ public class Player {
         _cards = new Card[6];
         _currentObjectiveIndex = 0; // Le joueur commence avec l'objectif 0
     }
+    // Méthode pour setter la position actuelle
+
 
     // Getters
     public String getName() {
         return _name;
+    }
+
+    public int get_currentObjectiveIndex() {
+        return _currentObjectiveIndex;
     }
 
     public Position getCurrentTile() {
@@ -32,13 +38,13 @@ public class Player {
 
 
     // Setter de la position actuelle
-    public void setCurrentTile(int x, int y) {
-        _currentTile = new Position(x, y);
+    public void setCurrentTile(Position position) {
+        this._currentTile = new Position(position.getX(), position.getY());
     }
 
     // Setter des cartes d'objectifs
     public void setCards(Card[] cards) {
-        _cards = cards;
+        this._cards = cards;
     }
 
     // Getter de l'objectif actuel
@@ -49,7 +55,7 @@ public class Player {
     // Méthode pour marquer un objectif comme atteint
     public void completeCurrentObjective() {
         if (_currentObjectiveIndex < _cards.length - 1) {
-            _currentObjectiveIndex++;  // Passe à l'objectif suivant
+            this._currentObjectiveIndex++;  // Passe à l'objectif suivant
         }
     }
 

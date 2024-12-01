@@ -22,6 +22,18 @@ public class Sides {
      * @return : an array of booleans
      */
     public ArrayList<Boolean> getSides() { return this._openSides; }
+    /**
+     * Getter pour un côté spécifique.
+     * @param i : index du côté (0 = haut, 1 = droite, 2 = bas, 3 = gauche).
+     * @return : true si le côté est ouvert, false sinon.
+     */
+    public Boolean getSide(int i) {
+        if (i < 0 || i > 3) {
+            throw new IllegalArgumentException("Index must be between 0 and 3.");
+        }
+        return this._openSides.get(i);
+    }
+
 
     /**
      * Sides setter.

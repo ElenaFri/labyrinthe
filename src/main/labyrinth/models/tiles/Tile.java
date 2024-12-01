@@ -5,7 +5,7 @@ import main.labyrinth.models.geometry.Sides;
 
 public abstract class Tile {
     protected String _type;
-    protected Boolean _hasTreasure;
+    public Boolean _hasTreasure;
     protected int _treasure; // equals -1 if none, between 0 and 23 (included) if any
     protected Boolean _canMove;
     protected Sides _openSides;
@@ -46,6 +46,7 @@ public abstract class Tile {
      * @return : type as a string.
      */
     public String getType() { return this._type; }
+    public int get_orientation() { return this._orientation; }
 
     /**
      * Sides getter.

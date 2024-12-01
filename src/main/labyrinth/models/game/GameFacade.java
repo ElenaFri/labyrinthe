@@ -26,31 +26,52 @@ public class GameFacade {
         gameFacadeObservers.add(observer);
     }
 
+    // Méthode pour mettre à jour l'objectif du joueur
+    public void PlayernextObjective() {
+        // Récupère le joueur actuel
+        Player currentPlayer = getCurrentPlayer();
+
+        // Marque l'objectif actuel comme atteint et passe à l'objectif suivant
+        currentPlayer.completeCurrentObjective();
+
+        // Notifie les observateurs du changement d'objectif
+        notifyPlayerObjectiveChange(currentPlayer.get_currentObjectiveIndex());
+    }
+
+
+    // Méthode pour déplacer le joueur
+    public void movePlayer(Position newPosition) {
+        Player currentPlayer = _players[currentPlayerIndex];
+        currentPlayer.setCurrentTile(newPosition);  // Met à jour la position du joueur actuel
+
+        // Notifie les observateurs de la nouvelle position du joueur
+        notifyPlayerPositionChange(newPosition);
+    }
 
     // Méthode pour notifier les observateurs de la position du joueur
     public void notifyPlayerPositionChange(Position newPosition) {
         for (GameFacadeObserver observer : gameFacadeObservers) {
-            observer.onPlayerPositionChanged(newPosition);
+            observer.UpdatePlayerPositionChanged(newPosition);
         }
     }
 
     // Méthode pour notifier les observateurs de l'objectif du joueur
     public void notifyPlayerObjectiveChange(int objective) {
         for (GameFacadeObserver observer : gameFacadeObservers) {
-            observer.onPlayerObjectiveChanged(objective);
+            observer.UpdatePlayerObjectiveChanged(objective);
         }
     }
     // Méthode pour passer au joueur suivant
     public void nextPlayer() {
         // Terminer le tour actuel, puis passer au joueur suivant
-        currentPlayerIndex = (currentPlayerIndex + 1) % _players.length; // Boucle sur les joueurs
+        this.currentPlayerIndex = (currentPlayerIndex + 1) % _players.length; // Boucle sur les joueurs
         notifyCurrentPlayerChange();
     }
     // Méthode pour notifier le changement de joueur
     private void notifyCurrentPlayerChange() {
         Player currentPlayer = _players[currentPlayerIndex];
         for (GameFacadeObserver observer : gameFacadeObservers) {
-            observer.onCurrentPlayerChanged(currentPlayer);
+            observer.UpdateCurrentPlayerChanged(currentPlayer);
         }
     }
     // Retourne le joueur en cours
@@ -58,6 +79,9 @@ public class GameFacade {
         return _players[currentPlayerIndex];
     }
 
+    public Player[] get_players() {
+        return _players;
+    }
 
     // Méthode pour générer et distribuer les cartes
     public void deal() {

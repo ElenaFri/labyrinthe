@@ -7,6 +7,8 @@ import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Gameboard {
     private List<GameBoardObserver> gameBoardObservers = new ArrayList<>();
@@ -55,6 +57,7 @@ public class Gameboard {
         placeObjectives();
 
     }
+
 
     // Placer les tuiles fixes
     private void placeFixedTiles() {
@@ -226,6 +229,175 @@ public class Gameboard {
             }
         }
     }
+    /**
+     * Vérifie si la tuile à une position donnée peut se connecter à ses voisins un par un.
+     *
+     * @param position : Les  coordonnée x et y de la tuile.
+     *
+     * @return : Une map contenant la direction et un booléen indiquant si la connexion est possible.
+ exemple:
+    Direction: Gauche - Connectable: true
+    Direction: Droite - Connectable: false
+    Direction: Haut - Connectable: true
+    Direction: Bas - Connectable: false
+*/
+    public Map<String, Boolean> checkNeighbors(Position position) {
+        if (position.getY() < 0 || position.getY() >= _tiles.length || position.getX()< 0 || position.getX() >= _tiles[0].length) {
+            throw new IllegalArgumentException("Les coordonnées (x, y) sont hors limites.");
+        }
+
+        Tile tile = _tiles[position.getY()][position.getX()];
+        if (tile == null) {
+            throw new IllegalArgumentException("La tuile à cette position est nulle.");
+        }
+
+        // Map pour stocker les résultats par direction
+        Map<String, Boolean> connections = new HashMap<>();
+
+        // Vérification des connexions avec les voisins
+        connections.put("Gauche", position.getX() > 0 && _tiles[position.getY()][position.getX() - 1] != null && canConnect(tile, _tiles[position.getY()][position.getX() - 1], 3)); // 3 = gauche
+        connections.put("Droite", position.getX() < _tiles[0].length - 1 && _tiles[position.getY()][position.getX() + 1] != null && canConnect(tile, _tiles[position.getY()][position.getX() + 1], 1)); // 1 = droite
+        connections.put("Haut", position.getY() > 0 && _tiles[position.getY()- 1][position.getX()] != null && canConnect(tile, _tiles[position.getY() - 1][position.getX()], 0)); // 0 = haut
+        connections.put("Bas", position.getY() < _tiles.length - 1 && _tiles[position.getY() + 1][position.getX()] != null && canConnect(tile, _tiles[position.getY() + 1][position.getX()], 2)); // 2 = bas
+
+        return connections;
+    }
+
+
+    /**
+     * Vérifie si deux tuiles peuvent se connecter via un côté spécifique.
+     *
+     * @param tile1 : La première tuile.
+     * @param tile2 : La deuxième tuile.
+     * @param side : Le côté de la première tuile où la connexion est testée (0 = haut, 1 = droite, 2 = bas, 3 = gauche).
+     * @return : true si les tuiles peuvent se connecter via le côté spécifié, false sinon.
+     */
+    public boolean canConnect(Tile tile1, Tile tile2, int side) {
+        if (tile1 == null || tile2 == null) {
+            return false;
+        }
+
+        // Vérifier si les côtés correspondants sont ouverts (côté à côté)
+        boolean canConnect = tile1.getOpenSides().getSide(side)
+                && tile2.getOpenSides().getSide((side + 2) % 4);
+
+        return canConnect;
+    }
+    public boolean shiftRowLeft(int rowIndex) {
+        boolean moved = false;
+        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
+
+        for (int col = 1; col < _tiles[rowIndex].length; col++) {
+            // Si une tuile est trouvée et l'espace à gauche est vide
+            if (_tiles[rowIndex][col] != null && _tiles[rowIndex][col - 1] == null) {
+                // Déplace la tuile vers la gauche
+                _tiles[rowIndex][col - 1] = _tiles[rowIndex][col];
+                // Mémorise la tuile qui sort pour la rendre freeTile
+                lastTile = _tiles[rowIndex][col];
+                // Remplace la position d'origine de la tuile par la freeTile
+                _tiles[rowIndex][col] = freeTile;
+                moved = true;
+            }
+        }
+
+        // Si un mouvement a été effectué, mettre à jour la freeTile
+        if (moved) {
+            // La tuile qui est sortie devient la freeTile
+            this.freeTile = lastTile;
+            notifyGameboardChange(); // Notifie que le tableau a changé
+        }
+
+        return moved;
+    }
+
+    public boolean shiftRowRight(int rowIndex) {
+        boolean moved = false;
+        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
+
+        for (int col = _tiles[rowIndex].length - 2; col >= 0; col--) {
+            // Si une tuile est trouvée et l'espace à droite est vide
+            if (_tiles[rowIndex][col] != null && _tiles[rowIndex][col + 1] == null) {
+                // Déplace la tuile vers la droite
+                _tiles[rowIndex][col + 1] = _tiles[rowIndex][col];
+                // Mémorise la tuile qui sort pour la rendre freeTile
+                lastTile = _tiles[rowIndex][col];
+                // Remplace la position d'origine de la tuile par la freeTile
+                _tiles[rowIndex][col] = freeTile;
+                moved = true;
+            }
+        }
+
+        // Si un mouvement a été effectué, mettre à jour la freeTile
+        if (moved) {
+            // La tuile qui est sortie devient la freeTile
+            this.freeTile = lastTile;
+            notifyGameboardChange(); // Notifie que le tableau a changé
+        }
+
+        return moved;
+    }
+
+    public boolean shiftColumnUp(int colIndex) {
+        boolean moved = false;
+        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
+
+        for (int row = 1; row < _tiles.length; row++) {
+            // Si une tuile est trouvée et l'espace au-dessus est vide
+            if (_tiles[row][colIndex] != null && _tiles[row - 1][colIndex] == null) {
+                // Déplace la tuile vers le haut
+                _tiles[row - 1][colIndex] = _tiles[row][colIndex];
+                // Mémorise la tuile qui sort pour la rendre freeTile
+                lastTile = _tiles[row][colIndex];
+                // Remplace la position d'origine de la tuile par la freeTile
+                _tiles[row][colIndex] = freeTile;
+                moved = true;
+            }
+        }
+
+        // Si un mouvement a été effectué, mettre à jour la freeTile
+        if (moved) {
+            // La tuile qui est sortie devient la freeTile
+            this.freeTile = lastTile;
+            notifyGameboardChange(); // Notifie que le tableau a changé
+        }
+
+        return moved;
+    }
+
+    public boolean shiftColumnDown(int colIndex) {
+        boolean moved = false;
+        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
+
+        for (int row = _tiles.length - 2; row >= 0; row--) {
+            // Si une tuile est trouvée et l'espace en dessous est vide
+            if (_tiles[row][colIndex] != null && _tiles[row + 1][colIndex] == null) {
+                // Déplace la tuile vers le bas
+                _tiles[row + 1][colIndex] = _tiles[row][colIndex];
+                // Mémorise la tuile qui sort pour la rendre freeTile
+                lastTile = _tiles[row][colIndex];
+                // Remplace la position d'origine de la tuile par la freeTile
+                _tiles[row][colIndex] = freeTile;
+                moved = true;
+            }
+        }
+
+        // Si un mouvement a été effectué, mettre à jour la freeTile
+        if (moved) {
+            // La tuile qui est sortie devient la freeTile
+            this.freeTile = lastTile;
+            notifyGameboardChange(); // Notifie que le tableau a changé
+        }
+
+        return moved;
+    }
+
+
+
+
+
+
+
+
 
 
 

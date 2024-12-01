@@ -4,7 +4,7 @@ import main.labyrinth.models.game.Player;
 import main.labyrinth.models.geometry.Position;
 
 public interface GameFacadeObserver {
-    void onCurrentPlayerChanged(Player currentPlayer);
-    void onPlayerPositionChanged(Position newPosition);
-    void onPlayerObjectiveChanged(int objective);
+    void UpdateCurrentPlayerChanged(Player currentPlayer);
+    void UpdatePlayerPositionChanged(Position newPosition);
+    void UpdatePlayerObjectiveChanged(int objective);
 }

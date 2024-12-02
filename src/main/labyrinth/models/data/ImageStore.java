@@ -45,8 +45,8 @@ public class ImageStore {
         BufferedImage tileWithTreasure = baseTile;
         if (withTreasure) {
             tileWithTreasure = ImageHelper.merge(
-                    "/home/ychettati/Bureau/a-31-labyrinthe/res/img/tiles/tile_" + index + ".png",
-                    "/home/ychettati/Bureau/a-31-labyrinthe/res/img/treasures/treasure" + treasureIndex + ".png"
+                    "/home/elena/Documents/a-31-labyrinthe/res/img/tiles/tile_" + index + ".png",
+                    "/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + treasureIndex + ".png"
             );
         }
 
@@ -100,7 +100,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTuiles() {
         BufferedImage[] tileImages = new BufferedImage[3]; // 16 tuiles
         for (int i = 0; i < 3; i++) {
-            tileImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/tiles/tile_" + i + ".png");
+            tileImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/tiles/tile_" + i + ".png");
         }
         return tileImages;
     }
@@ -109,9 +109,9 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
         for (int i = 0; i < 25; i++) {
-            cardImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardFront.png");
+            cardImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardFront.png");
         }
-        cardImages[24] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardBack.png"); // Carte verso
+        cardImages[24] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardBack.png"); // Carte verso
         return cardImages;
     }
 
@@ -119,7 +119,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTresors() {
         BufferedImage[] treasureImages = new BufferedImage[14];
         for (int i = 0; i < 14; i++) {
-            treasureImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/treasures/treasure" + i + ".png");
+            treasureImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + i + ".png");
         }
         return treasureImages;
     }
@@ -128,14 +128,14 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourPions() {
         BufferedImage[] pieceImages = new BufferedImage[4]; // 4 pions de couleurs différentes
         for (int i = 0; i < 4; i++) {
-            pieceImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/pieces/piece_" + i + ".png");
+            pieceImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/pieces/piece_" + i + ".png");
         }
         return pieceImages;
     }
 
     // Charger l'image de fond de la zone joueur
     private BufferedImage chargerImageDeFond() {
-        return loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/background.png");
+        return loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/background.png");
     }
 
     // Méthode utilitaire pour charger une image depuis un chemin donné

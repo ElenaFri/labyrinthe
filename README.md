@@ -1,26 +1,6 @@
 A31 - Projet "Labyrinthe"
 =========================
 
-![](res/img/labyrinthe.jpg)![](res/img/labyrinthe2.jpg)
-
-À vous de développer une application multi-joueurs du jeu de société Labyrinthe !
-
-Consignes générales
--------------------
-
-### Pour démarrer avec le dépôt Git
-
-1. **Créez un groupe `nom1-nom2`** où nom1 et nom2 sont les noms de famille des deux membres du binôme.
-1. **Forkez** le dépôt <https://git.unistra.fr/a313/a31-labyrinthe> dans le groupe créé ci-dessus.
-1. Ajoutez le responsable du module ET votre ou vos enseignant de TD/TP comme **Reporter** de votre dépôt
-
-### Pour toute la durée du projet
-
-- Ce projet est à réaliser **en binôme**.
-- Vous devez concevoir avec UML et implémenter en Java le jeu de société Labyrinthe, en respectant une **architecture MVC** et en proposant une **interface graphique en Swing**.
-- Vous devez respecter les **principes de conception** et mettre en œuvre les **patrons de conception** vus en cours, **lorsque cela est pertinent**. Attention, il ne s'agit pas d'essayer d'utiliser tous les patrons de conception vus en cours !
-- Il est possible que vous soyez amenés à **renoncer à une partie du développement par manque de temps**. Dans ce cas, le rapport final est l’endroit où le signaler ("il aurait fallu faire *ceci* mais nous n’avions pas assez de temps et avons préféré nous concentrer sur *cela* parce que ...").
-- Votre dépôt devra être **mis à jour au minimum une fois par semaine** de façon à ce que nous puissions évaluer votre progression sur toute la durée du projet.
 
 Les règles du jeu
 -----------------
@@ -40,10 +20,14 @@ Il y a également **24 objectifs**.
 
 Nous nous limiterons à un nombre fixe de **4 joueurs**.
 
+Captures d'écran
+-----------------
+
+[Plateau statique](screenshots/static_gameboard.png)
+
+
 Les fonctionnalités
 -------------------
-
-Vous devez modéliser et implémenter les fonctionalités ci-dessous.
 
 1 - La **génératon des tuiles**
 
@@ -82,12 +66,10 @@ Vous devez modéliser et implémenter les fonctionalités ci-dessous.
 
 9 - La **détection de la fin de partie** lorsqu'un joueur a trouvé tous ses objectifs et est revenu à sa position de départ
 
-> ***Conseil** : Faites la conception UML qui tient en compte tous les niveaux mais implémentez d'abord le jeu en entier avec tous les niveaux 1 avant d'implémenter les autres niveaux.*
-
 L'interface graphique
 ---------------------
 
-Votre application doit proposer 2 écrans :
+Le jeu comporte 2 écrans :
 
 - un **écran principal** qui permet de jouer une partie
 - un **écran de fin de partie**
@@ -124,40 +106,3 @@ L'écran de fin de partie doit annoncer le vainqueur.
 ***Bonus 2***
 
 L'écran de fin de partie propose de commencer une nouvelle partie : tout doit petre réinitialisé pour recommencer.
-
-Les rendus
-----------
-
-### 1er rendu
-
-Date limite : le dimanche **1/12 à 23h59**
-
-Documents :
-
-- le **diagramme de classes** UML
-  - le package `model` doit être décris en anticipant tout le développement
-  - les packages `controller` et `view` doivent proposer une version de base mais peuvent être incomplets
-- le **code source**
-- un **rapport** pour expliquer vos choix de conception
-
-Le rendu est à faire sur votre dépôt Git **sur une branche nommée `rendu1`**.
-
-### 2ème rendu
-
-Date limite : le dimanche **22/12 à 23h59**
-
-Documents :
-
-- le **diagramme de classes** UML qui doit :
-  - représenter l'intégralité de votre application
-  - être entièrement cohérent avec le code
-- le **code source**
-- un **mode d'emploi** nommé `INSTALL.md` à la racine de votre projet, qui explique comment compiler, installer et lancer votre application
-- un **rapport** pour présenter vos nouveaux choix de conception depuis le 1er rendu et expliquer les raisons des évolutions des choix de conception qui avaient été annoncés au 1er rendu.
-
-Le rendu est à faire sur votre dépôt Git **sur une branche nommé `rendu2`**.
-
-### Précisions
-
-- Vos diagrammes UML doivent être au format PlantUML,
-- À la fin du projet, votre dépôt devra contenir au minimum une branche `rendu1` et une branche `rendu2`. Ce seront les seules branches évaluées. Vous êtes libre de gérer le reste de votre dépôt comme vous le souhaitez.

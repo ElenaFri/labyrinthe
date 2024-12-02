@@ -7,16 +7,25 @@ import main.labyrinth.models.tiles.*;
 import main.labyrinth.models.geometry.Position;
 import main.labyrinth.models.data.*;
 import java.io.IOException;  // Pour les erreurs liées aux entrées/sorties (fichiers, etc.)
+import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;  // Si vous utilisez des objets BufferedImage pour le chargement et la manipulation d'images
+import java.io.File;  // Importation pour résoudre la classe File
 
 
 
 class GamePanel extends JPanel {
     private Gameboard gameboard;
+    private BufferedImage background;
 
     public GamePanel(Gameboard gameboard) {
         this.gameboard = gameboard;
+        try {
+            // Charger l'image de fond
+            background = ImageIO.read(new File("/home/elena/Documents/a-31-labyrinthe/res/img/screens/gameboard.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -26,6 +35,10 @@ class GamePanel extends JPanel {
         int tileSize = getWidth() / 7;
 
         ImageStore imageStore = new ImageStore();
+
+            if (background != null) {
+                g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+            }
 
         for (int row = 0; row < 7; row++) {
             for (int col = 0; col < 7; col++) {

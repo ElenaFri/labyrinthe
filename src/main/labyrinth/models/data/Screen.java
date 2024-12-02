@@ -1,6 +1,7 @@
 package main.labyrinth.models.data;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +14,8 @@ public class Screen {
      * Constructeur : charge les images des écrans
      */
     public Screen() throws IOException {
-        _mainScreen = ImageIO.read(new File("assets/images/screens/main_screen.png"));
-        _gameoverScreen = ImageIO.read(new File("assets/images/screens/gameover_screen.png"));
+        _mainScreen = ImageIO.read(new File("/home/elena/Documents/a-31-labyrinthe/res/img/screens/main_screen.png"));
+        _gameoverScreen = ImageIO.read(new File("/home/elena/Documents/a-31-labyrinthe/res/img/screens/gameover_screen.png"));
     }
 
     /**

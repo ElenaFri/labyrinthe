@@ -66,7 +66,7 @@ public class Gameboard {
         // Placer les 4 tuiles angulaires fixes aux positions prédéfinies
         // Les 4 coins du plateau
         int[] row = {0, 0, 6, 6};  // Lignes des coins (haut-gauche, haut-droit, bas-gauche, bas-droit)
-        int[] col = {0, 6, 0, 6};  // Colonnes des coins
+        int[] col = {0, 6, 6, 0};  // Colonnes des coins
 
         // Définir les orientations pour chaque coin
         int[] orientations = {0, 1, 2, 3}; // Orientation des tuiles angulaires (0, 1, 2, 3) pour former un carré
@@ -93,13 +93,13 @@ public class Gameboard {
 
                 // Définir les orientations spécifiques en fonction des positions de bordure
                 if (fixedTRows[i] == 0) {
-                    tile.setOrientation(0); // Orientation vers le haut pour les tuiles du haut
+                    tile.setOrientation(2); // Orientation vers le haut pour les tuiles du haut
                 } else if (fixedTRows[i] == 6) {
-                    tile.setOrientation(2); // Orientation vers le bas pour les tuiles du bas
+                    tile.setOrientation(0); // Orientation vers le bas pour les tuiles du bas
                 } else if (fixedTCols[i] == 0) {
-                    tile.setOrientation(3); // Orientation vers la gauche pour les tuiles de gauche
+                    tile.setOrientation(1); // Orientation vers la gauche pour les tuiles de gauche
                 } else if (fixedTCols[i] == 6) {
-                    tile.setOrientation(1); // Orientation vers la droite pour les tuiles de droite
+                    tile.setOrientation(3); // Orientation vers la droite pour les tuiles de droite
                 }
 
                 _tiles[fixedTRows[i]][fixedTCols[i]] = tile; // Placement de la tuile
@@ -114,6 +114,7 @@ public class Gameboard {
 
                 int randomOrientation = (int) (Math.random() * 4); // Orientation aléatoire (0, 1, 2, 3)
                 tile.setOrientation(randomOrientation);
+
                 _tiles[tRows[i]][tCols[i]] = tile; // Placement de la tuile
                 fixedCount++;
             }

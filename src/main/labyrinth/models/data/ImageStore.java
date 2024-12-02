@@ -32,32 +32,41 @@ public class ImageStore {
     }
 
     // Obtenir une image de tuile avec une rotation et éventuellement un trésor
+    // index 0 pour tile angle , 1 pour tile droite , 2 pour les tiles T
     public BufferedImage getTileImage(int index, int orientation, boolean withTreasure, int treasureIndex) throws IOException {
         if (index < 0 || index >= _tileImages.length) {
             throw new IllegalArgumentException("Index de tuile invalide.");
         }
+
         // Charger la base de la tuile
-        BufferedImage baseTile = _tileImages[index]; // Correction: Accès direct à l'index
+        BufferedImage baseTile = _tileImages[index];
 
         // Ajouter le trésor si demandé
         BufferedImage tileWithTreasure = baseTile;
         if (withTreasure) {
             tileWithTreasure = ImageHelper.merge(
-                    "assets/images/tiles/tile_" + index + ".png",
-                    "assets/images/treasures/treasure_" + treasureIndex + ".png"
+                    "/home/ychettati/Bureau/a-31-labyrinthe/res/img/tiles/tile_" + index + ".png",
+                    "/home/ychettati/Bureau/a-31-labyrinthe/res/img/treasures/treasure" + treasureIndex + ".png"
             );
         }
 
+        // Affichage des informations de débogage pour vérifier l'orientation
+        System.out.println("Orientation de la tuile: " + orientation);
+
         // Appliquer la rotation sur la tuile combinée
         switch (orientation) {
-            case 90:
+            case 1:
+                System.out.println("Appliquer rotation de 90°");
                 return ImageHelper.rotateClockwise(tileWithTreasure);
-            case 180:
+            case 2:
+                System.out.println("Appliquer rotation de 180°");
                 return ImageHelper.rotate(tileWithTreasure, Math.PI);
-            case 270:
+            case 3:
+                System.out.println("Appliquer rotation de 270°");
                 return ImageHelper.rotateCounterClockwise(tileWithTreasure);
             default:
-                return tileWithTreasure; // Pas de rotation
+                System.out.println("Pas de rotation");
+                return tileWithTreasure;  // Pas de rotation
         }
     }
 
@@ -91,7 +100,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTuiles() {
         BufferedImage[] tileImages = new BufferedImage[3]; // 16 tuiles
         for (int i = 0; i < 3; i++) {
-            tileImages[i] = loadImage("assets/images/tiles/tile_" + i + ".png");
+            tileImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/tiles/tile_" + i + ".png");
         }
         return tileImages;
     }
@@ -100,9 +109,9 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
         for (int i = 0; i < 25; i++) {
-            cardImages[i] = loadImage("assets/images/cards/card_" + i + ".png");
+            cardImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardFront.png");
         }
-        cardImages[24] = loadImage("assets/images/cards/card_back.png"); // Carte verso
+        cardImages[24] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardBack.png"); // Carte verso
         return cardImages;
     }
 
@@ -110,7 +119,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTresors() {
         BufferedImage[] treasureImages = new BufferedImage[14];
         for (int i = 0; i < 14; i++) {
-            treasureImages[i] = loadImage("assets/images/treasures/treasure_" + i + ".png");
+            treasureImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/treasures/treasure" + i + ".png");
         }
         return treasureImages;
     }
@@ -119,14 +128,14 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourPions() {
         BufferedImage[] pieceImages = new BufferedImage[4]; // 4 pions de couleurs différentes
         for (int i = 0; i < 4; i++) {
-            pieceImages[i] = loadImage("assets/images/pieces/piece_" + i + ".png");
+            pieceImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/pieces/piece_" + i + ".png");
         }
         return pieceImages;
     }
 
     // Charger l'image de fond de la zone joueur
     private BufferedImage chargerImageDeFond() {
-        return loadImage("assets/images/background/hand_background.png");
+        return loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/background.png");
     }
 
     // Méthode utilitaire pour charger une image depuis un chemin donné

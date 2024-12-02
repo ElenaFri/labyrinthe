@@ -9,7 +9,7 @@ public class GameWindow extends JFrame {
     public GameWindow() {
         gameboard = new Gameboard();
         setTitle("Labyrinth Game");
-        setSize(1000, 1000);  // Taille de la fenêtre
+        setSize(1000, 1020);  // Taille de la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);  // Centrer la fenêtre à l'écran
 

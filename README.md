@@ -23,7 +23,7 @@ Nous nous limiterons à un nombre fixe de **4 joueurs**.
 Captures d'écran
 -----------------
 
-[Plateau statique](screenshots/static_gameboard.png)
+![Plateau statique](screenshots/static_gameboard.png)
 
 
 Les fonctionnalités

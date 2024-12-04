@@ -4,64 +4,70 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Card {
-    private Integer _treasure;  // Le trésor associé à cette carte (null si carte "dos")
-    private boolean _isFound;   // Si le trésor de cette carte a été trouvé
+    private final Integer treasure;  // Trésor associé à la carte (null si "dos")
+    private boolean isFound;         // Indique si le trésor a été trouvé
 
     /**
-     * Constructeur pour créer une carte avec un trésor spécifique.
-     * @param treasure le trésor associé à la carte (peut être null pour une carte "dos").
+     * Constructeur pour une carte avec un trésor.
+     * @param treasure trésor associé à la carte (null pour une carte "dos").
      */
     public Card(Integer treasure) {
-        this._treasure = treasure;  // Associe un trésor ou laisse null pour une carte "dos"
-        this._isFound = false;
+        this.treasure = treasure;
+        this.isFound = false;
     }
 
     /**
-     * Accéder au trésor associé à la carte.
-     * @return l'ID du trésor ou null si la carte est une carte "dos".
+     * Retourne le trésor associé à cette carte.
+     * @return l'ID du trésor ou null si c'est une carte "dos".
      */
     public Integer getTreasure() {
-        return _treasure;
+        return treasure;
     }
 
     /**
-     * Vérifier si le trésor a été trouvé.
+     * Vérifie si le trésor a été trouvé.
      * @return true si le trésor est trouvé, false sinon.
      */
-    public boolean checkIfFound() {
-        return _isFound;
+    public boolean isFound() {
+        return isFound;
     }
 
     /**
-     * Marquer le trésor comme trouvé.
+     * Marque le trésor comme trouvé.
      */
-    public void setFound() {
-        _isFound = true;
+    public void setFound(boolean found) {
+        this.isFound = found;
     }
 
     /**
-     * Vérifier si la carte est une carte "dos".
+     * Vérifie si la carte est une carte "dos".
      * @return true si la carte n'a pas de trésor, false sinon.
      */
     public boolean isBackCard() {
-        return _treasure == null;
+        return treasure == 24;
     }
 
     /**
-     * Statique : créer un deck avec des trésors de 0 à 23 et une carte "dos".
-     * @return une liste de cartes avec des trésors associés.
+     * Retourne le nom de la carte (utile pour l'affichage ou le débogage).
+     * @return "Back" si c'est une carte "dos", sinon "Treasure X" où X est l'ID du trésor.
+     */
+    public String getName() {
+        return isBackCard() ? "Back" : "Treasure " + treasure;
+    }
+
+    /**
+     * Crée un deck de cartes avec des trésors numérotés de 0 à 23 et une carte "dos".
+     * @return une liste de cartes.
      */
     public static List<Card> createDeck() {
         List<Card> deck = new ArrayList<>();
-
-        // Créer des cartes avec des trésors de 0 à 23
         for (int i = 0; i < 24; i++) {
-            deck.add(new Card(i)); // Carte avec un trésor spécifique
+            deck.add(new Card(i));
         }
-
-        // Ajouter une carte "dos" (sans trésor)
-        deck.add(new Card(null));
-
+        deck.add(new Card(24)); // Ajout de la carte dos
+        System.out.println("Deck créé : " + deck);
         return deck;
     }
+
+
 }

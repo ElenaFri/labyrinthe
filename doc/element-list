@@ -1,1 +1,9 @@
+main.labyrinth
 main.labyrinth.controllers
+main.labyrinth.models.data
+main.labyrinth.models.game
+main.labyrinth.models.geometry
+main.labyrinth.models.observers
+main.labyrinth.models.tiles
+main.labyrinth.views.helpers
+main.labyrinth.views.ViewsForObservers

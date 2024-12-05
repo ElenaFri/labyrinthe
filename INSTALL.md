@@ -23,7 +23,13 @@ _explications_
 
 - Si vous avez compilé à la main, lancez `java Labyrinthe.java`, toujours depuis le même répertoire.
 
-### Divers
+### Java Doc
 
-_conseils particuliers_
+La documentation est disponible dans le répertoire `doc/`.
 
+Pour modifier / re-générer la Java Doc en ligne de commande :
+
+```aiignore
+javadoc -d ./doc -sourcepath ./src -subpackages main.labyrinth
+```
+(depuis le répertoire racine du projet)

@@ -2,6 +2,7 @@ package main.labyrinth.models.tiles;
 
 import java.util.Random;
 
+// Implements straight tiles.
 public class StraightTile extends Tile {
     /**
      * Straight Tile constructor.

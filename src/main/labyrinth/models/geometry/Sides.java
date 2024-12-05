@@ -2,6 +2,7 @@ package main.labyrinth.models.geometry;
 
 import java.util.ArrayList;
 
+// Handles a tile's perimeter and thus, the itinerary of a player, using a logic of booleans (can or not pass).
 public class Sides {
     private ArrayList<Boolean> _openSides;
 

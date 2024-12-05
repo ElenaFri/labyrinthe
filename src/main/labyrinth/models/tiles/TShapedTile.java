@@ -2,6 +2,7 @@ package main.labyrinth.models.tiles;
 
 import java.util.Random;
 
+// Implements T-shaped tiles.
 public class TShapedTile extends Tile {
     /**
      * T-Shaped Tile constructor.

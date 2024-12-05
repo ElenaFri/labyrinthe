@@ -1,8 +1,6 @@
 package main.labyrinth.models.tiles;
 
-
-
-
+// A tile factory, generic for tile creation.
 public class TileFactory {
 
     /**

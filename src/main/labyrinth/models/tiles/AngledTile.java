@@ -2,6 +2,7 @@ package main.labyrinth.models.tiles;
 
 import java.util.Random;
 
+// Implements angled tiles.
 public class AngledTile extends Tile {
     /**
      * Angled tile constructor.

@@ -3,6 +3,7 @@ package main.labyrinth.models.tiles;
 import main.labyrinth.models.geometry.Position;
 import main.labyrinth.models.geometry.Sides;
 
+// Abstract for tiles, movable or not. Every tile stores a bit of a labyrinth, but its logic is independent of the game's logic (implemented by 'GameboardController').
 public abstract class Tile {
     protected String _type;
     public Boolean _hasTreasure;
@@ -46,6 +47,11 @@ public abstract class Tile {
      * @return : type as a string.
      */
     public String getType() { return this._type; }
+
+    /**
+     * Orientation getter.
+     * @return : current tile orientation
+     */
     public int get_orientation() { return this._orientation; }
 
     /**
@@ -79,9 +85,12 @@ public abstract class Tile {
         this._hasTreasure = true;
         this._treasure = treasure;
     }
+
+    /**
+     * Marks the tile as movable by setting the _canMove property to true.
+     */
     public void setCanMove() {
         this._canMove = true;
-
     }
 
     /**

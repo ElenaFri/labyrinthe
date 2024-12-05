@@ -8,8 +8,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.labyrinth.models.data.Screen;
 
+// Provides resources for all graphical elements of the game.
 public class ImageStore {
-
     private BufferedImage[] _tileImages;
     private BufferedImage[] _cardImages;       // Recto et verso des cartes
     private BufferedImage[] _treasureImages;   // Trésors à superposer
@@ -18,7 +18,14 @@ public class ImageStore {
     private BufferedImage[] playerIcons;
     private Screen _screen;
 
-    // Constructeur
+    /**
+     * Constructs a new ImageStore instance, initializing various game-related
+     * images and resources needed for the labyrinth game. This constructor
+     * loads images for tiles, cards, treasures, playing pieces, player icons,
+     * and the background for the player's hand area. An instance of the Screen
+     * class is also initialized to manage screen resources, handling any potential
+     * IOExceptions that occur during the loading of screen images.
+     */
     public ImageStore() {
         _tileImages = chargerImagesPourTuiles();
         _cardImages = chargerImagesPourCartes();
@@ -33,6 +40,14 @@ public class ImageStore {
             _screen = null; // Optionnel, selon le comportement attendu.
         }
     }
+
+    /**
+     * Retrieves the image of a card with an optional treasure overlay.
+     * @param index : index of the card (0 to 23). An index of 24 refers to the back of the card if it is not open
+     * @param isOpen : boolean indicating whether the card is open (true) or closed (false)
+     * @return A BufferedImage of the card with the treasure if open; otherwise, the back of the card
+     * @throws IllegalArgumentException if the index is invalid (not between 0 and 23)
+     */
     public BufferedImage getCardWithTreasure(int index, boolean isOpen) {
         if (index < 0 || index >= 24) { // 24 cartes au total
             throw new IllegalArgumentException("Index de carte invalide.");
@@ -43,8 +58,8 @@ public class ImageStore {
             if (isOpen) {
                 // Essayer de fusionner l'image de la carte avec le trésor associé
                 return ImageHelper.merge(
-                        "/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardFront.png",
-                        "/home/ychettati/Bureau/a-31-labyrinthe/res/img/treasures/treasure" + index + ".png"
+                        "/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardFront.png",
+                        "/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + index + ".png"
                 );
             } else {
                 // Si la carte est fermée, retourner l'image du dos de la carte
@@ -58,10 +73,19 @@ public class ImageStore {
         }
     }
 
-
-
-    // Obtenir une image de tuile avec une rotation et éventuellement un trésor
-    // index 0 pour tile angle , 1 pour tile droite , 2 pour les tiles T
+    /**
+     * Retrieves a tile image based on specified parameters including index,
+     * orientation, and whether a treasure is to be included.
+     * @param index : index of the tile, must be within the range of available tiles
+     * @param orientation : orientation of the tile, where 0 is no rotation, 1 is 90 degrees clockwise,
+     *                    2 is 180 degrees, and 3 is 270 degrees counter-clockwise
+     * @param withTreasure : boolean flag indicating whether to overlay a treasure image on the tile
+     * @param treasureIndex : index of the treasure image to overlay if withTreasure is true
+     * @return a BufferedImage representing the requested tile, optionally with a treasure
+     *         and applied orientation
+     * @throws IOException if there is an error in loading the images
+     * @throws IllegalArgumentException if the tile index is invalid
+     */
     public BufferedImage getTileImage(int index, int orientation, boolean withTreasure, int treasureIndex) throws IOException {
         if (index < 0 || index >= _tileImages.length) {
             throw new IllegalArgumentException("Index de tuile invalide.");
@@ -74,8 +98,8 @@ public class ImageStore {
         BufferedImage tileWithTreasure = baseTile;
         if (withTreasure) {
             tileWithTreasure = ImageHelper.merge(
-                    "/home/ychettati/Bureau/a-31-labyrinthe/res/img/tiles/tile_" + index + ".png",
-                    "/home/ychettati/Bureau/a-31-labyrinthe/res/img/treasures/treasure" + treasureIndex + ".png"
+                    "/home/elena/Documents/a-31-labyrinthe/res/img/tiles/tile_" + index + ".png",
+                    "/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + treasureIndex + ".png"
             );
         }
 
@@ -99,17 +123,26 @@ public class ImageStore {
         }
     }
 
-
-
-
-
-    // Obtenir une image de pion
+    /**
+     * Retrieves the image of a playing piece based on the specified index.
+     * @param index : index of the playing piece image to retrieve, where each
+     *              piece corresponds to a predefined index within the range
+     *              of available piece images
+     * @return a BufferedImage representing the playing piece at the specified index
+     */
     public BufferedImage getPieceImage(int index) {
 
         return _pieceImages[index];
     }
 
-    // Récupérer l'image d'un joueur par index
+    /**
+     * Retrieves the image icon for a player based on the specified index.
+     * @param index : index of the player icon to retrieve, where each player
+     *              corresponds to a predefined index within the range of available
+     *              player icons
+     * @return a BufferedImage representing the player icon at the specified index,
+     *         or null if the index is out of bounds
+     */
     public BufferedImage getPlayerIcons(int index) {
         if (index >= 0 && index < playerIcons.length) {
             return playerIcons[index];
@@ -117,77 +150,124 @@ public class ImageStore {
         return null;  // or handle the case where the index is out of bounds
     }
 
-
-
-    // Obtenir le fond de la zone joueur
+    /**
+     * Retrieves the background image for the player's hand area.
+     * @return a BufferedImage representing the background of the hand area
+     */
     public BufferedImage getHandBackground() {
         return _handBackground;
     }
 
-    // Obtenir l'écran principal ou de fin de jeu
     /**
-     * Obtenir l'écran principal ou de fin de jeu
-     *
-     * @param isRunning True si le jeu est en cours, false si le jeu est terminé
-     * @return L'image de l'écran correspondant
+     * Retrieves the appropriate screen image based on the current game state.
+     * @param isRunning : a boolean indicating whether the game is currently running.
+     *                  If true, the main screen image is returned; if false, the
+     *                  game over screen image is returned.
+     * @return a BufferedImage representing the screen to be displayed for the
+     *         current game state
      */
     public BufferedImage getScreen(boolean isRunning) {
         return _screen.getScreenImage(isRunning);
     }
 
-    // Charger les images des tuiles
+    /**
+     * Loads an array of tile images from predefined file paths. This method
+     * attempts to load three distinct tile images from the specified directory
+     * and returns them as an array of BufferedImages.
+     * @return a BufferedImage array containing three tile images loaded from
+     *         predefined paths. Each index in the array corresponds to a specific
+     *         tile image, in the order they were loaded.
+     */
     private BufferedImage[] chargerImagesPourTuiles() {
         BufferedImage[] tileImages = new BufferedImage[3]; // 16 tuiles
         for (int i = 0; i < 3; i++) {
-            tileImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/tiles/tile_" + i + ".png");
+            tileImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/tiles/tile_" + i + ".png");
         }
         return tileImages;
     }
 
-    // Charger les images des cartes (recto et verso)
+    /**
+     * Loads images for 24 card fronts and 1 card back to be used in the labyrinth game.
+     * This method initializes an array of BufferedImages and sequentially loads each image
+     * from the specified file paths. It loads a default front image for all 24 card positions
+     * and loads a specific image for the card back.
+     * @return a BufferedImage array containing 24 images for card fronts and 1 image
+     *         for the card back
+     */
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
         for (int i = 0; i < 25; i++) {
-            cardImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardFront.png");
+            cardImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardFront.png");
         }
-        cardImages[24] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardBack.png"); // Carte verso
+        cardImages[24] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardBack.png"); // Carte verso
         return cardImages;
     }
 
-    // Charger les images des trésors
+    /**
+     * Loads and returns an array of images representing treasures used in the game.
+     * This method iterates over a predefined set of file paths to retrieve images
+     * associated with each treasure type.
+     * @return a BufferedImage array containing 14 treasure images, each loaded
+     *         from the specified file paths
+     */
     private BufferedImage[] chargerImagesPourTresors() {
         BufferedImage[] treasureImages = new BufferedImage[14];
         for (int i = 0; i < 14; i++) {
-            treasureImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/treasures/treasure" + i + ".png");
+            treasureImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + i + ".png");
         }
         return treasureImages;
     }
+
+    /**
+     * Loads and returns an array of images representing the players in the game.
+     * This method initializes an array of BufferedImages for four distinct player
+     * colors: blue, green, red, and yellow. Each image is loaded from a specified
+     * file path corresponding to the player's color.
+     * @return a BufferedImage array containing images for four players, each player
+     *         represented by a different color
+     */
     private BufferedImage[] chargerImagesPourJoueurs() {
         BufferedImage[] playersImages = new BufferedImage[4];
 
-        playersImages[0] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/blueplayer.png");
-        playersImages[1] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/greenplayer.png");
-        playersImages[2] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/redplayer.png");
-        playersImages[3] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/yellowplayer.png");
+        playersImages[0] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/blueplayer.png");
+        playersImages[1] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/greenplayer.png");
+        playersImages[2] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/redplayer.png");
+        playersImages[3] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/yellowplayer.png");
 
         return playersImages;
     }
 
-    // Charger les images des pions
+    /**
+     * Loads images for playing pieces, representing different colors used in the game.
+     * This method initializes an array of BufferedImages, each image being loaded
+     * from a predefined file path corresponding to each playing piece color.
+     * @return a BufferedImage array containing images for four playing pieces, each
+     *         represented by a different color
+     */
     private BufferedImage[] chargerImagesPourPions() {
         BufferedImage[] pieceImages = new BufferedImage[4]; // 4 pions de couleurs différentes
         for (int i = 0; i < 4; i++) {
-            pieceImages[i] = loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/pieces/piece_" + i + ".png");
+            pieceImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/pieces/piece_" + i + ".png");
         }
         return pieceImages;
     }
 
-    // Charger l'image de fond de la zone joueur
+    /**
+     * Loads the background image for the labyrinth game from a predefined file path.
+     * This method utilizes the loadImage utility to retrieve the image file and
+     * return it as a BufferedImage.
+     * @return a BufferedImage representing the background of the labyrinth, or null if the image cannot be loaded
+     */
     private BufferedImage chargerImageDeFond() {
-        return loadImage("/home/ychettati/Bureau/a-31-labyrinthe/res/img/background.png");
+        return loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/background.png");
     }
 
-    // Méthode utilitaire pour charger une image depuis un chemin donné
+    /**
+     * Loads an image from the specified file path.
+     * @param path : file path of the image to be loaded
+     * @return a BufferedImage object if the image is successfully loaded,
+     *         or null if the file does not exist or an IOException occurs
+     */
     private BufferedImage loadImage(String path) {
         try {
             File file = new File(path);
@@ -202,16 +282,28 @@ public class ImageStore {
             return null;
         }
     }
+
+    /**
+     * Retrieves the image used as the back of a card.
+     * Attempts to load an image from a specific file path representing the back of a card
+     * used in the game. Returns the card back image if successfully loaded; otherwise,
+     * returns null if an IOException occurs.
+     * @return a BufferedImage representing the card back image, or null if an error occurs during loading
+     */
     public BufferedImage getCardBackImage() {
         try {
-            return ImageIO.read(new File("/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
+            return ImageIO.read(new File("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    // Exemple de méthode pour obtenir l'image d'une carte spécifique
+    /**
+     * Retrieves the image of the specified card.
+     * @param card :  Card object for which the image is to be retrieved
+     * @return a BufferedImage representing the card's image, or null if the image cannot be loaded
+     */
     public BufferedImage getCardImage(Card card) {
         try {
             String cardImagePath = getCardImagePath(card);  // Logic to get the correct path based on card data
@@ -222,9 +314,15 @@ public class ImageStore {
         }
     }
 
-    // Logic to generate the path to card images based on card details
+    /**
+     * Generates and returns the file path for a card's image based on its name.
+     * The image path is composed by appending the card's name followed by ".png"
+     * to the predefined directory path for card images.
+     * @param card : Card object whose image path is to be retrieved
+     * @return a String representing the full file path of the card's image
+     */
     private String getCardImagePath(Card card) {
         // Ex: Return image path based on card type or name
-        return "/home/ychettati/Bureau/a-31-labyrinthe/res/img/cards/" + card.getName() + ".png";
+        return "/home/elena/Documents/a-31-labyrinthe/res/img/cards/" + card.getName() + ".png";
     }
 }

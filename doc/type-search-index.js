@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"main.labyrinth.models.game","l":"Card"},{"p":"main.labyrinth.models.game","l":"Gameboard"},{"p":"main.labyrinth.models.game","l":"GameFacade"},{"p":"main.labyrinth.models.game","l":"Player"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"main.labyrinth.models.observers","l":"GameBoardObserver"},{"p":"main.labyrinth.models.observers","l":"GameFacadeObserver"}];updateSearchResults();

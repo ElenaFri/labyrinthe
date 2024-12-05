@@ -3,13 +3,15 @@ package main.labyrinth.models.game;
 import java.util.ArrayList;
 import java.util.List;
 
+// Implements an objective, or "treasure" card.
 public class Card {
     private final Integer treasure;  // Trésor associé à la carte (null si "dos")
     private boolean isFound;         // Indique si le trésor a été trouvé
 
     /**
-     * Constructeur pour une carte avec un trésor.
-     * @param treasure trésor associé à la carte (null pour une carte "dos").
+     * Constructs a new Card with a specified treasure value.
+     * @param treasure : integer value representing the treasure associated with this card.
+     *                 It uniquely identifies the treasure, or indicates a special card state.
      */
     public Card(Integer treasure) {
         this.treasure = treasure;
@@ -17,47 +19,53 @@ public class Card {
     }
 
     /**
-     * Retourne le trésor associé à cette carte.
-     * @return l'ID du trésor ou null si c'est une carte "dos".
+     * Retrieves the treasure associated with this card.
+     * @return an Integer representing the treasure, or null if the card is a "back" card
      */
     public Integer getTreasure() {
         return treasure;
     }
 
     /**
-     * Vérifie si le trésor a été trouvé.
-     * @return true si le trésor est trouvé, false sinon.
+     * Checks if the treasure associated with this card has been found.
+     * @return true if the treasure has been found, false otherwise
      */
     public boolean isFound() {
         return isFound;
     }
 
     /**
-     * Marque le trésor comme trouvé.
+     * Sets the found status of the card's treasure. This status indicates whether the treasure
+     * associated with this card has been located.
+     * @param found a boolean value representing the found status of the card's treasure.
+     *              If true, the treasure is marked as found; if false, it is marked as not found
      */
     public void setFound(boolean found) {
         this.isFound = found;
     }
 
     /**
-     * Vérifie si la carte est une carte "dos".
-     * @return true si la carte n'a pas de trésor, false sinon.
+     * Determines whether the card is a "back" card.
+     * @return true if the card's treasure value is 24, indicating it is a "back" card; false otherwise
      */
     public boolean isBackCard() {
         return treasure == 24;
     }
 
     /**
-     * Retourne le nom de la carte (utile pour l'affichage ou le débogage).
-     * @return "Back" si c'est une carte "dos", sinon "Treasure X" où X est l'ID du trésor.
+     * Retrieves the "name", or status of the card, indicating whether it is a "back" card or a specific treasure card.
+     * If the card is a "back" card, it returns "Back"; otherwise, it returns "Treasure" followed by the treasure value.
+     * @return status of the card as a String, either "Back" or "Treasure" followed by the treasure value
      */
     public String getName() {
         return isBackCard() ? "Back" : "Treasure " + treasure;
     }
 
     /**
-     * Crée un deck de cartes avec des trésors numérotés de 0 à 23 et une carte "dos".
-     * @return une liste de cartes.
+     * Creates a new deck of cards for the game, consisting of 24 numbered treasure cards
+     * and a special "back" card with the number 24.
+     * @return a list of Card objects representing the complete deck for the game, including
+     * numbered treasure cards and one "back" card
      */
     public static List<Card> createDeck() {
         List<Card> deck = new ArrayList<>();

@@ -17,14 +17,14 @@ public class Position {
 
 	/**
 	 * Horizontal position getter.
-	 * @return : the coordinate of the position as on the X-axis,
+	 * @return the coordinate of the position as on the X-axis,
 	 * from left to right
 	 */
 	public int getX() { return this._x; }
 
 	/**
 	 * Vertical position getter.
-	 * @return : the coordinate of the position as on the Y-axis,
+	 * @return the coordinate of the position as on the Y-axis,
 	 * from top to bottom
 	 */
 	public int getY() { return this._y; }
@@ -41,7 +41,7 @@ public class Position {
 
 	/**
 	 * Returns a position in a conventional form.
-	 * @return : (x, y)
+	 * @return (x, y)
 	 */
 	@Override
 	public String toString() {

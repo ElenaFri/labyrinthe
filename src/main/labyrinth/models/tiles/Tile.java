@@ -44,37 +44,37 @@ public abstract class Tile {
 
     /**
      * Type getter.
-     * @return : type as a string.
+     * @return type as a string.
      */
     public String getType() { return this._type; }
 
     /**
      * Orientation getter.
-     * @return : current tile orientation
+     * @return current tile orientation
      */
     public int get_orientation() { return this._orientation; }
 
     /**
      * Sides getter.
-     * @return : passage ways as an array of booleans, starting with the top.
+     * @return passage ways as an array of booleans, starting with the top.
      */
     public Sides getOpenSides() { return this._openSides; }
 
     /**
      * Getter, checks if there is a treasure on the tile.
-     * @return : true if treasure, false otherwise.
+     * @return true if treasure, false otherwise.
      */
     public Boolean checkIfTreasure() { return this._hasTreasure; }
 
     /**
      * Getter, checks if the tile is movable or part of the gameboard.
-     * @return : true if movable, false otherwise.
+     * @return true if movable, false otherwise.
      */
     public Boolean checkIfMoves() { return this._canMove; }
 
     /**
      * Treasure getter.
-     * @return : integer indexing the treasure imprinted on the tile, in any. If there are none, returns -1.
+     * @return integer indexing the treasure imprinted on the tile, in any. If there are none, returns -1.
      */
     public int getTreasure() { return this._treasure; }
 

@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"main.labyrinth","l":"GameWindow"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"main.labyrinth.models.tiles","l":"AngledTile"},{"p":"main.labyrinth.models.tiles","l":"StraightTile"},{"p":"main.labyrinth.models.tiles","l":"Tile"},{"p":"main.labyrinth.models.tiles","l":"TileFactory"},{"p":"main.labyrinth.models.tiles","l":"TShapedTile"}];updateSearchResults();

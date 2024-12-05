@@ -4,6 +4,7 @@ import main.labyrinth.models.geometry.Position;
 import main.labyrinth.models.observers.GameFacadeObserver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -85,12 +86,13 @@ public class GameFacade {
 
     // Méthode pour générer et distribuer les cartes
     public void deal() {
-        List<Card> deck = Card.createDeck(); // Créer toutes les cartes (24 trésors + 1 carte dos)
-        Collections.shuffle(deck); // Mélanger les cartes de manière aléatoire
+        List<Card> deck = Card.createDeck(); // Créer le deck
+        Card backCard = deck.remove(deck.size() - 1); // Retirer la carte dos
+        Collections.shuffle(deck); // Mélanger les autres cartes
 
-        int cardsPerPlayer = 24 / _players.length; // Chaque joueur reçoit 6 cartes
+        int cardsPerPlayer = 6; // Chaque joueur reçoit 6 cartes
 
-        for (int i = 0; i < _players.length; i++) {
+        for (int i = 0; i < 4; i++) {
             Card[] playerCards = new Card[cardsPerPlayer];
             for (int j = 0; j < cardsPerPlayer; j++) {
                 playerCards[j] = deck.remove(0); // Attribuer la carte et la retirer du deck
@@ -98,9 +100,16 @@ public class GameFacade {
             _players[i].setCards(playerCards); // Attribuer les cartes au joueur
         }
 
-        // La carte restante est la carte "dos"
-        assert deck.size() == 1 && deck.get(0).isBackCard();
+        // Vérification de la carte restante
+        if (!deck.isEmpty()) {
+            throw new IllegalStateException("Le deck devrait être vide après la distribution.");
+        }
+
+        System.out.println("Carte dos conservée : " + backCard);
     }
+
+
+
 
     // Méthode pour obtenir un joueur par son index
     public Player getPlayer(int n) {

@@ -6,15 +6,25 @@ import main.labyrinth.models.game.Gameboard;
 
 import java.util.Map;
 
-// Makes the
+// Manipulates Gameboard.
 public class GameboardController {
     private final Gameboard gameboard;
 
+    /**
+     * Constructs a GameboardController with a specified Gameboard.
+     * @param gameboard : Gameboard instance to be controlled by this controller
+     */
     public GameboardController(Gameboard gameboard) {
         this.gameboard = gameboard;
     }
 
-    // Retourne les mouvements valides pour une position donnée
+    /**
+     * Determines and returns the available moves from the current position on the gameboard.
+     * @param currentPosition : current position on the gameboard from which to evaluate available moves
+     * @return a map where each key represents a direction (e.g., "up", "down", "left", "right")
+     * and the corresponding Boolean value indicates whether a move in that direction is available
+     * @throws IllegalArgumentException if there is no tile at the specified position
+     */
     public Map<String, Boolean> getAvailableMoves(Position currentPosition) {
         Tile tile = gameboard.getTile(currentPosition);  // Obtenir la tuile à la position donnée
         if (tile == null) {
@@ -23,7 +33,15 @@ public class GameboardController {
         return gameboard.checkNeighbors(currentPosition);  // Vérifie les voisins valides
     }
 
-    // Effectuer un mouvement sur une ligne du plateau
+    /**
+     * Shifts the tiles in a specified row of the gameboard in the given direction.
+     * If the direction is left, the row will be shifted to the left. If the direction
+     * is right, the row will be shifted to the right. Only valid indices and directions
+     * are accepted.
+     * @param index : index of the row to be shifted. Must be between 0 and 6 inclusive
+     * @param direction : direction to shift the row. Use 1 for left and 3 for right
+     * @throws IllegalArgumentException if the index is out of bounds or if the direction is invalid
+     */
     public void shiftRow(int index, int direction) {
         if (index < 0 || index >= 7) {
             throw new IllegalArgumentException("Indice de ligne invalide : " + index);
@@ -40,7 +58,14 @@ public class GameboardController {
         }
     }
 
-    // Effectuer un mouvement sur une colonne du plateau
+    /**
+     * Shifts a column on the gameboard at a specified index in the given direction.
+     * The column can be shifted upwards or downwards. Only valid indices and
+     * directions are accepted.
+     * @param index : index of the column to be shifted. Must be between 0 and 6 inclusive
+     * @param direction : direction to shift the column. 0 for up and 2 for down
+     * @throws IllegalArgumentException if the index is out of bounds or if the direction is invalid
+     */
     public void shiftColumn(int index, int direction) {
         if (index < 0 || index >= 7) {
             throw new IllegalArgumentException("Indice de colonne invalide : " + index);
@@ -57,7 +82,14 @@ public class GameboardController {
         }
     }
 
-    // Faire pivoter une tuile
+    /**
+     * Rotates the specified tile to a given orientation.
+     * @param tile : tile to be rotated. Must not be null
+     * @param orientation : the desired orientation of the tile. Must be an integer between 0 and 3 inclusive,
+     * where each number represents a specific orientation state.
+     * @throws IllegalArgumentException if the provided tile is null or
+     * if the orientation is outside the valid range
+     */
     public void rotateTile(Tile tile, int orientation) {
         if (tile == null) {
             throw new IllegalArgumentException("La tuile à pivoter ne peut pas être nulle.");
@@ -69,6 +101,4 @@ public class GameboardController {
 
         tile.setOrientation(orientation);  // Supposons que Tile a une méthode setOrientation(int)
     }
-
-
 }

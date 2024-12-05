@@ -6,6 +6,7 @@ import main.labyrinth.models.game.Gameboard;
 
 import java.util.Map;
 
+// Makes the
 public class GameboardController {
     private final Gameboard gameboard;
 

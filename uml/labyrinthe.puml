@@ -68,7 +68,6 @@ package controllers
    }
 
    class UIController {
-       - _view: GameView
        + handleTileClick(position: Position)
        + handleObjectiveFound(player: Player)
        + updateView(): void
@@ -288,6 +287,7 @@ Gameboard "1" o--> "1\n - _gameboardobservers" GameboardObserver
 UIController .> GameFacade
 ImageHelper ..> ImageStore
 UIController "1" o--> "1\n - _boardController" GameboardController
+UIController "1" o--> "1\n - _view" GameboardTextView
 GameboardTextView ..|> GameboardObserver
 GameFacadeTextView ..|> GameFacadeObserver
 GameboardTextView "1" o--> "1\n - _gameboard" Gameboard

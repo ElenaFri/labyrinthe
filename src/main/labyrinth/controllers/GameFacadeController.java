@@ -3,10 +3,12 @@ package main.labyrinth.controllers;
 import main.labyrinth.models.game.GameFacade;
 import main.labyrinth.models.game.Player;
 import main.labyrinth.models.geometry.Position;
+import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 // Manipulates GameFacade.
 public class GameFacadeController {
     private final GameFacade gameFacade;
+    //private final GameBoardFacadeView gameBoardFacadeView;
 
     /**
      * Constructs a GameFacadeController with the specified GameFacade.
@@ -56,9 +58,24 @@ public class GameFacadeController {
      * Updates the player's position on the game board.
      * @param newPosition : the new position of the player
      */
-    public void changePlayerPosition(Position newPosition) {
-        gameFacade.movePlayer(newPosition);
+    public void changePlayerPosition(Position newPosition, GameBoardFacadeView gameBoardFacadeView) {
+        // Déplace le joueur via le gameFacade
+        gameFacade.movePlayer(newPosition, getCurrentPlayer());
+        System.out.println("Joueur déplacé : " + getCurrentPlayer().getName());
+
+        // Récupérer les nouvelles positions des joueurs sous forme de tableau de Position
+        Position[] updatedPositions = gameFacade.getPlayersPositions(); // getplayerspos()  retourner un tableau de Position[]
+        System.out.println("les nouvelles positions du joueurs sontnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn   "+  updatedPositions);
+
+        // Met à jour les positions sur le plateau
+        gameBoardFacadeView.setPlayerPositions(updatedPositions); // Met à jour le plateau avec les nouvelles positions
+
+       ////////////:faux ajouter une methode updateon setposition
+
     }
+
+
+
 
     /**
      * Advances the player's objective to the next one.

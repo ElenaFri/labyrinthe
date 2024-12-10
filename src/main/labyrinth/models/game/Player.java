@@ -22,6 +22,10 @@ public class Player {
         _name = name;
         _cards = new Card[6];
         _currentObjectiveIndex = 0; // Le joueur commence avec l'objectif 0
+        if(id==0){this._currentTile=new Position(0,0);}
+            if(id==1){this._currentTile=new Position(0,6);}
+                if(id==2){this._currentTile=new Position(6,0);}
+                    if(id==3){this._currentTile=new Position(6,6);}
     }
 
     /**

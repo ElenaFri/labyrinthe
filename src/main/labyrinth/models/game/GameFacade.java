@@ -26,6 +26,7 @@ public class GameFacade {
 
         for (int i = 0; i < 4; i++) {
             _players[i] = new Player(i, "Player " + (i + 1));
+
         }
 
         deal(); // Distribuer les cartes au démarrage du jeu
@@ -59,7 +60,14 @@ public class GameFacade {
         // Notifie les observateurs du changement d'objectif
         notifyPlayerObjectiveChange(currentPlayer.get_currentObjectiveIndex());
     }
-
+    // Renvoie un tableau de positions des joueurs
+    public Position[] getPlayersPositions() {
+        Position[] positions = new Position[_players.length];
+        for (int i = 0; i < _players.length; i++) {
+            positions[i] = _players[i].getCurrentTile(); // Récupère la position actuelle du joueur
+        }
+        return positions;
+    }
 
     /**
      * Moves the current player to a new position on the game board.
@@ -68,9 +76,9 @@ public class GameFacade {
      * @param newPosition : new Position object representing the coordinates
      *                    on the game board where the current player will be moved
      */
-    public void movePlayer(Position newPosition) {
-        Player currentPlayer = _players[currentPlayerIndex];
-        currentPlayer.setCurrentTile(newPosition);  // Met à jour la position du joueur actuel
+    public void movePlayer(Position newPosition, Player player) {
+      //  Player currentPlayer = _players[currentPlayerIndex];
+        player.setCurrentTile(newPosition);  // Met à jour la position du joueur actuel
 
         // Notifie les observateurs de la nouvelle position du joueur
         notifyPlayerPositionChange(newPosition);

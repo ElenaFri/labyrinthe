@@ -1,5 +1,6 @@
 package main.labyrinth.views.ViewsForObservers;
 
+import main.labyrinth.controllers.GameFacadeController;
 import main.labyrinth.controllers.GameboardController;
 import main.labyrinth.models.game.Gameboard;
 import main.labyrinth.models.tiles.Tile;
@@ -26,6 +27,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private final GameFacade gameFacade;
     private final ImageStore imageStore;
     private final GameboardController gameboardController;
+    private final GameFacadeController gameFacadeController;
 
     private static final int TILE_SIZE = 128;
     private static final int BOARD_SIZE = 900;
@@ -34,18 +36,41 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     // Variable pour suivre le bouton sélectionné
     private JButton selectedButton;
 
-    private int[][] playerPositions = {
-            {0, 0}, {0, 6}, {6, 0}, {6, 6}
-    };
+    private Position[] playerPositions;
+
+
+    // Tableau de positions
+
+
+    // Définir les nouvelles positions des joueurs
+    public void setPlayerPositions(Position[] playerPositions) {
+        // Vérifie si les positions sont valides (optionnel)
+        if (playerPositions.length != 4) {
+            throw new IllegalArgumentException("Il doit y avoir 4 joueurs.");
+        }
+        this.playerPositions = playerPositions;
+
+    }
+
 
 
     public GameBoardFacadeView(Gameboard gameboard, GameFacade gameFacade, ImageStore imageStore) {
+        // Initialisation du tableau playerPositions
+        playerPositions = new Position[4]; 
+
+        // Remplissage du tableau playerPositions avec les positions des joueurs
+        playerPositions[0] = gameFacade.getPlayer(0).getCurrentTile();
+        playerPositions[1] = gameFacade.getPlayer(1).getCurrentTile();
+        playerPositions[2] = gameFacade.getPlayer(2).getCurrentTile();
+        playerPositions[3] = gameFacade.getPlayer(3).getCurrentTile();
 
         this.gameboard = gameboard;
         gameboard.addGameboardObserver(this);
+        gameFacade.addGameFacadeObserver(this);
         this.gameFacade = gameFacade;
         this.imageStore = imageStore;
         this.gameboardController = new GameboardController(gameboard);
+        this.gameFacadeController=new GameFacadeController(gameFacade);
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
         // Initialisation du bouton Rotate Tile
@@ -59,7 +84,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
        // System.out.println("///////////////////////////////////////////////"
 
 
-        Position position = new Position(3, 3);
+        Position position = new Position(0, 0);
 
 // Affichage des tuiles accessibles à partir de la position donnée
         List<Position> accessibleTiles = gameboard.getAccessibleTiles(position);
@@ -84,7 +109,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Rendre le bouton transparent
         tileButton.setOpaque(false);
         tileButton.setContentAreaFilled(false); // Empêche le remplissage du bouton
-        tileButton.setBorderPainted(true); // Ajoute une bordure si vous le souhaitez
+        tileButton.setBorderPainted(true); // Ajoute une bordure
 
         // Modifier la bordure pour qu'elle soit visible (optionnel, pour donner une indication visuelle)
         tileButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));  // Ajoute une bordure rouge
@@ -102,10 +127,13 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Ajouter l'action au clic
         tileButton.addActionListener(e -> {
             System.out.println("hollaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            System.exit(0);
+         //   System.exit(0);
+            gameFacadeController.changePlayerPosition(position,this);
+           //repaint();
+
         });
 
-        // Ajouter le bouton à votre container (comme un JPanel ou autre)
+        // Ajouter le bouton à  container (comme un JPanel ou autre)
         add(tileButton);
     }
 
@@ -328,16 +356,21 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private void drawPieces(Graphics g, int xOffset, int yOffset) {
         for (int i = 0; i < playerPositions.length; i++) {
-            int[] position = playerPositions[i];
-            int x = xOffset + position[1] * TILE_SIZE;
-            int y = yOffset + position[0] * TILE_SIZE;
+            Position position = playerPositions[i];  // Accéder à la position du joueur à l'index i
 
+            // Obtenir les coordonnées x et y depuis l'objet Position
+            int x = xOffset + position.getY() * TILE_SIZE;  // position.getY() pour la coordonnée x
+            int y = yOffset + position.getX() * TILE_SIZE;  // position.getX() pour la coordonnée y
+
+            // Charger l'image de la pièce du joueur
             BufferedImage pieceImage = imageStore.getPieceImage(i);
             if (pieceImage != null) {
+                // Dessiner l'image de la pièce centrée dans la case
                 g.drawImage(pieceImage, x + (TILE_SIZE - PLAYER_SIZE) / 2, y + (TILE_SIZE - PLAYER_SIZE) / 2, PLAYER_SIZE, PLAYER_SIZE, null);
             }
         }
     }
+
 
     private void drawPlayerCards(Graphics g, Player player, int xOffset, int yOffset, int cardWidth, int cardHeight, int cardOverlap, int playerIndex) {
         Card[] playerCards = player.getCards();
@@ -379,7 +412,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     @Override
     public void update(Gameboard gameboard) {
-        System.out.println("game board updated!");
+        System.out.println("game board updated!yoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
 
        this.repaint();     // Redessine le composant
     }

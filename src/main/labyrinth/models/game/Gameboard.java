@@ -12,11 +12,11 @@ import java.util.List;
 public class Gameboard {
     private List<GameBoardObserver> gameBoardObservers = new ArrayList<>();
     private Tile[][] _tiles;
-
     private TileFactory tileFactory;
     private Tile freeTile;
 
     private Random random;
+
 
     /**
      * Constructs a new Gameboard, initializing the board and its various components.
@@ -34,16 +34,18 @@ public class Gameboard {
         initializeBoard();
     }
 
+
+
     /**
      * Adds a GameBoardObserver to the list of observers for the gameboard.
      * Observers are notified of changes to the gameboard state.
+     *
      * @param observer : GameBoardObserver instance to be added
      */
     public void addGameboardObserver(GameBoardObserver observer) {
         gameBoardObservers.add(observer);
     }
 
-<<<<<<< Updated upstream
     /**
      * Notifies all registered observers about a change in the gameboard's state.
      * This method iterates over the list of GameBoardObserver objects and calls
@@ -51,8 +53,7 @@ public class Gameboard {
      * It is used to inform observers that they should refresh or reconsider their state
      * due to changes that occur in the gameboard.
      */
-=======
->>>>>>> Stashed changes
+
     public void notifyGameboardChange() {
         // Notifier tous les observateurs du changement d'état du plateau
         for (GameBoardObserver observer : gameBoardObservers) {
@@ -60,15 +61,13 @@ public class Gameboard {
         }
     }
 
-<<<<<<< Updated upstream
+
     /**
      * Retrieves the free tile currently available for movement or placement on the gameboard.
+     *
      * @return the tile that is currently free, ready to be inserted into the board
      */
-=======
 
-    // Getter pour obtenir la freeTile actuelle
->>>>>>> Stashed changes
     public Tile getFreeTile() {
         return freeTile;
     }
@@ -77,6 +76,7 @@ public class Gameboard {
      * Sets the free tile for the gameboard. This tile is available for movement
      * or placement within the board configuration. Setting a new free tile will
      * trigger notifications to observers about the change in the gameboard state.
+     *
      * @param : Tile instance to be set as the free tile for the gameboard
      */
     public void setFreeTile(Tile freeTile) {
@@ -85,7 +85,6 @@ public class Gameboard {
     }
 
 
-<<<<<<< Updated upstream
     /**
      * Initializes the game board by populating each cell with a tile,
      * ensuring that fixed and movable tile constraints are respected.
@@ -98,55 +97,17 @@ public class Gameboard {
      * 3. `placeObjectives()` to place game objectives on the board.
      * This method is fundamental in setting the initial game state.
      */
-    private void initializeBoard() {        // Remplir chaque case avec une tuile, en respectant les contraintes de tuiles fixes et déplaçables
+    private void initializeBoard() {
+        // Remplir chaque case avec une tuile, en respectant les contraintes de tuiles fixes et déplaçables
         placeFixedTiles(); // Placer les tuiles fixes
         placeMovableTiles(); // Placer les tuiles déplaçables
         placeObjectives();
-=======
-    // Méthode pour initialiser le plateau avec des tuiles
-    // Méthode pour initialiser le plateau avec des tuiles
-    private void initializeBoard() {
-        // Étape 1 : Placer les tuiles fixes
-        placeFixedTiles();
 
-        // Étape 2 : Préparer les tuiles déplaçables
-        List<Tile> movableTiles = new ArrayList<>();
->>>>>>> Stashed changes
-
-        // Ajouter les tuiles déplaçables
-        for (int i = 0; i < 16; i++) {
-            movableTiles.add(tileFactory.createAngledTile());
-        }
-        for (int i = 0; i < 12; i++) {
-            movableTiles.add(tileFactory.createStraightTile());
-        }
-        for (int i = 0; i < 6; i++) {
-            movableTiles.add(tileFactory.createTShapedTile());
-        }
-
-        // Mélanger les tuiles déplaçables
-        Collections.shuffle(movableTiles, random);
-
-        // Sélectionner la dernière tuile comme tuile libre
-        //la freeTile est réassignée avec une tuile issue de la liste mélangée des tuiles déplaçables (movableTiles).
-        freeTile = movableTiles.remove(movableTiles.size() - 1);
-
-        // Étape 3 : Placer les tuiles déplaçables sur le plateau
-        for (int row = 0; row < 7; row++) {
-            for (int col = 0; col < 7; col++) {
-                if (_tiles[row][col] == null && !movableTiles.isEmpty()) {
-                    Tile tile = movableTiles.remove(0);
-                    tile.setOrientation(random.nextInt(4)); // Orientation aléatoire
-                    ///////////////////////////:///////////::::::::::::::::
-                    tile.setOpenSides();
-                    _tiles[row][col] = tile;
-                }
-            }
-        }
-
-        // Étape 4 : Placer les objectifs
-        placeObjectives();
     }
+
+
+
+
 
     /**
      * Places all fixed tiles on the game board according to predefined rules and positions.
@@ -173,7 +134,7 @@ public class Gameboard {
         for (int i = 0; i < 4; i++) {
             if (_tiles[row[i]][col[i]] == null) {
                 Tile tile = tileFactory.createAngledTile();
-               // Cette tuile ne peut pas être déplacée et c est par defaut dans tile
+                // Cette tuile ne peut pas être déplacée et c est par defaut dans tile
                 tile.setOrientation(orientations[i]); // Définir l'orientation appropriée
                 //////////////////////////////
                 tile.setOpenSides();
@@ -185,7 +146,7 @@ public class Gameboard {
         // Placer les 12 tuiles "T" fixes aux positions spécifiques avec orientations définies ou aléatoires
         int[] tRows = {0, 0, 2, 2, 2, 2, 4, 4, 4, 4, 6, 6}; // Lignes des tuiles "T"
         int[] tCols = {2, 4, 2, 4, 0, 6, 0, 2, 4, 6, 2, 4}; // Colonnes des tuiles "T"
-        int[] fixedTRows = {0, 0, 2, 4, 6, 6, 2, 4 };  // Lignes des tuiles "T" avec orientation définie pour la bordure
+        int[] fixedTRows = {0, 0, 2, 4, 6, 6, 2, 4};  // Lignes des tuiles "T" avec orientation définie pour la bordure
         int[] fixedTCols = {2, 4, 0, 0, 2, 4, 6, 6}; // Colonnes des tuiles "T" avec orientation définie
 
         for (int i = 0; i < fixedTRows.length; i++) {
@@ -308,6 +269,7 @@ public class Gameboard {
      * Places a movable tile onto the gameboard at a random unoccupied position
      * within a 7x7 grid and assigns it a random orientation. If placement is
      * unsuccessful after 50 attempts, a message is logged indicating failure.
+     *
      * @param tile : Tile object to be placed on the gameboard. It must be
      *             capable of being moved and reoriented, and should not already
      *             occupy a position on the board
@@ -335,6 +297,7 @@ public class Gameboard {
 
     /**
      * Retrieves the tile located at the specified position on the gameboard.
+     *
      * @param position : Position object containing the x and y coordinates for the tile location
      * @return Tile object found at the given position on the gameboard
      */
@@ -391,24 +354,6 @@ public class Gameboard {
         }
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Checks the neighboring tiles of the given position for possible connections.
-     * This method evaluates the tiles neighboring the specified position in four directions:
-     * left, right, up, and down. For each direction, it determines whether a connection
-     * is possible based on the current tile's position and the tile present in the
-     * neighboring position.
-     * @param position : position of the tile to check connections for, consisting of x and y coordinates
-     * @return a map where the keys represent directions ("Gauche", "Droite", "Haut", "Bas")
-     *         and the values are booleans indicating if a connection is possible in that direction
-     * @throws IllegalArgumentException if the given position is out of bounds or the tile at the given position is null
-     */
-    public Map<String, Boolean> checkNeighbors(Position position) {
-        if (position.getY() < 0 || position.getY() >= _tiles.length || position.getX()< 0 || position.getX() >= _tiles[0].length) {
-            throw new IllegalArgumentException("Les coordonnées (x, y) sont hors limites.");
-=======
-
-
 
     public boolean shiftRowLeft(int rowIndex) {
         boolean moved = false;  // Indique si un mouvement a eu lieu
@@ -416,7 +361,7 @@ public class Gameboard {
         // Vérifie si l'index de la ligne est valide
         if (rowIndex < 0 || rowIndex >= _tiles.length) {
             throw new IllegalArgumentException("Index de ligne invalide !");
->>>>>>> Stashed changes
+
         }
 
         // Stocke la première tuile avant de la déplacer
@@ -439,24 +384,6 @@ public class Gameboard {
 
         return moved;
     }
-
-
-<<<<<<< Updated upstream
-    /**
-     * Determines if two tiles can be connected based on their sides.
-     * This method checks whether the specified sides of two tiles are open
-     * and can therefore connect to each other.
-     * @param tile1 : first tile to be checked for connectivity
-     * @param tile2 : second tile to be checked for connectivity
-     * @param side : the side of the first tile to be checked for an open connection
-     * @return true if the tiles can be connected on the specified sides; false otherwise
-     */
-    public boolean canConnect(Tile tile1, Tile tile2, int side) {
-        if (tile1 == null || tile2 == null) {
-            return false;
-        }
-=======
->>>>>>> Stashed changes
 
 
     public boolean shiftRowRight(int rowIndex) {
@@ -488,32 +415,6 @@ public class Gameboard {
         return moved;
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Shifts the tiles in a specified row to the right. If a tile can be moved to the right into an empty space,
-     * it is moved, and the formerly occupied position is replaced with the free tile. If any tile is shifted,
-     * the free tile is updated and the game board is notified of the change.
-     * @param rowIndex : index of the row to be shifted
-     * @return true if any tile was moved; false otherwise
-     */
-    public boolean shiftRowRight(int rowIndex) {
-        boolean moved = false;
-        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
-
-        for (int col = _tiles[rowIndex].length - 2; col >= 0; col--) {
-            // Si une tuile est trouvée et l'espace à droite est vide
-            if (_tiles[rowIndex][col] != null && _tiles[rowIndex][col + 1] == null) {
-                // Déplace la tuile vers la droite
-                _tiles[rowIndex][col + 1] = _tiles[rowIndex][col];
-                // Mémorise la tuile qui sort pour la rendre freeTile
-                lastTile = _tiles[rowIndex][col];
-                // Remplace la position d'origine de la tuile par la freeTile
-                _tiles[rowIndex][col] = freeTile;
-                moved = true;
-            }
-=======
-
-
 
     public boolean shiftColumnUp(int colIndex) {
         boolean moved = false;  // Indique si un mouvement a eu lieu
@@ -521,7 +422,7 @@ public class Gameboard {
         // Vérifie si l'index de la colonne est valide
         if (colIndex < 0 || colIndex >= _tiles[0].length) {
             throw new IllegalArgumentException("Index de colonne invalide !");
->>>>>>> Stashed changes
+
         }
 
         // Stocke la première tuile de la colonne avant de la déplacer
@@ -545,32 +446,6 @@ public class Gameboard {
         return moved;
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Shifts the tiles in a specified column upwards by one position where possible.
-     * If a tile is moved, the tile that is moved out becomes the free tile.
-     * This method also notifies any listeners that the game board has changed.
-     * @param colIndex : index of the column to shift upwards
-     * @return true if any tiles were moved, false otherwise
-     */
-    public boolean shiftColumnUp(int colIndex) {
-        boolean moved = false;
-        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
-
-        for (int row = 1; row < _tiles.length; row++) {
-            // Si une tuile est trouvée et l'espace au-dessus est vide
-            if (_tiles[row][colIndex] != null && _tiles[row - 1][colIndex] == null) {
-                // Déplace la tuile vers le haut
-                _tiles[row - 1][colIndex] = _tiles[row][colIndex];
-                // Mémorise la tuile qui sort pour la rendre freeTile
-                lastTile = _tiles[row][colIndex];
-                // Remplace la position d'origine de la tuile par la freeTile
-                _tiles[row][colIndex] = freeTile;
-                moved = true;
-            }
-=======
-
-
 
     public boolean shiftColumnDown(int colIndex) {
         boolean moved = false;  // Flag pour indiquer si un mouvement a eu lieu
@@ -578,7 +453,7 @@ public class Gameboard {
         // Vérifie si l'index de la colonne est valide
         if (colIndex < 0 || colIndex >= _tiles[0].length) {
             throw new IllegalArgumentException("Index de colonne invalide !");
->>>>>>> Stashed changes
+
         }
 
         // Stocke la dernière tuile de la colonne avant de la déplacer
@@ -601,6 +476,7 @@ public class Gameboard {
 
         return moved;
     }
+
     public List<Position> getAccessibleTiles(Position position) {
         List<Position> accessibleTiles = new ArrayList<>();
         accessibleTiles.add(position);
@@ -617,9 +493,9 @@ public class Gameboard {
         // Vérification pour ne pas dépasser les limites du plateau
         if (currentTile.getOpenSides().isSideOpen(0)) { // haut
             Position upPosition = new Position(position.getX() - 1, position.getY());
-           // System.out.println("Vérification côté haut pour la position : " + upPosition);
+            // System.out.println("Vérification côté haut pour la position : " + upPosition);
             if (isPositionValid(upPosition)) {
-              //  System.out.println("Position haut valide : " + upPosition);
+                //  System.out.println("Position haut valide : " + upPosition);
                 if (isOppositeSideOpen(upPosition, 2)) { // Vérifier côté bas de la tuile voisine
                     System.out.println("Côté bas de la tuile voisine ouvert pour : " + upPosition);
                     accessibleTiles.add(upPosition);
@@ -631,33 +507,11 @@ public class Gameboard {
             }
         }
 
-<<<<<<< Updated upstream
-    /**
-     * Shifts the tiles in the specified column downwards if there are empty spaces.
-     * If a tile moves, the method updates the game board and sets the last moved tile as the free tile.
-     * @param colIndex : index of the column to be shifted down
-     * @return true if any tiles were moved; false otherwise
-     */
-    public boolean shiftColumnDown(int colIndex) {
-        boolean moved = false;
-        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
-
-        for (int row = _tiles.length - 2; row >= 0; row--) {
-            // Si une tuile est trouvée et l'espace en dessous est vide
-            if (_tiles[row][colIndex] != null && _tiles[row + 1][colIndex] == null) {
-                // Déplace la tuile vers le bas
-                _tiles[row + 1][colIndex] = _tiles[row][colIndex];
-                // Mémorise la tuile qui sort pour la rendre freeTile
-                lastTile = _tiles[row][colIndex];
-                // Remplace la position d'origine de la tuile par la freeTile
-                _tiles[row][colIndex] = freeTile;
-                moved = true;
-=======
         if (currentTile.getOpenSides().isSideOpen(1)) { // Côté droite
             Position rightPosition = new Position(position.getX(), position.getY() + 1);
-          //  System.out.println("Vérification côté droit pour la position : " + rightPosition);
+            //  System.out.println("Vérification côté droit pour la position : " + rightPosition);
             if (isPositionValid(rightPosition)) {
-            //    System.out.println("Position droite valide : " + rightPosition);
+                //    System.out.println("Position droite valide : " + rightPosition);
                 if (isOppositeSideOpen(rightPosition, 3)) { // Vérifier côté gauche de la tuile voisine
                     System.out.println("Côté gauche de la tuile voisine ouvert pour : " + rightPosition);
                     accessibleTiles.add(rightPosition);
@@ -666,7 +520,6 @@ public class Gameboard {
                 }
             } else {
                 System.out.println("Position droite invalide : " + rightPosition);
->>>>>>> Stashed changes
             }
         }
 
@@ -688,9 +541,9 @@ public class Gameboard {
 
         if (currentTile.getOpenSides().isSideOpen(3)) { // Côté gauche
             Position leftPosition = new Position(position.getX(), position.getY() - 1);
-           // System.out.println("Vérification côté gauche pour la position : " + leftPosition);
+            // System.out.println("Vérification côté gauche pour la position : " + leftPosition);
             if (isPositionValid(leftPosition)) {
-              //  System.out.println("Position gauche valide : " + leftPosition);
+                //  System.out.println("Position gauche valide : " + leftPosition);
                 if (isOppositeSideOpen(leftPosition, 1)) { // Vérifier côté droite de la tuile voisine
                     System.out.println("Côté droite de la tuile voisine ouvert pour : " + leftPosition);
                     accessibleTiles.add(leftPosition);
@@ -707,8 +560,6 @@ public class Gameboard {
     }
 
 
-
-
     // Méthode pour vérifier si un côté opposé d'une tuile est ouvert
     public boolean isOppositeSideOpen(Position position, int oppositeSide) {
         Tile neighborTile = getTile(position);
@@ -723,8 +574,6 @@ public class Gameboard {
         System.out.println("Tuile voisine nulle pour la position : " + position);
         return false;
     }
-<<<<<<< Updated upstream
-=======
 
 
     // Méthode pour vérifier si la position est valide (dans les limites du plateau)
@@ -735,18 +584,16 @@ public class Gameboard {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> Stashed changes
 }
+
+
+
+
+
+
+
+
+
+
+
+

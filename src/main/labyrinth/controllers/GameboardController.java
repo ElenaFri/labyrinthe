@@ -20,24 +20,6 @@ public class GameboardController {
         this.gameboard = gameboard;
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Determines and returns the available moves from the current position on the gameboard.
-     * @param currentPosition : current position on the gameboard from which to evaluate available moves
-     * @return a map where each key represents a direction (e.g., "up", "down", "left", "right")
-     * and the corresponding Boolean value indicates whether a move in that direction is available
-     * @throws IllegalArgumentException if there is no tile at the specified position
-     */
-    public Map<String, Boolean> getAvailableMoves(Position currentPosition) {
-        Tile tile = gameboard.getTile(currentPosition);  // Obtenir la tuile à la position donnée
-        if (tile == null) {
-            throw new IllegalArgumentException("Aucune tuile à cette position.");
-        }
-        return gameboard.checkNeighbors(currentPosition);  // Vérifie les voisins valides
-    }
-=======
-
->>>>>>> Stashed changes
 
     /**
      * Shifts the tiles in a specified row of the gameboard in the given direction.

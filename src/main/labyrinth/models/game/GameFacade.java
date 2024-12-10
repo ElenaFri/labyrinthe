@@ -49,7 +49,7 @@ public class GameFacade {
      * Observers are notified about the change in the player's objective state, providing
      * them with the updated objective index.
      */
-    public void PlayernextObjective() {
+    public void playerNextObjective() {
         // Récupère le joueur actuel
         Player currentPlayer = getCurrentPlayer();
 

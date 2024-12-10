@@ -4,14 +4,12 @@ import main.labyrinth.models.data.ImageStore;
 import main.labyrinth.models.geometry.Position;
 import main.labyrinth.models.geometry.Sides;
 
-<<<<<<< Updated upstream
-// Abstract for tiles, movable or not. Every tile stores a bit of a labyrinth, but its logic is independent of the game's logic (implemented by 'GameboardController').
-=======
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
->>>>>>> Stashed changes
+
 public abstract class Tile {
     protected String _type;
 

@@ -10,12 +10,7 @@ import main.labyrinth.models.data.Screen;
 
 // Provides resources for all graphical elements of the game.
 public class ImageStore {
-<<<<<<< Updated upstream
-=======
 
-
-
->>>>>>> Stashed changes
     private BufferedImage[] _tileImages;
     private BufferedImage[] _cardImages;       // Recto et verso des cartes
     private BufferedImage[] _treasureImages;   // Trésors à superposer
@@ -48,7 +43,7 @@ public class ImageStore {
         }
     }
 
-<<<<<<< Updated upstream
+
     /**
      * Retrieves the image of a card with an optional treasure overlay.
      * @param index : index of the card (0 to 23). An index of 24 refers to the back of the card if it is not open
@@ -56,8 +51,7 @@ public class ImageStore {
      * @return A BufferedImage of the card with the treasure if open; otherwise, the back of the card
      * @throws IllegalArgumentException if the index is invalid (not between 0 and 23)
      */
-=======
->>>>>>> Stashed changes
+
     public BufferedImage getCardWithTreasure(int index, boolean isOpen) {
         if (index < 0 || index >= 24) { // 24 cartes au total
             throw new IllegalArgumentException("Index de carte invalide.");
@@ -68,8 +62,8 @@ public class ImageStore {
             if (isOpen) {
                 // Essayer de fusionner l'image de la carte avec le trésor associé
                 return ImageHelper.merge(
-                        "/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardFront.png",
-                        "/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + index + ".png"
+                        "../res/img/cards/cardFront.png",
+                        "../res/img/treasures/treasure" + index + ".png"
                 );
             } else {
                 // Si la carte est fermée, retourner l'image du dos de la carte
@@ -108,8 +102,8 @@ public class ImageStore {
         BufferedImage tileWithTreasure = baseTile;
         if (withTreasure) {
             tileWithTreasure = ImageHelper.merge(
-                    "/home/elena/Documents/a-31-labyrinthe/res/img/tiles/tile_" + index + ".png",
-                    "/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + treasureIndex + ".png"
+                    "../res/img/tiles/tile_" + index + ".png",
+                    "../res/img/treasures/treasure" + treasureIndex + ".png"
             );
         }
 
@@ -191,12 +185,12 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTuiles() {
         BufferedImage[] tileImages = new BufferedImage[3]; // 3 typestuiles
         for (int i = 0; i < 3; i++) {
-            tileImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/tiles/tile_" + i + ".png");
+            tileImages[i] = loadImage("../res/img/tiles/tile_" + i + ".png");
         }
         return tileImages;
     }
 
-<<<<<<< Updated upstream
+
     /**
      * Loads images for 24 card fronts and 1 card back to be used in the labyrinth game.
      * This method initializes an array of BufferedImages and sequentially loads each image
@@ -205,16 +199,16 @@ public class ImageStore {
      * @return a BufferedImage array containing 24 images for card fronts and 1 image
      *         for the card back
      */
-=======
+
 
     // Charger les images des cartes (recto et verso)
->>>>>>> Stashed changes
+
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
         for (int i = 0; i < 25; i++) {
-            cardImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardFront.png");
+            cardImages[i] = loadImage("../res/img/cards/cardFront.png");
         }
-        cardImages[24] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardBack.png"); // Carte verso
+        cardImages[24] = loadImage("../res/img/cards/cardBack.png"); // Carte verso
         return cardImages;
     }
 
@@ -228,7 +222,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTresors() {
         BufferedImage[] treasureImages = new BufferedImage[14];
         for (int i = 0; i < 14; i++) {
-            treasureImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/treasures/treasure" + i + ".png");
+            treasureImages[i] = loadImage("../res/img/treasures/treasure" + i + ".png");
         }
         return treasureImages;
     }
@@ -244,10 +238,10 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourJoueurs() {
         BufferedImage[] playersImages = new BufferedImage[4];
 
-        playersImages[0] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/blueplayer.png");
-        playersImages[1] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/greenplayer.png");
-        playersImages[2] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/redplayer.png");
-        playersImages[3] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/yellowplayer.png");
+        playersImages[0] = loadImage("../res/img/blueplayer.png");
+        playersImages[1] = loadImage("../res/img/greenplayer.png");
+        playersImages[2] = loadImage("../res/img/redplayer.png");
+        playersImages[3] = loadImage("../res/img/yellowplayer.png");
 
         return playersImages;
     }
@@ -262,7 +256,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourPions() {
         BufferedImage[] pieceImages = new BufferedImage[4]; // 4 pions de couleurs différentes
         for (int i = 0; i < 4; i++) {
-            pieceImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/pieces/piece_" + i + ".png");
+            pieceImages[i] = loadImage("../res/img/pieces/piece_" + i + ".png");
         }
         return pieceImages;
     }
@@ -274,7 +268,7 @@ public class ImageStore {
      * @return a BufferedImage representing the background of the labyrinth, or null if the image cannot be loaded
      */
     private BufferedImage chargerImageDeFond() {
-        return loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/background.png");
+        return loadImage("../res/img/background.png");
     }
 
     /**
@@ -307,7 +301,7 @@ public class ImageStore {
      */
     public BufferedImage getCardBackImage() {
         try {
-            return ImageIO.read(new File("/home/elena/Documents/a-31-labyrinthe/res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
+            return ImageIO.read(new File("../res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -338,6 +332,6 @@ public class ImageStore {
      */
     private String getCardImagePath(Card card) {
         // Ex: Return image path based on card type or name
-        return "/home/elena/Documents/a-31-labyrinthe/res/img/cards/" + card.getName() + ".png";
+        return "../res/img/cards/" + card.getName() + ".png";
     }
 }

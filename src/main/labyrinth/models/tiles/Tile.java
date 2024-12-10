@@ -1,11 +1,20 @@
 package main.labyrinth.models.tiles;
 
+import main.labyrinth.models.data.ImageStore;
 import main.labyrinth.models.geometry.Position;
 import main.labyrinth.models.geometry.Sides;
 
+<<<<<<< Updated upstream
 // Abstract for tiles, movable or not. Every tile stores a bit of a labyrinth, but its logic is independent of the game's logic (implemented by 'GameboardController').
+=======
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+>>>>>>> Stashed changes
 public abstract class Tile {
     protected String _type;
+
     public Boolean _hasTreasure;
     protected int _treasure; // equals -1 if none, between 0 and 23 (included) if any
     protected Boolean _canMove;
@@ -26,6 +35,8 @@ public abstract class Tile {
         this._orientation = 0;
         this._openSides = new Sides();
     }
+
+
 
     /**
      * Tile constructor with position.
@@ -53,6 +64,8 @@ public abstract class Tile {
      * @return current tile orientation
      */
     public int get_orientation() { return this._orientation; }
+    public Position get_position() { return this._position; }
+
 
     /**
      * Sides getter.
@@ -93,6 +106,7 @@ public abstract class Tile {
         this._canMove = true;
     }
 
+
     /**
      * Abstract method for random orientation reinitialization.
      */
@@ -108,4 +122,13 @@ public abstract class Tile {
      * Abstract method for side management.
      */
     public abstract void setOpenSides();
+    @Override
+    public String toString() {
+        return "Tile[position=(" + get_position().getX() + ", " + get_position().getY() +
+                "), type=" + this._type+ "]";
+    }
+
+
+
+
 }

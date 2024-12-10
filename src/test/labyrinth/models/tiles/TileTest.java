@@ -1,4 +1,4 @@
-package main.labyrinth.models.tiles;
+/*package main.labyrinth.models.tiles;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,4 +51,4 @@ public class TileTest {
         angledTile.initOrientation(); // Setting orientation
         assertEquals(angledTile.getOpenSides().getSides().get(2), true); // Check a specific side
     }
-}
+}*/

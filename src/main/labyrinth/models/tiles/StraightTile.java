@@ -1,5 +1,11 @@
 package main.labyrinth.models.tiles;
 
+import main.labyrinth.models.data.ImageStore;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 // Implements straight tiles.
@@ -13,6 +19,7 @@ public class StraightTile extends Tile {
         this._type = "straight";
         initOrientation();
         setOpenSides();
+
     }
 
     /**
@@ -21,7 +28,7 @@ public class StraightTile extends Tile {
     @Override
     public void initOrientation() {
         Random rand = new Random();
-        this._orientation = rand.nextInt(2); // There are only two orientations possible for straight-shaped tiles, vertical and horizontal
+        this._orientation = rand.nextInt(4);
     }
 
     /**
@@ -39,17 +46,33 @@ public class StraightTile extends Tile {
      */
     @Override
     public void setOpenSides() {
+
+        // Réinitialiser tous les côtés à false
+        for (int i = 0; i < 4; i++) {
+            this._openSides.setSide(i, false);
+        }
+        // Définir les côtés ouverts en fonction de l'orientation
         switch (this._orientation) {
-            case 0:
-                this._openSides.setSide(0, true);
-                this._openSides.setSide(2, true);
+            case 0: // Orientation verticale (Haut et Bas)
+                this._openSides.setSide(0, true); // Haut
+                this._openSides.setSide(2, true); // Bas
                 break;
-            case 1:
-                this._openSides.setSide(1, true);
-                this._openSides.setSide(3, true);
+            case 1: // Orientation horizontale (Gauche et Droite)
+                this._openSides.setSide(1, true); // Droite
+                this._openSides.setSide(3, true); // Gauche
                 break;
+            case 2: // Orientation horizontale (Gauche et Droite)
+                this._openSides.setSide(0, true); // Droite
+                this._openSides.setSide(2, true); // Gauche
+                break;
+            case 3: // Orientation horizontale (Gauche et Droite)
+                this._openSides.setSide(1, true); // Droite
+                this._openSides.setSide(3, true); // Gauche
+                break;
+
             default:
                 break;
         }
     }
+
 }

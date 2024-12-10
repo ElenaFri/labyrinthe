@@ -10,6 +10,12 @@ import main.labyrinth.models.data.Screen;
 
 // Provides resources for all graphical elements of the game.
 public class ImageStore {
+<<<<<<< Updated upstream
+=======
+
+
+
+>>>>>>> Stashed changes
     private BufferedImage[] _tileImages;
     private BufferedImage[] _cardImages;       // Recto et verso des cartes
     private BufferedImage[] _treasureImages;   // Trésors à superposer
@@ -27,6 +33,7 @@ public class ImageStore {
      * IOExceptions that occur during the loading of screen images.
      */
     public ImageStore() {
+
         _tileImages = chargerImagesPourTuiles();
         _cardImages = chargerImagesPourCartes();
         _treasureImages = chargerImagesPourTresors();
@@ -41,6 +48,7 @@ public class ImageStore {
         }
     }
 
+<<<<<<< Updated upstream
     /**
      * Retrieves the image of a card with an optional treasure overlay.
      * @param index : index of the card (0 to 23). An index of 24 refers to the back of the card if it is not open
@@ -48,6 +56,8 @@ public class ImageStore {
      * @return A BufferedImage of the card with the treasure if open; otherwise, the back of the card
      * @throws IllegalArgumentException if the index is invalid (not between 0 and 23)
      */
+=======
+>>>>>>> Stashed changes
     public BufferedImage getCardWithTreasure(int index, boolean isOpen) {
         if (index < 0 || index >= 24) { // 24 cartes au total
             throw new IllegalArgumentException("Index de carte invalide.");
@@ -179,13 +189,14 @@ public class ImageStore {
      *         tile image, in the order they were loaded.
      */
     private BufferedImage[] chargerImagesPourTuiles() {
-        BufferedImage[] tileImages = new BufferedImage[3]; // 16 tuiles
+        BufferedImage[] tileImages = new BufferedImage[3]; // 3 typestuiles
         for (int i = 0; i < 3; i++) {
             tileImages[i] = loadImage("/home/elena/Documents/a-31-labyrinthe/res/img/tiles/tile_" + i + ".png");
         }
         return tileImages;
     }
 
+<<<<<<< Updated upstream
     /**
      * Loads images for 24 card fronts and 1 card back to be used in the labyrinth game.
      * This method initializes an array of BufferedImages and sequentially loads each image
@@ -194,6 +205,10 @@ public class ImageStore {
      * @return a BufferedImage array containing 24 images for card fronts and 1 image
      *         for the card back
      */
+=======
+
+    // Charger les images des cartes (recto et verso)
+>>>>>>> Stashed changes
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
         for (int i = 0; i < 25; i++) {

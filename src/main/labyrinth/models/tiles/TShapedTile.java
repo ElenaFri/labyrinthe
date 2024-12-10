@@ -1,5 +1,11 @@
 package main.labyrinth.models.tiles;
 
+import main.labyrinth.models.data.ImageStore;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 // Implements T-shaped tiles.
@@ -13,6 +19,7 @@ public class TShapedTile extends Tile {
         this._type = "t-shaped";
         initOrientation();
         setOpenSides();
+
     }
 
     /**
@@ -38,26 +45,39 @@ public class TShapedTile extends Tile {
      */
     @Override
     public void setOpenSides() {
+        // Réinitialiser tous les côtés à false
+        for (int i = 0; i < 4; i++) {
+            this._openSides.setSide(i, false);
+        }
+
         switch (this._orientation) {
             case 0:
                 this._openSides.setSide(0, true);
                 this._openSides.setSide(1, true);
                 this._openSides.setSide(3, true);
+
+
+
                 break;
             case 1:
                 this._openSides.setSide(0, true);
                 this._openSides.setSide(1, true);
                 this._openSides.setSide(2, true);
+
                 break;
             case 2:
                 this._openSides.setSide(1, true);
                 this._openSides.setSide(2, true);
                 this._openSides.setSide(3, true);
+
+
                 break;
             case 3:
                 this._openSides.setSide(2, true);
                 this._openSides.setSide(3, true);
                 this._openSides.setSide(0, true);
+
+
                 break;
             default:
                 break;

@@ -17,6 +17,16 @@ public class Sides {
             this._openSides.add(false); // then initialize all to false
         }
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Côtés ouverts : ");
+        if (isSideOpen(0)) sb.append("Haut ");
+        if (isSideOpen(1)) sb.append("Droite ");
+        if (isSideOpen(2)) sb.append("Bas ");
+        if (isSideOpen(3)) sb.append("Gauche ");
+        return sb.toString().trim();
+    }
+
 
     /**
      * Sides getter.
@@ -56,4 +66,9 @@ public class Sides {
         // Assigns the new value.
         this._openSides.set(i, isOpen);
     }
+    // Nouvelle méthode pour vérifier si un côté est ouvert
+    public boolean isSideOpen(int side) {
+        return getSide(side);
+    }
+
 }

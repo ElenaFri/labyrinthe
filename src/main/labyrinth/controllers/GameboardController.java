@@ -1,5 +1,6 @@
 package main.labyrinth.controllers;
 
+import main.labyrinth.models.observers.GameBoardObserver;
 import main.labyrinth.models.tiles.Tile;
 import main.labyrinth.models.geometry.Position;
 import main.labyrinth.models.game.Gameboard;
@@ -15,9 +16,11 @@ public class GameboardController {
      * @param gameboard : Gameboard instance to be controlled by this controller
      */
     public GameboardController(Gameboard gameboard) {
+
         this.gameboard = gameboard;
     }
 
+<<<<<<< Updated upstream
     /**
      * Determines and returns the available moves from the current position on the gameboard.
      * @param currentPosition : current position on the gameboard from which to evaluate available moves
@@ -32,6 +35,9 @@ public class GameboardController {
         }
         return gameboard.checkNeighbors(currentPosition);  // Vérifie les voisins valides
     }
+=======
+
+>>>>>>> Stashed changes
 
     /**
      * Shifts the tiles in a specified row of the gameboard in the given direction.
@@ -51,11 +57,12 @@ public class GameboardController {
             throw new IllegalArgumentException("Direction invalide. Utilisez 1 pour gauche ou 3 pour droite.");
         }
 
-        if (direction == 1) {  // Gauche
-            gameboard.shiftRowLeft(index);
-        } else if (direction == 3) {  // Droite
+        if (direction == 1) {  // droite
             gameboard.shiftRowRight(index);
+        } else if (direction == 3) {  // gauche
+            gameboard.shiftRowLeft(index);
         }
+
     }
 
     /**
@@ -99,6 +106,7 @@ public class GameboardController {
             throw new IllegalArgumentException("Orientation invalide. Utilisez une valeur entre 0 et 3.");
         }
 
-        tile.setOrientation(orientation);  // Supposons que Tile a une méthode setOrientation(int)
+        tile.setOrientation(orientation);
+        gameboard.notifyGameboardChange();
     }
 }

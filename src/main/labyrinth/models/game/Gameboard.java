@@ -3,17 +3,16 @@ package main.labyrinth.models.game;
 import main.labyrinth.models.geometry.*;
 import main.labyrinth.models.observers.GameBoardObserver;
 import main.labyrinth.models.tiles.*;
-import java.util.Random;
+
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 // Implements the Labyrinthe gameboard - INCLUDING the free tile used to modify the labyrinth.
 public class Gameboard {
     private List<GameBoardObserver> gameBoardObservers = new ArrayList<>();
     private Tile[][] _tiles;
+
     private TileFactory tileFactory;
     private Tile freeTile;
 
@@ -28,6 +27,7 @@ public class Gameboard {
      */
     public Gameboard() {
         _tiles = new Tile[7][7]; // Créer un tableau de 7x7 de tuiles
+
         tileFactory = new TileFactory(); // Initialisation de la factory
         random = new Random();
         freeTile = new AngledTile();
@@ -43,6 +43,7 @@ public class Gameboard {
         gameBoardObservers.add(observer);
     }
 
+<<<<<<< Updated upstream
     /**
      * Notifies all registered observers about a change in the gameboard's state.
      * This method iterates over the list of GameBoardObserver objects and calls
@@ -50,6 +51,8 @@ public class Gameboard {
      * It is used to inform observers that they should refresh or reconsider their state
      * due to changes that occur in the gameboard.
      */
+=======
+>>>>>>> Stashed changes
     public void notifyGameboardChange() {
         // Notifier tous les observateurs du changement d'état du plateau
         for (GameBoardObserver observer : gameBoardObservers) {
@@ -57,10 +60,15 @@ public class Gameboard {
         }
     }
 
+<<<<<<< Updated upstream
     /**
      * Retrieves the free tile currently available for movement or placement on the gameboard.
      * @return the tile that is currently free, ready to be inserted into the board
      */
+=======
+
+    // Getter pour obtenir la freeTile actuelle
+>>>>>>> Stashed changes
     public Tile getFreeTile() {
         return freeTile;
     }
@@ -77,6 +85,7 @@ public class Gameboard {
     }
 
 
+<<<<<<< Updated upstream
     /**
      * Initializes the game board by populating each cell with a tile,
      * ensuring that fixed and movable tile constraints are respected.
@@ -93,7 +102,50 @@ public class Gameboard {
         placeFixedTiles(); // Placer les tuiles fixes
         placeMovableTiles(); // Placer les tuiles déplaçables
         placeObjectives();
+=======
+    // Méthode pour initialiser le plateau avec des tuiles
+    // Méthode pour initialiser le plateau avec des tuiles
+    private void initializeBoard() {
+        // Étape 1 : Placer les tuiles fixes
+        placeFixedTiles();
 
+        // Étape 2 : Préparer les tuiles déplaçables
+        List<Tile> movableTiles = new ArrayList<>();
+>>>>>>> Stashed changes
+
+        // Ajouter les tuiles déplaçables
+        for (int i = 0; i < 16; i++) {
+            movableTiles.add(tileFactory.createAngledTile());
+        }
+        for (int i = 0; i < 12; i++) {
+            movableTiles.add(tileFactory.createStraightTile());
+        }
+        for (int i = 0; i < 6; i++) {
+            movableTiles.add(tileFactory.createTShapedTile());
+        }
+
+        // Mélanger les tuiles déplaçables
+        Collections.shuffle(movableTiles, random);
+
+        // Sélectionner la dernière tuile comme tuile libre
+        //la freeTile est réassignée avec une tuile issue de la liste mélangée des tuiles déplaçables (movableTiles).
+        freeTile = movableTiles.remove(movableTiles.size() - 1);
+
+        // Étape 3 : Placer les tuiles déplaçables sur le plateau
+        for (int row = 0; row < 7; row++) {
+            for (int col = 0; col < 7; col++) {
+                if (_tiles[row][col] == null && !movableTiles.isEmpty()) {
+                    Tile tile = movableTiles.remove(0);
+                    tile.setOrientation(random.nextInt(4)); // Orientation aléatoire
+                    ///////////////////////////:///////////::::::::::::::::
+                    tile.setOpenSides();
+                    _tiles[row][col] = tile;
+                }
+            }
+        }
+
+        // Étape 4 : Placer les objectifs
+        placeObjectives();
     }
 
     /**
@@ -123,6 +175,8 @@ public class Gameboard {
                 Tile tile = tileFactory.createAngledTile();
                // Cette tuile ne peut pas être déplacée et c est par defaut dans tile
                 tile.setOrientation(orientations[i]); // Définir l'orientation appropriée
+                //////////////////////////////
+                tile.setOpenSides();
                 _tiles[row[i]][col[i]] = tile; // Placement de la tuile
                 fixedCount++;
             }
@@ -141,12 +195,20 @@ public class Gameboard {
                 // Définir les orientations spécifiques en fonction des positions de bordure
                 if (fixedTRows[i] == 0) {
                     tile.setOrientation(2); // Orientation vers le haut pour les tuiles du haut
+                    //////////////////////////////
+                    tile.setOpenSides();
                 } else if (fixedTRows[i] == 6) {
                     tile.setOrientation(0); // Orientation vers le bas pour les tuiles du bas
+                    //////////////////////////////
+                    tile.setOpenSides();
                 } else if (fixedTCols[i] == 0) {
                     tile.setOrientation(1); // Orientation vers la gauche pour les tuiles de gauche
+                    //////////////////////////////
+                    tile.setOpenSides();
                 } else if (fixedTCols[i] == 6) {
                     tile.setOrientation(3); // Orientation vers la droite pour les tuiles de droite
+                    //////////////////////////////
+                    tile.setOpenSides();
                 }
 
                 _tiles[fixedTRows[i]][fixedTCols[i]] = tile; // Placement de la tuile
@@ -161,6 +223,8 @@ public class Gameboard {
 
                 int randomOrientation = (int) (Math.random() * 4); // Orientation aléatoire (0, 1, 2, 3)
                 tile.setOrientation(randomOrientation);
+                //////////////////////////////////////////////////////
+                tile.setOpenSides();
 
                 _tiles[tRows[i]][tCols[i]] = tile; // Placement de la tuile
                 fixedCount++;
@@ -264,6 +328,7 @@ public class Gameboard {
 
         int orientation = random.nextInt(4);
         tile.setOrientation(orientation);
+        tile.setOpenSides();
         tile.setCanMove();
         _tiles[row][col] = tile;
     }
@@ -326,6 +391,7 @@ public class Gameboard {
         }
     }
 
+<<<<<<< Updated upstream
     /**
      * Checks the neighboring tiles of the given position for possible connections.
      * This method evaluates the tiles neighboring the specified position in four directions:
@@ -340,26 +406,42 @@ public class Gameboard {
     public Map<String, Boolean> checkNeighbors(Position position) {
         if (position.getY() < 0 || position.getY() >= _tiles.length || position.getX()< 0 || position.getX() >= _tiles[0].length) {
             throw new IllegalArgumentException("Les coordonnées (x, y) sont hors limites.");
+=======
+
+
+
+    public boolean shiftRowLeft(int rowIndex) {
+        boolean moved = false;  // Indique si un mouvement a eu lieu
+
+        // Vérifie si l'index de la ligne est valide
+        if (rowIndex < 0 || rowIndex >= _tiles.length) {
+            throw new IllegalArgumentException("Index de ligne invalide !");
+>>>>>>> Stashed changes
         }
 
-        Tile tile = _tiles[position.getY()][position.getX()];
-        if (tile == null) {
-            throw new IllegalArgumentException("La tuile à cette position est nulle.");
+        // Stocke la première tuile avant de la déplacer
+        Tile firstTile = _tiles[rowIndex][0];
+
+        // Décale toutes les tuiles vers la gauche
+        for (int col = 0; col < _tiles[rowIndex].length - 1; col++) {
+            _tiles[rowIndex][col] = _tiles[rowIndex][col + 1];
         }
 
-        // Map pour stocker les résultats par direction
-        Map<String, Boolean> connections = new HashMap<>();
+        // La dernière tuile de la ligne prend la freeTile
+        _tiles[rowIndex][_tiles[rowIndex].length - 1] = this.freeTile;
 
-        // Vérification des connexions avec les voisins
-        connections.put("Gauche", position.getX() > 0 && _tiles[position.getY()][position.getX() - 1] != null && canConnect(tile, _tiles[position.getY()][position.getX() - 1], 3)); // 3 = gauche
-        connections.put("Droite", position.getX() < _tiles[0].length - 1 && _tiles[position.getY()][position.getX() + 1] != null && canConnect(tile, _tiles[position.getY()][position.getX() + 1], 1)); // 1 = droite
-        connections.put("Haut", position.getY() > 0 && _tiles[position.getY()- 1][position.getX()] != null && canConnect(tile, _tiles[position.getY() - 1][position.getX()], 0)); // 0 = haut
-        connections.put("Bas", position.getY() < _tiles.length - 1 && _tiles[position.getY() + 1][position.getX()] != null && canConnect(tile, _tiles[position.getY() + 1][position.getX()], 2)); // 2 = bas
+        // Met à jour la freeTile avec la tuile initialement à la première position
+        this.freeTile = firstTile;
 
-        return connections;
+        // Notifie le changement si une modification a été effectuée
+        moved = true;
+        notifyGameboardChange();  // Signale que le plateau a été mis à jour
+
+        return moved;
     }
 
 
+<<<<<<< Updated upstream
     /**
      * Determines if two tiles can be connected based on their sides.
      * This method checks whether the specified sides of two tiles are open
@@ -373,40 +455,40 @@ public class Gameboard {
         if (tile1 == null || tile2 == null) {
             return false;
         }
+=======
+>>>>>>> Stashed changes
 
-        // Vérifier si les côtés correspondants sont ouverts (côté à côté)
-        boolean canConnect = tile1.getOpenSides().getSide(side)
-                && tile2.getOpenSides().getSide((side + 2) % 4);
 
-        return canConnect;
-    }
-    public boolean shiftRowLeft(int rowIndex) {
-        boolean moved = false;
-        Tile lastTile = null; // Variable pour mémoriser la dernière tuile déplacée
+    public boolean shiftRowRight(int rowIndex) {
+        boolean moved = false;  // Indique si un mouvement a eu lieu
 
-        for (int col = 1; col < _tiles[rowIndex].length; col++) {
-            // Si une tuile est trouvée et l'espace à gauche est vide
-            if (_tiles[rowIndex][col] != null && _tiles[rowIndex][col - 1] == null) {
-                // Déplace la tuile vers la gauche
-                _tiles[rowIndex][col - 1] = _tiles[rowIndex][col];
-                // Mémorise la tuile qui sort pour la rendre freeTile
-                lastTile = _tiles[rowIndex][col];
-                // Remplace la position d'origine de la tuile par la freeTile
-                _tiles[rowIndex][col] = freeTile;
-                moved = true;
-            }
+        // Vérifie si l'index de la ligne est valide
+        if (rowIndex < 0 || rowIndex >= _tiles.length) {
+            throw new IllegalArgumentException("Index de ligne invalide !");
         }
 
-        // Si un mouvement a été effectué, mettre à jour la freeTile
-        if (moved) {
-            // La tuile qui est sortie devient la freeTile
-            this.freeTile = lastTile;
-            notifyGameboardChange(); // Notifie que le tableau a changé
+        // Stocke la dernière tuile avant de la déplacer
+        Tile lastTile = _tiles[rowIndex][_tiles[rowIndex].length - 1];
+
+        // Décale toutes les tuiles vers la droite
+        for (int col = _tiles[rowIndex].length - 1; col > 0; col--) {
+            _tiles[rowIndex][col] = _tiles[rowIndex][col - 1];
         }
+
+        // La première tuile de la ligne prend la freeTile
+        _tiles[rowIndex][0] = this.freeTile;
+
+        // Met à jour la freeTile avec la tuile initialement à la dernière position
+        this.freeTile = lastTile;
+
+        // Notifie le changement si une modification a été effectuée
+        moved = true;
+        notifyGameboardChange();  // Signale que le plateau a été mis à jour
 
         return moved;
     }
 
+<<<<<<< Updated upstream
     /**
      * Shifts the tiles in a specified row to the right. If a tile can be moved to the right into an empty space,
      * it is moved, and the formerly occupied position is replaced with the free tile. If any tile is shifted,
@@ -429,18 +511,41 @@ public class Gameboard {
                 _tiles[rowIndex][col] = freeTile;
                 moved = true;
             }
+=======
+
+
+
+    public boolean shiftColumnUp(int colIndex) {
+        boolean moved = false;  // Indique si un mouvement a eu lieu
+
+        // Vérifie si l'index de la colonne est valide
+        if (colIndex < 0 || colIndex >= _tiles[0].length) {
+            throw new IllegalArgumentException("Index de colonne invalide !");
+>>>>>>> Stashed changes
         }
 
-        // Si un mouvement a été effectué, mettre à jour la freeTile
-        if (moved) {
-            // La tuile qui est sortie devient la freeTile
-            this.freeTile = lastTile;
-            notifyGameboardChange(); // Notifie que le tableau a changé
+        // Stocke la première tuile de la colonne avant de la déplacer
+        Tile firstTile = _tiles[0][colIndex];
+
+        // Décale toutes les tuiles vers le haut
+        for (int row = 0; row < _tiles.length - 1; row++) {
+            _tiles[row][colIndex] = _tiles[row + 1][colIndex];
         }
+
+        // La dernière tuile de la colonne prend la freeTile
+        _tiles[_tiles.length - 1][colIndex] = this.freeTile;
+
+        // Met à jour la freeTile avec la tuile initialement à la première position
+        this.freeTile = firstTile;
+
+        // Notifie le changement si une modification a été effectuée
+        moved = true;
+        notifyGameboardChange();  // Signale que le plateau a été mis à jour
 
         return moved;
     }
 
+<<<<<<< Updated upstream
     /**
      * Shifts the tiles in a specified column upwards by one position where possible.
      * If a tile is moved, the tile that is moved out becomes the free tile.
@@ -463,18 +568,70 @@ public class Gameboard {
                 _tiles[row][colIndex] = freeTile;
                 moved = true;
             }
+=======
+
+
+
+    public boolean shiftColumnDown(int colIndex) {
+        boolean moved = false;  // Flag pour indiquer si un mouvement a eu lieu
+
+        // Vérifie si l'index de la colonne est valide
+        if (colIndex < 0 || colIndex >= _tiles[0].length) {
+            throw new IllegalArgumentException("Index de colonne invalide !");
+>>>>>>> Stashed changes
         }
 
-        // Si un mouvement a été effectué, mettre à jour la freeTile
-        if (moved) {
-            // La tuile qui est sortie devient la freeTile
-            this.freeTile = lastTile;
-            notifyGameboardChange(); // Notifie que le tableau a changé
+        // Stocke la dernière tuile de la colonne avant de la déplacer
+        Tile lastTile = _tiles[_tiles.length - 1][colIndex];
+
+        // Décale toutes les tuiles vers le bas
+        for (int row = _tiles.length - 1; row > 0; row--) {
+            _tiles[row][colIndex] = _tiles[row - 1][colIndex];
         }
+
+        // La première tuile de la colonne prend la freeTile
+        _tiles[0][colIndex] = this.freeTile;
+
+        // Met à jour la freeTile avec la tuile initialement à la dernière position
+        this.freeTile = lastTile;
+
+        // Notifie le changement si une modification a été effectuée
+        moved = true;
+        notifyGameboardChange();  // Signale que le plateau a été mis à jour
 
         return moved;
     }
+    public List<Position> getAccessibleTiles(Position position) {
+        List<Position> accessibleTiles = new ArrayList<>();
+        accessibleTiles.add(position);
 
+        // Récupérer la tuile à la position donnée
+        Tile currentTile = getTile(position);
+        System.out.println("Position actuelle : " + position + " -> Tuile : " + currentTile);
+        // Récupérer et afficher les côtés ouverts de la tuile actuelle
+        Sides openSides = currentTile.getOpenSides();
+        System.out.println("orientation d ela tuile ctuelle  : " + currentTile.get_orientation());
+        System.out.println("Côtés ouverts de la tuile actuelle : " + openSides);
+
+        // Vérifier les côtés ouverts de la tuile actuelle
+        // Vérification pour ne pas dépasser les limites du plateau
+        if (currentTile.getOpenSides().isSideOpen(0)) { // haut
+            Position upPosition = new Position(position.getX() - 1, position.getY());
+           // System.out.println("Vérification côté haut pour la position : " + upPosition);
+            if (isPositionValid(upPosition)) {
+              //  System.out.println("Position haut valide : " + upPosition);
+                if (isOppositeSideOpen(upPosition, 2)) { // Vérifier côté bas de la tuile voisine
+                    System.out.println("Côté bas de la tuile voisine ouvert pour : " + upPosition);
+                    accessibleTiles.add(upPosition);
+                } else {
+                    System.out.println("Côté bas de la tuile voisine fermé pour : " + upPosition);
+                }
+            } else {
+                System.out.println("Position haut invalide : " + upPosition);
+            }
+        }
+
+<<<<<<< Updated upstream
     /**
      * Shifts the tiles in the specified column downwards if there are empty spaces.
      * If a tile moves, the method updates the game board and sets the last moved tile as the free tile.
@@ -495,16 +652,101 @@ public class Gameboard {
                 // Remplace la position d'origine de la tuile par la freeTile
                 _tiles[row][colIndex] = freeTile;
                 moved = true;
+=======
+        if (currentTile.getOpenSides().isSideOpen(1)) { // Côté droite
+            Position rightPosition = new Position(position.getX(), position.getY() + 1);
+          //  System.out.println("Vérification côté droit pour la position : " + rightPosition);
+            if (isPositionValid(rightPosition)) {
+            //    System.out.println("Position droite valide : " + rightPosition);
+                if (isOppositeSideOpen(rightPosition, 3)) { // Vérifier côté gauche de la tuile voisine
+                    System.out.println("Côté gauche de la tuile voisine ouvert pour : " + rightPosition);
+                    accessibleTiles.add(rightPosition);
+                } else {
+                    System.out.println("Côté gauche de la tuile voisine fermé pour : " + rightPosition);
+                }
+            } else {
+                System.out.println("Position droite invalide : " + rightPosition);
+>>>>>>> Stashed changes
             }
         }
 
-        // Si un mouvement a été effectué, mettre à jour la freeTile
-        if (moved) {
-            // La tuile qui est sortie devient la freeTile
-            this.freeTile = lastTile;
-            notifyGameboardChange(); // Notifie que le tableau a changé
+        if (currentTile.getOpenSides().isSideOpen(2)) { // Côté bas
+            Position downPosition = new Position(position.getX() + 1, position.getY());
+            //System.out.println("Vérification côté bas pour la position : " + downPosition);
+            if (isPositionValid(downPosition)) {
+                //System.out.println("Position bas valide : " + downPosition);
+                if (isOppositeSideOpen(downPosition, 0)) { // Vérifier côté haut de la tuile voisine
+                    System.out.println("Côté haut de la tuile voisine ouvert pour : " + downPosition);
+                    accessibleTiles.add(downPosition);
+                } else {
+                    System.out.println("Côté haut de la tuile voisine fermé pour : " + downPosition);
+                }
+            } else {
+                System.out.println("Position bas invalide : " + downPosition);
+            }
         }
 
-        return moved;
+        if (currentTile.getOpenSides().isSideOpen(3)) { // Côté gauche
+            Position leftPosition = new Position(position.getX(), position.getY() - 1);
+           // System.out.println("Vérification côté gauche pour la position : " + leftPosition);
+            if (isPositionValid(leftPosition)) {
+              //  System.out.println("Position gauche valide : " + leftPosition);
+                if (isOppositeSideOpen(leftPosition, 1)) { // Vérifier côté droite de la tuile voisine
+                    System.out.println("Côté droite de la tuile voisine ouvert pour : " + leftPosition);
+                    accessibleTiles.add(leftPosition);
+                } else {
+                    System.out.println("Côté droite de la tuile voisine fermé pour : " + leftPosition);
+                }
+            } else {
+                System.out.println("Position gauche invalide : " + leftPosition);
+            }
+        }
+
+        System.out.println("Tuiles accessibles : " + accessibleTiles);
+        return accessibleTiles;
     }
+
+
+
+
+    // Méthode pour vérifier si un côté opposé d'une tuile est ouvert
+    public boolean isOppositeSideOpen(Position position, int oppositeSide) {
+        Tile neighborTile = getTile(position);
+        if (neighborTile != null) {
+            System.out.println("Tuile voisine : " + neighborTile + ", orientation : " + neighborTile.get_orientation());
+            System.out.println("Côtés ouverts de la tuile voisine : " + neighborTile.getOpenSides());
+
+            boolean isOpen = neighborTile.getOpenSides().isSideOpen(oppositeSide);
+            System.out.println("Côté opposé " + oppositeSide + " est " + (isOpen ? "ouvert" : "fermé"));
+            return isOpen;
+        }
+        System.out.println("Tuile voisine nulle pour la position : " + position);
+        return false;
+    }
+<<<<<<< Updated upstream
+=======
+
+
+    // Méthode pour vérifier si la position est valide (dans les limites du plateau)
+    private boolean isPositionValid(Position position) {
+        boolean valid = position.getX() >= 0 && position.getX() < 7 && position.getY() >= 0 && position.getY() < 7; // Vérifier si la position X et Y sont dans les limites du plateau
+        System.out.println("Vérification de la validité de la position " + position + " : " + (valid ? "Valide" : "Invalide"));
+        return valid;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> Stashed changes
 }

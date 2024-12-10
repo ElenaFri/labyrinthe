@@ -88,7 +88,16 @@ public class Player {
     public void completeCurrentObjective() {
         if (_currentObjectiveIndex < _cards.length - 1) {
             this._currentObjectiveIndex++;  // Passe à l'objectif suivant
+
         }
+    }
+    public boolean hasCompletedAllObjectives() {
+        for (Card objective : _cards) {
+            if (!objective.isFound()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

@@ -148,6 +148,39 @@ public class GameFacade {
     public Player[] get_players() {
         return _players;
     }
+    // Méthode pour vérifier si la partie est terminée
+    public boolean isGameOver() {
+        for (Player player : _players) {
+            Position initialPosition;
+
+            // Définir les positions initiales en fonction du joueur
+            switch (player.getName()) { // Identifier le joueur
+                case "Joueur 1":
+                    initialPosition = new Position(0, 0);
+                    break;
+                case "Joueur 2":
+                    initialPosition = new Position(0, 6);
+                    break;
+                case "Joueur 3":
+                    initialPosition = new Position(6, 0);
+                    break;
+                case "Joueur 4":
+                    initialPosition = new Position(6, 6);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Joueur inconnu : " + player.getName());
+            }
+
+            // Vérifier si le joueur a complété ses objectifs et est retourné à sa position initiale
+            if (player.hasCompletedAllObjectives() && player.getCurrentTile().equals(initialPosition)) {
+                return true; // La partie est terminée
+            }
+        }
+        return false; // La partie continue
+    }
+
+
+
 
     /**
      * Distributes cards to players at the beginning of the game. This method shuffles
@@ -198,5 +231,9 @@ public class GameFacade {
             throw new IllegalArgumentException("Invalid player index: " + n);
         }
         return _players[n];
+    }
+    // Setter pour mettre à jour l'ordre des joueurs
+    public void setPlayers(Player[] players) {
+        this._players = players;
     }
 }

@@ -22,25 +22,7 @@ public class TourController {
 
     }
 
-    public void commencerTour() {
-
-        // Étape 2 : Le joueur choisit une flèche (condition sur les joueurs en face, etc.)
-        //des que il choisit la fleche on bloque le button rotatetile
-            if (aAtteintObjectif()) {
-                ////////:un label au lieu de ca
-                System.out.println("Objectif atteint !");
-            }
-
-
-        // Étape 5 : Fin du tour
-        finDuTour();
-    }
-
-
-
-
-
-    private boolean aAtteintObjectif() {
+    public boolean aAtteintObjectif() {
         // Récupérer la position actuelle du joueur
         Position currentPosition = joueur.getCurrentTile();
 
@@ -49,6 +31,14 @@ public class TourController {
 
         return objectifs.contains(currentPosition);
     }
+
+
+
+
+
+
+
+
 
     private void finDuTour() {
 

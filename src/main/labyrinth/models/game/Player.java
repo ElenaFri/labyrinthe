@@ -8,6 +8,9 @@ public class Player {
     private int _id;
     private String _name;
     private Position _currentTile;
+    private Position _lastPosition;  // Dernière position du joueur
+
+
     private Card[] _cards;            // Les 6 cartes d'objectifs du joueur
     private int _currentObjectiveIndex; // L'index de l'objectif en cours (0 à 5)
 
@@ -26,6 +29,8 @@ public class Player {
             if(id==1){this._currentTile=new Position(0,6);}
                 if(id==2){this._currentTile=new Position(6,0);}
                     if(id==3){this._currentTile=new Position(6,6);}
+                    this._lastPosition=null;
+
     }
 
     /**
@@ -50,6 +55,13 @@ public class Player {
      */
     public Position getCurrentTile() {
         return _currentTile;
+    }
+    public Position get_lastPosition() {
+        return _lastPosition;
+    }
+    public void setLastPosition(Position position)
+    {
+        this._lastPosition=position;
     }
 
     /**
@@ -103,6 +115,12 @@ public class Player {
         }
         return true;
     }
+    @Override
+    public String toString() {
+        return "Player: " + _name + ", Current Objective Number: " + (_currentObjectiveIndex + 1);
+    }
+
+
 
 
 }

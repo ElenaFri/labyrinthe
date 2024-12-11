@@ -432,6 +432,17 @@ public class Gameboard {
         ////////////////////////////////////:
 
     }
+    public Position getObjectivePosition(int objectiveId) {
+        for (int i = 0; i < _tiles.length; i++) {
+            for (int j = 0; j < _tiles[i].length; j++) {
+                if (_tiles[i][j] != null && _tiles[i][j].getTreasure() == objectiveId) {
+                    return new Position(i, j);
+                }
+            }
+        }
+        throw new IllegalArgumentException("L'objectif " + objectiveId + " n'est pas placé sur le plateau.");
+    }
+
 
 
     public boolean shiftRowLeft(int rowIndex) {

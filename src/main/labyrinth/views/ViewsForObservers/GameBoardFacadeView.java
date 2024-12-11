@@ -2,6 +2,7 @@ package main.labyrinth.views.ViewsForObservers;
 
 import main.labyrinth.controllers.GameFacadeController;
 import main.labyrinth.controllers.GameboardController;
+import main.labyrinth.controllers.TourController;
 import main.labyrinth.models.game.Gameboard;
 import main.labyrinth.models.tiles.Tile;
 import main.labyrinth.models.geometry.Position;
@@ -16,10 +17,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
@@ -28,6 +27,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private JButton arrowButton;  // Le bouton de flèche
     private JButton rotateTileButton;
     private final Gameboard gameboard;
+    private final TourController tourController;
     private final GameFacade gameFacade;
     private final ImageStore imageStore;
     private final GameboardController gameboardController;
@@ -58,6 +58,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
 
 
+
+
+
     public GameBoardFacadeView(Gameboard gameboard, GameFacade gameFacade, ImageStore imageStore) {
         // Initialisation du tableau playerPositions
         playerPositions = new Position[4];
@@ -74,6 +77,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         this.gameFacade = gameFacade;
         this.imageStore = imageStore;
         this.gameboardController = new GameboardController(gameboard);
+        this.tourController=new TourController(gameFacade.getCurrentPlayer(),this.gameboard);
         this.gameFacadeController=new GameFacadeController(gameFacade);
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
@@ -85,24 +89,40 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         add(rotateTileButton);
 
         createArrowButtons();
-       // System.out.println("///////////////////////////////////////////////"
-
-
-        Position start = new Position(0, 0);  // Exemple de position de départ
+        // Ajouter un bouton sur toutes les tuiles du plateau
+        for (int x = 0; x < 7; x++) { // Parcourir les lignes
+            for (int y = 0; y < 7; y++) { // Parcourir les colonnes
+                Position position = new Position(x, y);
+                makeTileClickable(position);
+            }
+        }
+        Position start = gameFacade.getCurrentPlayer().getCurrentTile();
         List<Position> accessibleTiles = gameboard.getAllAccessibleTiles(start);
-        System.out.println("Tuiles accessibles  : " + accessibleTiles);
+        System.out.println("Tuiles accessibles : " + accessibleTiles);
+        showAdjacentAccessibleTiles(start); // Méthode pour activer/désactiver les boutons
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////
+      /*  Position start = gameFacade.getCurrentPlayer().getCurrentTile();  // Exemple de position de départ
+       List<Position> accessibleTiles = gameboard.getAllAccessibleTiles(start);
+      //  System.out.println("Tuiles accessibles  : " + accessibleTiles);
         for (Position accessibleTile : accessibleTiles) {
             makeTileClickable(accessibleTile);  // Rend la tuile cliquable en appelant la méthode makeTileClickable
-        }
-        System.out.println("////////////////////////////////////////////////clique");
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    System.out.println(gameboard.getObjectivePositions());
+        }*/
+///////////////////////////////////////////////////////////////
+
+
 
 
 
 
     }
-    private void makeTileClickable(Position position) {
+  /*  private void makeTileClickable(Position position) {
         JButton tileButton = new JButton();
 
         // Définir la taille et la position du bouton
@@ -131,6 +151,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             System.out.println("hollaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
          //   System.exit(0);
             gameFacadeController.changePlayerPosition(position,this);
+            gameFacadeController.changePlayerLastPosition(position);
+           //aut exclure la position d avant du joueur
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           //////////////// gameFacade.getCurrentPlayer().completeCurrentObjective();
            //repaint();
@@ -139,11 +161,86 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Ajouter le bouton à  container (comme un JPanel ou autre)
         add(tileButton);
+    }*/
+  private Map<Position, JButton> tileButtons = new HashMap<>();
+
+    private void makeTileClickable(Position position) {
+        JButton tileButton = new JButton();
+
+        // Position et style du bouton
+        tileButton.setBounds(
+                1920 - 900 - 510 + 10 + position.getY() * TILE_SIZE,
+                1080 - 900 - 100 - 5 + position.getX() * TILE_SIZE,
+                TILE_SIZE - 20, TILE_SIZE - 20
+        );
+        tileButton.setOpaque(false);
+        tileButton.setContentAreaFilled(false);
+        tileButton.setBorderPainted(true);
+        tileButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+
+        // Ajouter effets visuels
+        tileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tileButton.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tileButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            }
+        });
+
+        // Action au clic
+        tileButton.addActionListener(e -> {
+            System.out.println("Tuile cliquée : " + position);
+
+            // Mettre à jour la position du joueur et la dernière position
+            gameFacade.getCurrentPlayer().setLastPosition(gameFacade.getCurrentPlayer().getCurrentTile()); // Stocker l'ancienne position
+            gameFacadeController.changePlayerPosition(position, this); // Changer la position actuelle
+            gameFacadeController.changePlayerObjective(this.gameboard);
+            System.out.println("/////////////////////////////////////////////////////////////////////: l index de l objectif current est "+ gameFacade.getCurrentPlayer().getCurrentObjective());
+            // Afficher les nouvelles tuiles accessibles
+            showAdjacentAccessibleTiles(position);
+
+        });
+
+        // Ajouter le bouton à l'interface
+        add(tileButton);
+        tileButtons.put(position, tileButton); // Stocker le bouton dans la map
     }
 
 
+    private void showAdjacentAccessibleTiles(Position currentPosition) {
+        // Désactiver et masquer tous les boutons
+        tileButtons.values().forEach(button -> {
+            button.setEnabled(false);
+            button.setVisible(false); // Rendre le bouton invisible
+        });
 
+        // Vérifier si le joueur reste sur la même case
+        if (currentPosition.equals(gameFacade.getCurrentPlayer().get_lastPosition())) {
+            System.out.println("Le joueur reste sur la même position : " + currentPosition);
+            JButton button = tileButtons.get(currentPosition);
+            if (button != null) {
+                button.setEnabled(false);
+                button.setVisible(false);
+            }
+            return; // Sortir de la méthode car il n'y a pas de tuiles adjacentes à afficher
+        }
 
+        // Obtenir les tuiles accessibles adjacentes
+        List<Position> accessibleTiles = gameboard.getAccessibleTiles(currentPosition);
+
+        for (Position position : accessibleTiles) {
+            if (!position.equals(gameFacade.getCurrentPlayer().get_lastPosition())) { // Exclure la dernière position
+                JButton button = tileButtons.get(position);
+                if (button != null) {
+                    button.setEnabled(true); // Activer le bouton
+                    button.setVisible(true); // Rendre le bouton visible
+                }
+            }
+        }
+
+        System.out.println("Tuiles accessibles depuis " + currentPosition + ": " + accessibleTiles);
+    }
 
 
 

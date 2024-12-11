@@ -1,9 +1,13 @@
 package main.labyrinth.controllers;
 
+import main.labyrinth.models.game.Card;
 import main.labyrinth.models.game.GameFacade;
+import main.labyrinth.models.game.Gameboard;
 import main.labyrinth.models.game.Player;
 import main.labyrinth.models.geometry.Position;
 import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
+
+import java.util.List;
 
 // Manipulates GameFacade.
 public class GameFacadeController {
@@ -80,15 +84,31 @@ public class GameFacadeController {
     /**
      * Advances the player's objective to the next one.
      */
-    public void changePlayerObjective() {
-        gameFacade.playerNextObjective();
+    public void changePlayerObjective(Gameboard gameboard) {
+        if(aAtteintObjectif(gameboard)){ gameFacade.playerNextObjective();}
+       // gameFacade.playerNextObjective();
     }
+    public boolean aAtteintObjectif(Gameboard gameboard) {
+        // Récupérer l'objectif actuel du joueur
+        Card currentObjective = this.getCurrentPlayer().getCurrentObjective();
+
+        // Vérifier si la position actuelle du joueur correspond à l'emplacement de l'objectif sur le plateau
+        Position objectivePosition = gameboard.getObjectivePosition(currentObjective.getTreasure());
+
+        // Comparer la position actuelle du joueur avec celle de l'objectif
+        return this.getCurrentPlayer().getCurrentTile().equals(objectivePosition);
+    }
+
 
     /**
      * Advances the game to the next player.
      */
     public void nextPlayer() {
         gameFacade.nextPlayer();
+    }
+    public void changePlayerLastPosition(Position position)
+    {
+        this.getCurrentPlayer().setLastPosition(position);
     }
 
     /**

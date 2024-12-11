@@ -5,6 +5,7 @@ import java.util.List;
 
 // Implements an objective, or "treasure" card.
 public class Card {
+
     private final Integer treasure;  // Trésor associé à la carte (null si "dos")
     private boolean isFound;         // Indique si le trésor a été trouvé
 
@@ -14,9 +15,11 @@ public class Card {
      *                 It uniquely identifies the treasure, or indicates a special card state.
      */
     public Card(Integer treasure) {
+
         this.treasure = treasure;
         this.isFound = false;
     }
+
 
     /**
      * Retrieves the treasure associated with this card.

@@ -26,6 +26,9 @@ import java.awt.geom.RoundRectangle2D;
 
 
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
+    private static final int PLAYER_SPACING = 20; // Espace supplémentaire entre les joueurs
+    private static final int CARD_SPACING = 5; // Distance entre l'image du joueur et la première carte.
+
     private List<Position> clickedTiles = new ArrayList<>();
 
     private JButton arrowButton;  // Le bouton de flèche
@@ -263,16 +266,26 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         int xOffset = (getWidth() - BOARD_SIZE) / 2;
         int yOffset = (getHeight() - BOARD_SIZE) / 2;
 
+        // Dessiner la bordure noire autour du plateau
+        Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
+        g2d.setColor(Color.DARK_GRAY);  // Couleur de la bordure
+        g2d.setStroke(new BasicStroke(5)); // Épaisseur de la bordure (5 pixels)
+        g2d.drawRect(xOffset - 2, yOffset - 2, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
+
         // Dessiner le plateau de jeu
         drawGameboard(g, xOffset, yOffset);
+
         // Dessiner les joueurs et leurs pièces
         drawPlayersAndPieces(g, xOffset, yOffset);
+
         // Dessiner les cartes pour chaque joueur
         Player[] players = gameFacade.get_players();
         for (int i = 0; i < players.length; i++) {
             drawPlayerCards(g, players[i], xOffset, yOffset, 60, 100, 85, i);
         }
     }
+
+
     private JButton createArrowButton(String imagePath, int index, String direction) {
         JButton button = new JButton(new ImageIcon(imagePath));
         button.setBorderPainted(false);
@@ -447,21 +460,21 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         for (int i = 0; i < players.length; i++) {
             int x = 0, y = 0;
             switch (i) {
-                case 0:
-                    x = xOffset - PLAYER_SIZE / 1;
-                    y = yOffset - PLAYER_SIZE / 4; //players
+                case 0: // Joueur à gauche (index 0)
+                    x = xOffset - PLAYER_SIZE / 1 - PLAYER_SPACING; // Décalage vers la gauche (ajout de PLAYER_SPACING)
+                    y = yOffset - PLAYER_SIZE / 4; // Ajustement vertical
                     break;
-                case 1:
-                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100;
-                    y = yOffset - PLAYER_SIZE / 4;
+                case 1: // Joueur à droite (index 1)
+                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
+                    y = yOffset - PLAYER_SIZE / 4; // Ajustement vertical
                     break;
-                case 2:
-                    x = xOffset - PLAYER_SIZE / 1;
-                    y = yOffset + BOARD_SIZE - PLAYER_SIZE / 1;
+                case 2: // Joueur à gauche (index 2)
+                    x = xOffset - PLAYER_SIZE / 1 - PLAYER_SPACING; // Décalage vers la gauche (ajout de PLAYER_SPACING)
+                    y = yOffset + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
                     break;
-                case 3:
-                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100;
-                    y = yOffset + BOARD_SIZE - PLAYER_SIZE;
+                case 3: // Joueur à droite (index 3)
+                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
+                    y = yOffset + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
                     break;
             }
 
@@ -501,48 +514,47 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             }
         }
     }
+
     private void drawPlayerCards(Graphics g, Player player, int xOffset, int yOffset, int cardWidth, int cardHeight, int cardOverlap, int playerIndex) {
         Card[] playerCards = player.getCards();
 
         int startX = 0, startY = 0;
 
         switch (playerIndex) {
-            case 0:
-                startX = xOffset -150;
-                startY = yOffset - 10;
+            case 0: // Joueur à gauche (index 0)
+                startX = xOffset - 150; // Position X pour le joueur à gauche
+                startY = yOffset - 10;  // Position Y pour le joueur à gauche
                 break;
-            case 1:
-                startX = xOffset + BOARD_SIZE + 70;
-                startY = yOffset - 10;
+            case 1: // Joueur à droite (index 1)
+                startX = xOffset + BOARD_SIZE + 70; // Position X pour le joueur à droite
+                startY = yOffset - 10;  // Position Y pour le joueur à droite
                 break;
-            case 2:
-                startX = xOffset - 150;
-                startY = yOffset + BOARD_SIZE - 90;
+            case 2: // Joueur à gauche (index 2)
+                startX = xOffset - 150; // Position X pour le joueur à gauche
+                startY = yOffset + BOARD_SIZE - 90;  // Position Y pour le joueur à gauche
                 break;
-            case 3:
-                startX = xOffset + BOARD_SIZE + 80;
-                startY = yOffset + BOARD_SIZE - 90;
+            case 3: // Joueur à droite (index 3)
+                startX = xOffset + BOARD_SIZE + 80; // Position X pour le joueur à droite
+                startY = yOffset + BOARD_SIZE - 90;  // Position Y pour le joueur à droite
                 break;
         }
 
+        // Dessiner la pile de cartes
         int currentIndex = player.get_currentObjectiveIndex();  // Récupère l'index de la carte à afficher
-        if (currentIndex < playerCards.length) {
-            Card card = playerCards[currentIndex];
+        for (int i = currentIndex; i < playerCards.length; i++) {
+            Card card = playerCards[i];
             int cardId = card.getTreasure();
             BufferedImage cardImage = imageStore.getCardWithTreasure(cardId, true);
 
             if (cardImage != null && !card.isFound()) {
+                // Décaler chaque carte légèrement vers le bas
                 int x = startX;
-                int y = startY;
+                int y = startY + (i - currentIndex) * CARD_SPACING; // Décalage vertical pour créer l'effet de pile
+
                 g.drawImage(cardImage, x, y, cardWidth, cardHeight, null);
             }
         }
     }
-
-
-
-
-
 
 
     @Override

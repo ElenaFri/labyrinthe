@@ -1,51 +1,40 @@
 package main.labyrinth.controllers;
 
+import main.labyrinth.models.game.GameFacade;
 import main.labyrinth.models.game.Gameboard;
 import main.labyrinth.models.game.Player;
 import main.labyrinth.models.geometry.Position;
-import main.labyrinth.models.tiles.Tile;
 import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 import java.util.List;
 
 public class TourController {
-    private Player joueur;
-    private Gameboard plateau;
+    private GameFacade gameFacade;
+    private Gameboard gameboard;
     private GameFacadeController gameFacadeController;
     private GameBoardFacadeView gameBoardFacadeView;
+    private Player currentPlayer;
 
-    private boolean objectifAtteint;
-
-    public TourController(Player joueur, Gameboard plateau) {
-        this.joueur = joueur;
-        this.plateau = plateau;
-
+    public TourController(GameFacade gameFacade, Gameboard gameboard, GameFacadeController gameFacadeController, GameBoardFacadeView gameBoardFacadeView) {
+        this.gameFacade = gameFacade;
+        this.gameboard = gameboard;
+        this.gameFacadeController = gameFacadeController;
+        this.gameBoardFacadeView = gameBoardFacadeView;
+        this.currentPlayer = gameFacade.getCurrentPlayer();
     }
 
-    public boolean aAtteintObjectif() {
-        // Récupérer la position actuelle du joueur
-        Position currentPosition = joueur.getCurrentTile();
-
-        // Vérifier si cette position est dans la liste des positions des objectifs
-        List<Position> objectifs = plateau.getObjectivePositions();
-
-        return objectifs.contains(currentPosition);
-    }
-
-
-
+    // Méthode pour afficher les tuiles accessibles et gérer le déplacement
+   /* public void handlePlayerTurn() {
+        //gameBoardFacadeView.cliquerSurButtonFleche();
+        Position start = gameFacade.getCurrentPlayer().getCurrentTile();
+        List<Position> accessibleTiles = gameboard.getAllAccessibleTiles(start);
+        System.out.println("Tuiles accessibles : " + accessibleTiles);
+        gameBoardFacadeView.showAdjacentAccessibleTiles(start); // Méthode pour activer/désactiver les boutons
+       // gameBoardFacadeView.gererDeplacementPionParPionEtTrouverObjectif();
+        gameFacadeController.nextPlayer();
+    }*/
 
 
+    // Méthode pour attendre que le joueur choisisse une tuile
 
-
-
-
-    private void finDuTour() {
-
-        System.out.println("Fin du tour du joueur " + joueur.getName());
-        this.gameFacadeController.nextPlayer();
-
-
-    }
 }
-

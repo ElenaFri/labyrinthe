@@ -455,15 +455,15 @@ public class Gameboard {
         }
 
         // Stocke la première tuile avant de la déplacer
-        Tile firstTile = _tiles[rowIndex][0];
+        Tile firstTile = this._tiles[rowIndex][0];
 
         // Décale toutes les tuiles vers la gauche
-        for (int col = 0; col < _tiles[rowIndex].length - 1; col++) {
-            _tiles[rowIndex][col] = _tiles[rowIndex][col + 1];
+        for (int col = 0; col < this._tiles[rowIndex].length - 1; col++) {
+            this._tiles[rowIndex][col] = this._tiles[rowIndex][col + 1];
         }
 
         // La dernière tuile de la ligne prend la freeTile
-        _tiles[rowIndex][_tiles[rowIndex].length - 1] = this.freeTile;
+        _tiles[rowIndex][this._tiles[rowIndex].length - 1] = this.freeTile;
 
         // Met à jour la freeTile avec la tuile initialement à la première position
         this.freeTile = firstTile;

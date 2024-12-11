@@ -24,9 +24,10 @@ public class GameFacade {
     public GameFacade() {
         _players = new Player[4];
 
-        for (int i = 0; i < 4; i++) {
-            _players[i] = new Player(i, "Player " + (i + 1));
+        String[] playerNames = {"Alice", "Bob", "Charlie", "Eve"};
 
+        for (int i = 0; i < 4; i++) {
+            _players[i] = new Player(i, playerNames[i]);
         }
 
         deal(); // Distribuer les cartes au démarrage du jeu

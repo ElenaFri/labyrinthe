@@ -246,22 +246,22 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             int rowIndex = rowIndices[i];
 
             // Droite
-            JButton rightButton = createArrowButton("/home/ychettati/Bureau/a-31-labyrinthe/res/img/flecheD.png", rowIndex, "droite");
+            JButton rightButton = createArrowButton("../res/img/arrows/arrowD.png", rowIndex, "droite");
             rightButton.setBounds(rightPositions[i][0], rightPositions[i][1], 50, 50);
             add(rightButton);
 
             // Gauche
-            JButton leftButton = createArrowButton("/home/ychettati/Bureau/a-31-labyrinthe/res/img/flecheG.png", rowIndex, "gauche");
+            JButton leftButton = createArrowButton("../res/img/arrows/arrowG.png", rowIndex, "gauche");
             leftButton.setBounds(leftPositions[i][0], leftPositions[i][1], 50, 50);
             add(leftButton);
 
             // Haut
-            JButton upButton = createArrowButton("/home/ychettati/Bureau/a-31-labyrinthe/res/img/flecheH.jpeg", rowIndex, "haut");
+            JButton upButton = createArrowButton("../res/img/arrows/arrowH.png", rowIndex, "haut");
             upButton.setBounds(upPositions[i][0], upPositions[i][1], 50, 50);
             add(upButton);
 
             // Bas
-            JButton downButton = createArrowButton("/home/ychettati/Bureau/a-31-labyrinthe/res/img/flecheB.png", rowIndex, "bas");
+            JButton downButton = createArrowButton("../res/img/arrows/arrowB.pn", rowIndex, "bas");
             downButton.setBounds(downPositions[i][0], downPositions[i][1], 50, 50);
             add(downButton);
         }

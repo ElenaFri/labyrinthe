@@ -18,8 +18,8 @@ public class Screen {
      * @throws IOException if there is an issue reading the image files from disk
      */
     public Screen() throws IOException {
-        _mainScreen = ImageIO.read(new File("/home/elena/Documents/a-31-labyrinthe/res/img/screens/main_screen.png"));
-        _gameoverScreen = ImageIO.read(new File("/home/elena/Documents/a-31-labyrinthe/res/img/screens/gameover_screen.png"));
+        _mainScreen = ImageIO.read(new File("../res/img/screens/main_screen.png"));
+        _gameoverScreen = ImageIO.read(new File("../res/img/screens/gameover_screen.png"));
     }
 
     /**

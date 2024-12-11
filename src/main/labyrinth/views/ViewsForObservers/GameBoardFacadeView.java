@@ -261,7 +261,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             add(upButton);
 
             // Bas
-            JButton downButton = createArrowButton("../res/img/arrows/arrowB.pn", rowIndex, "bas");
+            JButton downButton = createArrowButton("../res/img/arrows/arrowB.png", rowIndex, "bas");
             downButton.setBounds(downPositions[i][0], downPositions[i][1], 50, 50);
             add(downButton);
         }

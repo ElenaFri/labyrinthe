@@ -10,6 +10,7 @@ import java.util.List;
 
 // Implements the Labyrinthe gameboard - INCLUDING the free tile used to modify the labyrinth.
 public class Gameboard {
+    private Set<Position> visited = new HashSet<>();
     private List<GameBoardObserver> gameBoardObservers = new ArrayList<>();
     private Tile[][] _tiles;
     private TileFactory tileFactory;
@@ -32,6 +33,67 @@ public class Gameboard {
         random = new Random();
         freeTile = new AngledTile();
         initializeBoard();
+    }
+    public List<Position> getAllAccessibleTiles(Position start) {
+        visited.clear(); // Réinitialise les tuiles visitées avant chaque appel
+        List<Position> accessibleTiles = new ArrayList<>();
+        explore(start, accessibleTiles);
+        return accessibleTiles;
+    }
+
+    private void explore(Position current, List<Position> accessibleTiles) {
+        // Condition d'arrêt : si déjà visitée
+        if (visited.contains(current)) {
+            return;
+        }
+
+        // Ajouter à la liste des visités et à la liste des tuiles accessibles
+        visited.add(current);
+        accessibleTiles.add(current);
+
+        // Récupérer la tuile actuelle
+        Tile currentTile = getTile(current);
+
+        // Vérifier chaque direction
+        if (currentTile.getOpenSides().isSideOpen(0)) { // Haut
+            Position up = new Position(current.getX() - 1, current.getY());
+            if (isPositionValid(up) && isOppositeSideOpen(up, 2)) {
+                explore(up, accessibleTiles);
+            }
+        }
+
+        if (currentTile.getOpenSides().isSideOpen(1)) { // Droite
+            Position right = new Position(current.getX(), current.getY() + 1);
+            if (isPositionValid(right) && isOppositeSideOpen(right, 3)) {
+                explore(right, accessibleTiles);
+            }
+        }
+
+        if (currentTile.getOpenSides().isSideOpen(2)) { // Bas
+            Position down = new Position(current.getX() + 1, current.getY());
+            if (isPositionValid(down) && isOppositeSideOpen(down, 0)) {
+                explore(down, accessibleTiles);
+            }
+        }
+
+        if (currentTile.getOpenSides().isSideOpen(3)) { // Gauche
+            Position left = new Position(current.getX(), current.getY() - 1);
+            if (isPositionValid(left) && isOppositeSideOpen(left, 1)) {
+                explore(left, accessibleTiles);
+            }
+        }
+    }
+    public List<Position> getNeighbors(Position current) {
+        List<Position> neighbors = new ArrayList<>();
+        int x = current.getX();
+        int y = current.getY();
+
+        neighbors.add(new Position(x - 1, y)); // Haut
+        neighbors.add(new Position(x + 1, y)); // Bas
+        neighbors.add(new Position(x, y - 1)); // Gauche
+        neighbors.add(new Position(x, y + 1)); // Droite
+
+        return neighbors;
     }
 
 
@@ -353,6 +415,23 @@ public class Gameboard {
             }
         }
     }
+    public List<Position> getObjectivePositions() {
+        List<Position> objectivePositions = new ArrayList<>();
+
+        // Parcourir toutes les tuiles
+        for (int i = 0; i < _tiles.length; i++) {
+            for (int j = 0; j < _tiles[i].length; j++) {
+                // Vérifier si la tuile a un objectif (trésor)
+                if (_tiles[i][j] != null &&_tiles[i][j]._hasTreasure) {
+                    objectivePositions.add(new Position(i, j));
+                }
+            }
+        }
+
+        return objectivePositions;
+        ////////////////////////////////////:
+
+    }
 
 
     public boolean shiftRowLeft(int rowIndex) {
@@ -476,6 +555,9 @@ public class Gameboard {
 
         return moved;
     }
+    // Méthode pour récupérer les tuiles accessibles adjacentes, en évitant les tuiles déjà visitées
+
+
 
     public List<Position> getAccessibleTiles(Position position) {
         List<Position> accessibleTiles = new ArrayList<>();
@@ -486,8 +568,8 @@ public class Gameboard {
         System.out.println("Position actuelle : " + position + " -> Tuile : " + currentTile);
         // Récupérer et afficher les côtés ouverts de la tuile actuelle
         Sides openSides = currentTile.getOpenSides();
-        System.out.println("orientation d ela tuile ctuelle  : " + currentTile.get_orientation());
-        System.out.println("Côtés ouverts de la tuile actuelle : " + openSides);
+     //   System.out.println("orientation d ela tuile ctuelle  : " + currentTile.get_orientation());
+       // System.out.println("Côtés ouverts de la tuile actuelle : " + openSides);
 
         // Vérifier les côtés ouverts de la tuile actuelle
         // Vérification pour ne pas dépasser les limites du plateau
@@ -497,10 +579,10 @@ public class Gameboard {
             if (isPositionValid(upPosition)) {
                 //  System.out.println("Position haut valide : " + upPosition);
                 if (isOppositeSideOpen(upPosition, 2)) { // Vérifier côté bas de la tuile voisine
-                    System.out.println("Côté bas de la tuile voisine ouvert pour : " + upPosition);
+               //     System.out.println("Côté bas de la tuile voisine ouvert pour : " + upPosition);
                     accessibleTiles.add(upPosition);
                 } else {
-                    System.out.println("Côté bas de la tuile voisine fermé pour : " + upPosition);
+                   // System.out.println("Côté bas de la tuile voisine fermé pour : " + upPosition);
                 }
             } else {
                 System.out.println("Position haut invalide : " + upPosition);
@@ -513,10 +595,10 @@ public class Gameboard {
             if (isPositionValid(rightPosition)) {
                 //    System.out.println("Position droite valide : " + rightPosition);
                 if (isOppositeSideOpen(rightPosition, 3)) { // Vérifier côté gauche de la tuile voisine
-                    System.out.println("Côté gauche de la tuile voisine ouvert pour : " + rightPosition);
+                   // System.out.println("Côté gauche de la tuile voisine ouvert pour : " + rightPosition);
                     accessibleTiles.add(rightPosition);
                 } else {
-                    System.out.println("Côté gauche de la tuile voisine fermé pour : " + rightPosition);
+                    //System.out.println("Côté gauche de la tuile voisine fermé pour : " + rightPosition);
                 }
             } else {
                 System.out.println("Position droite invalide : " + rightPosition);
@@ -529,10 +611,10 @@ public class Gameboard {
             if (isPositionValid(downPosition)) {
                 //System.out.println("Position bas valide : " + downPosition);
                 if (isOppositeSideOpen(downPosition, 0)) { // Vérifier côté haut de la tuile voisine
-                    System.out.println("Côté haut de la tuile voisine ouvert pour : " + downPosition);
+                   // System.out.println("Côté haut de la tuile voisine ouvert pour : " + downPosition);
                     accessibleTiles.add(downPosition);
                 } else {
-                    System.out.println("Côté haut de la tuile voisine fermé pour : " + downPosition);
+                    //System.out.println("Côté haut de la tuile voisine fermé pour : " + downPosition);
                 }
             } else {
                 System.out.println("Position bas invalide : " + downPosition);
@@ -545,10 +627,10 @@ public class Gameboard {
             if (isPositionValid(leftPosition)) {
                 //  System.out.println("Position gauche valide : " + leftPosition);
                 if (isOppositeSideOpen(leftPosition, 1)) { // Vérifier côté droite de la tuile voisine
-                    System.out.println("Côté droite de la tuile voisine ouvert pour : " + leftPosition);
+                 //   System.out.println("Côté droite de la tuile voisine ouvert pour : " + leftPosition);
                     accessibleTiles.add(leftPosition);
                 } else {
-                    System.out.println("Côté droite de la tuile voisine fermé pour : " + leftPosition);
+                    //System.out.println("Côté droite de la tuile voisine fermé pour : " + leftPosition);
                 }
             } else {
                 System.out.println("Position gauche invalide : " + leftPosition);
@@ -558,6 +640,10 @@ public class Gameboard {
         System.out.println("Tuiles accessibles : " + accessibleTiles);
         return accessibleTiles;
     }
+
+
+
+
 
 
     // Méthode pour vérifier si un côté opposé d'une tuile est ouvert

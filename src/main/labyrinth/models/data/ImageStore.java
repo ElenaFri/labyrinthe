@@ -238,9 +238,9 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourJoueurs() {
         BufferedImage[] playersImages = new BufferedImage[4];
 
-        playersImages[0] = loadImage("../res/img/players/blueplayer.png");
+        playersImages[0] = loadImage("../res/img/players/redplayer.png");
         playersImages[1] = loadImage("../res/img/players/greenplayer.png");
-        playersImages[2] = loadImage("../res/img/players/redplayer.png");
+        playersImages[2] = loadImage("../res/img/players/blueplayer.png");
         playersImages[3] = loadImage("../res/img/players/yellowplayer.png");
 
         return playersImages;

@@ -19,6 +19,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.RoundRectangle2D;
 
 
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
@@ -437,12 +441,15 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private void drawPlayers(Graphics g, int xOffset, int yOffset) {
         Player[] players = gameFacade.get_players();
+        Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Activer l'anti-aliasing pour améliorer le rendu
+
         for (int i = 0; i < players.length; i++) {
             int x = 0, y = 0;
             switch (i) {
                 case 0:
                     x = xOffset - PLAYER_SIZE / 1;
-                    y = yOffset - PLAYER_SIZE / 4;
+                    y = yOffset - PLAYER_SIZE / 4; //players
                     break;
                 case 1:
                     x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100;
@@ -460,10 +467,21 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
             BufferedImage playerImage = imageStore.getPlayerIcons(i);
             if (playerImage != null) {
-                g.drawImage(playerImage, x, y, PLAYER_SIZE, PLAYER_SIZE, null);
+                // Créer une forme arrondie
+                RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(x, y, PLAYER_SIZE, PLAYER_SIZE, 20, 20); // 20 pixels de rayon pour les coins arrondis
+
+                // Définir le clip pour dessiner l'image avec des coins arrondis
+                g2d.setClip(roundedRectangle);
+
+                // Dessiner l'image dans la zone découpée
+                g2d.drawImage(playerImage, x, y, PLAYER_SIZE, PLAYER_SIZE, null);
+
+                // Réinitialiser le clip
+                g2d.setClip(null);
             }
-            g.setColor(Color.BLACK);
-            g.drawString(players[i].getName(), x + 5, y + PLAYER_SIZE + 15);
+
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(players[i].getName(), x + 5, y + PLAYER_SIZE + 15);
         }
     }
 

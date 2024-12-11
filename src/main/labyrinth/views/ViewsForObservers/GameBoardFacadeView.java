@@ -244,9 +244,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
 
 
-    public List<Position> getClickedTiles() {
-        return clickedTiles;
-    }
 
 
 

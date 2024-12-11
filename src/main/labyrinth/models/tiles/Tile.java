@@ -50,7 +50,12 @@ public abstract class Tile {
         this._orientation = 0;
         this._openSides = new Sides();
     }
-
+    public int getTileIndex(Tile tile) {
+        // Détermine l'index de l'image en fonction du type de tuile
+        if (tile instanceof main.labyrinth.models.tiles.AngledTile) return 0;
+        if (tile instanceof main.labyrinth.models.tiles.TShapedTile) return 2;
+        return 1; // Par défaut, pour les tuiles droites ou autres
+    }
     /**
      * Type getter.
      * @return type as a string.

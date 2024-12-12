@@ -300,7 +300,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private void updateRotateButtonPosition(Position freeTilePosition, int xOffset, int yOffset) {
         if (freeTilePosition != null) {
-            int buttonX = xOffset + (freeTilePosition.getY() * TILE_SIZE) + TILE_SIZE - 5;
+            int buttonX = xOffset + (freeTilePosition.getY() * TILE_SIZE) + TILE_SIZE - 4;
             int buttonY = yOffset + (freeTilePosition.getX() * TILE_SIZE) + TILE_SIZE + 150; // Calculer Y pour le positionner en bas
 
             rotateTileButton.setBounds(buttonX, buttonY, 130, 30); // Mettre à jour la position et la taille du bouton
@@ -632,14 +632,20 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             // Charger l'image de la pièce du joueur
             BufferedImage pieceImage = imageStore.getPieceImage(i);
             if (pieceImage != null) {
-                // Dessiner l'ombre ovale
+                // Dessiner l'ombre
+                g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
+                int shadowOffsetX = 5;  // Décalage shadow sur x
+                int shadowOffsetY = 5;  // Décalage shadow sur y
+
+                // Dessiner l'ombre derrière le pion
+                g2d.fillOval(x + shadowOffsetX + 30, y + shadowOffsetY + 30, PLAYER_SIZE-22, PLAYER_SIZE-24); // Utiliser fillOval pour l'ombre
 
                 // Dessiner l'image de la pièce centrée dans la case
                 g.drawImage(pieceImage, x + (TILE_SIZE - PLAYER_SIZE) / 2, y + (TILE_SIZE - PLAYER_SIZE) / 2, PLAYER_SIZE, PLAYER_SIZE, null);
-
             }
         }
     }
+
 
     private void drawPlayerCards(Graphics g, Player player, int xOffset, int yOffset, int cardWidth, int cardHeight, int cardOverlap, int playerIndex) {
         Card[] playerCards = player.getCards();

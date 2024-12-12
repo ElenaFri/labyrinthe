@@ -95,6 +95,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         rotateTileButton.setBounds(1530, 600, 129, 30);  // Position du bouton à l'écran
 
         Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
+        rotateTileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
         rotateTileButton.setFont(buttonFont);
 
         rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
@@ -402,24 +403,28 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
             // Droite
             JButton rightButton = createArrowButton("../res/img/arrows/arrowD.png", rowIndex, "droite");
+            rightButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
             rightButton.setBounds(rightPositions[i][0], rightPositions[i][1], 50, 50);
             add(rightButton);
             arrowButtons.add(rightButton);
 
             // Gauche
             JButton leftButton = createArrowButton("../res/img/arrows/arrowG.png", rowIndex, "gauche");
+            leftButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
             leftButton.setBounds(leftPositions[i][0], leftPositions[i][1], 50, 50);
             add(leftButton);
             arrowButtons.add(leftButton);
 
             // Haut
             JButton upButton = createArrowButton("../res/img/arrows/arrowH.png", rowIndex, "haut");
+            upButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
             upButton.setBounds(upPositions[i][0], upPositions[i][1], 50, 50);
             add(upButton);
             arrowButtons.add(upButton);
 
             // Bas
             JButton downButton = createArrowButton("../res/img/arrows/arrowB.png", rowIndex, "bas");
+            downButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
             downButton.setBounds(downPositions[i][0], downPositions[i][1], 50, 50);
             add(downButton);
             arrowButtons.add(downButton);
@@ -599,6 +604,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private void drawPieces(Graphics g, int xOffset, int yOffset) {
         for (int i = 0; i < playerPositions.length; i++) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Activer l'anti-aliasing pour améliorer le rendu
+
             Position position = playerPositions[i];  // Accéder à la position du joueur à l'index i
 
             // Obtenir les coordonnées x et y depuis l'objet Position
@@ -608,8 +616,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             // Charger l'image de la pièce du joueur
             BufferedImage pieceImage = imageStore.getPieceImage(i);
             if (pieceImage != null) {
+                // Dessiner l'ombre ovale
+
                 // Dessiner l'image de la pièce centrée dans la case
                 g.drawImage(pieceImage, x + (TILE_SIZE - PLAYER_SIZE) / 2, y + (TILE_SIZE - PLAYER_SIZE) / 2, PLAYER_SIZE, PLAYER_SIZE, null);
+
             }
         }
     }

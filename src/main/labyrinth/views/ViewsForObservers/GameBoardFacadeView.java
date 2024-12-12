@@ -54,8 +54,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private Position[] playerPositions;
     private Position freeTilePosition;
 
-    // Tableau de positions
-
+    // Couleurs utilisées
+    Color beige = new Color(222, 198, 150);
+    Color navy = new Color(0, 0, 90);
 
     // Définir les nouvelles positions des joueurs
     public void setPlayerPositions(Position[] playerPositions) {
@@ -100,9 +101,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
         rotateTileButton.setFont(buttonFont);
 
-        Color beige = new Color(222, 198, 150);
         rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
-        rotateTileButton.setForeground(Color.DARK_GRAY); // Changer la couleur du texte
+        rotateTileButton.setForeground(navy); // Changer la couleur du texte
 
         rotateTileButton.addActionListener(e -> rotateFreeTile());
         setLayout(null); // Utilisation d'un layout absolu pour le positionnement
@@ -274,7 +274,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Dessiner la bordure noire autour du plateau
         Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
-        g2d.setColor(Color.DARK_GRAY);  // Couleur de la bordure
+
+        g2d.setColor(navy);  // Couleur de la bordure
         g2d.setStroke(new BasicStroke(8)); // Épaisseur de la bordure (8 pixels)
         g2d.drawRect(xOffset - 4, yOffset - 4, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
 
@@ -474,7 +475,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
                 // Dessiner le cadre autour de la tuile libre avec des coins arrondis
                 Graphics2D g2d = (Graphics2D) g; // Convertir pour Graphics2D
-                g2d.setColor(Color.DARK_GRAY); // Couleur du cadre
+                g2d.setColor(navy); // Couleur du cadre
                 g2d.setStroke(new BasicStroke(4)); // Épaisseur du cadre (ajustez à votre goût)
                 RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(
                         freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, 50, 50);  // 20 pixels pour le rayon des coins arrondis

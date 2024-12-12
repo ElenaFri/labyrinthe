@@ -94,10 +94,18 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
         // Initialisation du bouton Rotate Tile
-        rotateTileButton = new JButton("Tourner la tuile");
-       rotateTileButton.setBounds(1520, 600, 140, 30);  // Position du bouton à l'écran
-      rotateTileButton.addActionListener(e -> rotateFreeTile());
-     setLayout(null); // Utilisation d'un layout absolu pour le positionnement
+        rotateTileButton = new JButton("TOURNER");
+        rotateTileButton.setBounds(1530, 600, 129, 30);  // Position du bouton à l'écran
+
+        Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
+        rotateTileButton.setFont(buttonFont);
+
+        Color beige = new Color(222, 198, 150);
+        rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
+        rotateTileButton.setForeground(Color.DARK_GRAY); // Changer la couleur du texte
+
+        rotateTileButton.addActionListener(e -> rotateFreeTile());
+        setLayout(null); // Utilisation d'un layout absolu pour le positionnement
         add(rotateTileButton);
 
         createArrowButtons();
@@ -256,13 +264,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         System.out.println("Tuiles accessibles depuis " + currentPosition + ": " + accessibleTiles);
     }
 
-
-
-
-
-
-
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -273,8 +274,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Dessiner la bordure noire autour du plateau
         Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
         g2d.setColor(Color.DARK_GRAY);  // Couleur de la bordure
-        g2d.setStroke(new BasicStroke(5)); // Épaisseur de la bordure (5 pixels)
-        g2d.drawRect(xOffset - 2, yOffset - 2, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
+        g2d.setStroke(new BasicStroke(8)); // Épaisseur de la bordure (8 pixels)
+        g2d.drawRect(xOffset - 4, yOffset - 4, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
 
         // Dessiner le plateau de jeu
         drawGameboard(g, xOffset, yOffset);
@@ -412,9 +413,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         }
     }
 
-
-
-
     private void drawGameboard(Graphics g, int xOffset, int yOffset) {
         // Dessiner les tuiles du plateau de jeu
         for (int row = 0; row < 7; row++) {
@@ -443,12 +441,10 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Dessiner la tuile libre
         drawFreeTile(g, xOffset);
-
-
     }
 
     private void drawFreeTile(Graphics g, int xOffset) {
-        int freeTileX = xOffset + BOARD_SIZE + PADDING+70;
+        int freeTileX = xOffset + BOARD_SIZE + PADDING + 70;
         int freeTileY = (getHeight() - TILE_SIZE) / 2;
 
         Tile freeTile = gameboard.getFreeTile();
@@ -462,8 +458,14 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 BufferedImage tileImage = imageStore.getTileImage(tileIndex, orientation, hasTreasure, treasureIndex);
                 g.drawImage(tileImage, freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, null);
 
-                g.setColor(Color.BLACK);
-                g.drawRect(freeTileX, freeTileY, TILE_SIZE, TILE_SIZE); // Encadrer la tuile libre
+                // Dessiner le cadre autour de la tuile libre avec des coins arrondis
+                Graphics2D g2d = (Graphics2D) g; // Convertir pour Graphics2D
+                g2d.setColor(Color.DARK_GRAY); // Couleur du cadre
+                g2d.setStroke(new BasicStroke(4)); // Épaisseur du cadre (ajustez à votre goût)
+                RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(
+                        freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, 50, 50);  // 20 pixels pour le rayon des coins arrondis
+                g2d.draw(roundedRectangle); // Dessiner le cadre arrondi
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

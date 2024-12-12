@@ -89,7 +89,8 @@ public class GameboardController {
         }
 
         tile.setOrientation(orientation);
-        tile.setOpenSides();
+        //tile.setOpenSides();
         gameboard.notifyGameboardChange();
+        tile.setOpenSides();
     }
 }

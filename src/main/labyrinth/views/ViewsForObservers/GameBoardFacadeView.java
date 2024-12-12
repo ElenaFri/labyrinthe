@@ -659,8 +659,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             int currentOrientation = freeTile.get_orientation();
             int newOrientation = (currentOrientation + 1) % 4;  // Rotation de 90 degrés
             gameboardController.rotateTile(freeTile, newOrientation);
-            freeTile.setOpenSides();// Utilisation du contrôleur pour effectuer la rotation
-            //repaint();  // Redessiner le panneau après la rotation
+           
         }
     }
 

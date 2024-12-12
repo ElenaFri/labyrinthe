@@ -372,27 +372,27 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         int[] colIndices = {1, 3, 5};  // Indices pour les colonnes
         // Positionnement des boutons pour chaque direction
         int[][] rightPositions = {
-                {450, 220}, // Position pour 1ère ligne
-                {450, 500}, // Position pour 2ème ligne
-                {450, 730}  // Position pour 3ème ligne
+                {450, 260}, // Position pour 1ère ligne
+                {450, 515}, // Position pour 2ème ligne
+                {450, 775}  // Position pour 3ème ligne
         };
 
         int[][] leftPositions = {
-                {1417, 220},
-                {1417, 500},
-                {1417, 730}
+                {1417, 260},
+                {1417, 515},
+                {1417, 775}
         };
 
         int[][] upPositions = {
                 {680, 1000},
-                {920, 1000},
-                {1200, 1000}
+                {935, 1000},
+                {1190, 1000}
         };
 
         int[][] downPositions = {
                 {680, 30},
-                {920, 30},
-                {1200, 30}
+                {935, 30},
+                {1190, 30}
         };
 
         // Création des boutons pour chaque direction

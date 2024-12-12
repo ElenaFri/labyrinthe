@@ -378,21 +378,21 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         };
 
         int[][] leftPositions = {
-                {1420, 220},
-                {1420, 500},
-                {1420, 730}
+                {1417, 220},
+                {1417, 500},
+                {1417, 730}
         };
 
         int[][] upPositions = {
-                {680, 960},
-                {920, 960},
-                {1200, 960}
+                {680, 1000},
+                {920, 1000},
+                {1200, 1000}
         };
 
         int[][] downPositions = {
-                {680, 10},
-                {920, 10},
-                {1200, 10}
+                {680, 30},
+                {920, 30},
+                {1200, 30}
         };
 
         // Création des boutons pour chaque direction

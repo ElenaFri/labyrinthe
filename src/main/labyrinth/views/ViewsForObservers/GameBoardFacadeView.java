@@ -94,10 +94,18 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
         // Initialisation du bouton Rotate Tile
-        rotateTileButton = new JButton("Tourner la tuile");
-       rotateTileButton.setBounds(1520, 600, 140, 30);  // Position du bouton à l'écran
-      rotateTileButton.addActionListener(e -> rotateFreeTile());
-     setLayout(null); // Utilisation d'un layout absolu pour le positionnement
+        rotateTileButton = new JButton("TOURNER");
+        rotateTileButton.setBounds(1530, 600, 129, 30);  // Position du bouton à l'écran
+
+        Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
+        rotateTileButton.setFont(buttonFont);
+
+        Color beige = new Color(222, 198, 150);
+        rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
+        rotateTileButton.setForeground(Color.DARK_GRAY); // Changer la couleur du texte
+
+        rotateTileButton.addActionListener(e -> rotateFreeTile());
+        setLayout(null); // Utilisation d'un layout absolu pour le positionnement
         add(rotateTileButton);
 
         createArrowButtons();

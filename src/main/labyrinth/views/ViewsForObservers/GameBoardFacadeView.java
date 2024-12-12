@@ -92,11 +92,13 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
         // Initialisation du bouton Rotate Tile
         rotateTileButton = new JButton("TOURNER");
-        rotateTileButton.setBounds(1530, 600, 129, 30);  // Position du bouton à l'écran
 
         Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
         rotateTileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
         rotateTileButton.setFont(buttonFont);
+
+        rotateTileButton.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        rotateTileButton.setFocusable(false); // Pour désactiver le contour de focus
 
         rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
         rotateTileButton.setForeground(navy); // Changer la couleur du texte
@@ -363,10 +365,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         return button;
     }
-
-
-
-
 
     private void createArrowButtons() {
         // Définir les indices spécifiques pour les lignes et les colonnes

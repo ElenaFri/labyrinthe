@@ -23,7 +23,7 @@ Nous nous limiterons à un nombre fixe de **4 joueurs**.
 Captures d'écran
 -----------------
 
-! Plateau complet (flèches à ajuster) [Plateau](screenshots/gameboard.png)
+Plateau complet (flèches à ajuster) ![Plateau](screenshots/gameboard.png)
 
 
 Les fonctionnalités

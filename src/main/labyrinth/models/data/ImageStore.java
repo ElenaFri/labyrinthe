@@ -138,6 +138,10 @@ public class ImageStore {
 
         return _pieceImages[index];
     }
+    public BufferedImage get_handBackground()
+    {
+        return this._handBackground;
+    }
 
     /**
      * Retrieves the image icon for a player based on the specified index.
@@ -268,8 +272,9 @@ public class ImageStore {
      * @return a BufferedImage representing the background of the labyrinth, or null if the image cannot be loaded
      */
     private BufferedImage chargerImageDeFond() {
-        return loadImage("../res/img/background.png");
+        return loadImage("../res/img/screens/main_screen.png");
     }
+
 
     /**
      * Loads an image from the specified file path.

@@ -266,8 +266,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
 
+        super.paintComponent(g);
+        g.drawImage(imageStore.get_handBackground(), 0, 0, getWidth(), getHeight(), this);
         int xOffset = (getWidth() - BOARD_SIZE) / 2;
         int yOffset = (getHeight() - BOARD_SIZE) / 2;
 
@@ -414,6 +415,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
     private void drawGameboard(Graphics g, int xOffset, int yOffset) {
+    //    g.drawImage(imageStore.get_handBackground(), 0, 0, getWidth(), getHeight(), this);
         // Dessiner les tuiles du plateau de jeu
         for (int row = 0; row < 7; row++) {
             for (int col = 0; col < 7; col++) {
@@ -659,7 +661,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             int currentOrientation = freeTile.get_orientation();
             int newOrientation = (currentOrientation + 1) % 4;  // Rotation de 90 degrés
             gameboardController.rotateTile(freeTile, newOrientation);
-           
+
         }
     }
 

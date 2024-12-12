@@ -522,7 +522,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                     y = yOffset - PLAYER_SIZE / 4; // Ajustement vertical
                     break;
                 case 1: // Joueur à droite (index 1)
-                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
+                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 150 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
                     y = yOffset - PLAYER_SIZE / 4; // Ajustement vertical
                     break;
                 case 2: // Joueur à gauche (index 2)
@@ -530,13 +530,17 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                     y = yOffset + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
                     break;
                 case 3: // Joueur à droite (index 3)
-                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
+                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 150 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
                     y = yOffset + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
                     break;
             }
 
             BufferedImage playerImage = imageStore.getPlayerIcons(i);
             if (playerImage != null) {
+                g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire (avec transparence)
+                RoundRectangle2D shadowRectangle = new RoundRectangle2D.Double(x + 10, y + 12, PLAYER_SIZE, PLAYER_SIZE, 20, 20); // 20 pour le rayon des coins arrondis
+                g2d.fill(shadowRectangle); // Dessiner l'ombre
+
                 // Créer une forme arrondie
                 RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(x, y, PLAYER_SIZE, PLAYER_SIZE, 20, 20); // 20 pixels de rayon pour les coins arrondis
 

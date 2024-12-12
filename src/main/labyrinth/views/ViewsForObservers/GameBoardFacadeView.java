@@ -648,6 +648,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 int x = startX;
                 int y = startY;
                 g.drawImage(cardImage, x, y, cardWidth, cardHeight, null);
+
+
             }
         }
     }

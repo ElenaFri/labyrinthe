@@ -6,6 +6,7 @@ import main.labyrinth.models.game.Gameboard;
 import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Labyrinth {
 
@@ -24,7 +25,18 @@ public class Labyrinth {
 		frame.pack(); // Ajuste la taille de la fenêtre pour contenir le JPanel
 
 		// Maximiser la fenêtre à son ouverture
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Ouvrir en mode maximisé
+		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Ouvrir en mode maximisé
+		// Passer en mode plein écran
+		GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice graphicsDevice = graphicsEnvironment.getDefaultScreenDevice();
+
+		// Vérifiez si le mode plein écran est supporté
+		if (graphicsDevice.isFullScreenSupported()) {
+			frame.dispose(); // Fermer la fenêtre actuelle
+			frame.setUndecorated(true); // Supprimer les bordures de la fenêtre
+			graphicsDevice.setFullScreenWindow(frame); // Mettre la fenêtre en plein écran
+		}
+
 		frame.setLocationRelativeTo(null); // Centrer la fenêtre
 		frame.setVisible(true);
 	}

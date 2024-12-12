@@ -69,10 +69,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
 
-
-
-
-
     public GameBoardFacadeView(Gameboard gameboard, GameFacade gameFacade, ImageStore imageStore) {
         // Initialisation du tableau playerPositions
         playerPositions = new Position[4];
@@ -274,6 +270,10 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Dessiner la bordure noire autour du plateau
         Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
+        g2d.fillRect(xOffset + 10, yOffset + 10, BOARD_SIZE, BOARD_SIZE); // Déplacement léger pour créer l'ombre
 
         g2d.setColor(navy);  // Couleur de la bordure
         g2d.setStroke(new BasicStroke(8)); // Épaisseur de la bordure (8 pixels)

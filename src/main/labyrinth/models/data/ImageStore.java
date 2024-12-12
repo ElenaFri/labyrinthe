@@ -18,6 +18,7 @@ public class ImageStore {
     private BufferedImage _handBackground;     // Zone joueur
     private BufferedImage[] playerIcons;
     private Screen _screen;
+    private BufferedImage _gameBoardBackground; // Fond du tableau
 
     /**
      * Constructs a new ImageStore instance, initializing various game-related
@@ -34,6 +35,7 @@ public class ImageStore {
         _treasureImages = chargerImagesPourTresors();
         _pieceImages = chargerImagesPourPions();
         _handBackground = chargerImageDeFond();
+        _gameBoardBackground = chargerImageFondTableau();
         this.playerIcons = chargerImagesPourJoueurs();
         try {
             _screen = new Screen();
@@ -178,6 +180,8 @@ public class ImageStore {
         return _screen.getScreenImage(isRunning);
     }
 
+
+
     /**
      * Loads an array of tile images from predefined file paths. This method
      * attempts to load three distinct tile images from the specified directory
@@ -275,6 +279,11 @@ public class ImageStore {
         return loadImage("../res/img/screens/main_screen.png");
     }
 
+    private BufferedImage chargerImageFondTableau() {
+        return loadImage("../res/img/screens/gameboard.png");
+    }
+
+    public BufferedImage getGameBoardBackground() { return _gameBoardBackground; }
 
     /**
      * Loads an image from the specified file path.

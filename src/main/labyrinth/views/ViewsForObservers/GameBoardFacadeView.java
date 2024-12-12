@@ -29,7 +29,7 @@ import java.util.TimerTask;
 
 
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
-    private static final int PLAYER_SPACING = 20; // Espace supplémentaire entre les joueurs
+    private static final int PLAYER_SPACING = 40; // Espace supplémentaire entre les joueurs
     private static final int CARD_SPACING = 5; // Distance entre l'image du joueur et la première carte.
 
     private List<Position> clickedTiles = new ArrayList<>();
@@ -274,10 +274,10 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
-        g2d.fillRect(xOffset + 12, yOffset + 16, BOARD_SIZE, BOARD_SIZE); // Déplacement léger pour créer l'ombre
+        g2d.fillRect(xOffset + 14, yOffset + 16, BOARD_SIZE, BOARD_SIZE); // Déplacement léger pour créer l'ombre
 
         g2d.setColor(navy);  // Couleur de la bordure
-        g2d.setStroke(new BasicStroke(8)); // Épaisseur de la bordure (8 pixels)
+        g2d.setStroke(new BasicStroke(10)); // Épaisseur de la bordure (8 pixels)
         g2d.drawRect(xOffset - 4, yOffset - 4, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
 
         // Dessiner le plateau de jeu
@@ -432,7 +432,21 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
     private void drawGameboard(Graphics g, int xOffset, int yOffset) {
-    //    g.drawImage(imageStore.get_handBackground(), 0, 0, getWidth(), getHeight(), this);
+        BufferedImage gameBoardBackground = imageStore.getGameBoardBackground(); // Obtenez le fond du tableau depuis ImageStore
+
+        if (gameBoardBackground != null) {
+            g.drawImage(gameBoardBackground, xOffset, yOffset, BOARD_SIZE, BOARD_SIZE, null); // Dessiner l'image de fond
+        } else {
+            System.err.println("Le fond du tableau n'a pas pu être chargé.");
+        }
+
+        // Ajouter un buffer pour l'espacement entre le plateau et les bords
+        int BUFFER = 2;
+
+        // Calculez les décalages pour centrer les tuiles selon l'espacement
+        int tileOffsetX = xOffset + BUFFER; // Décalage horizontal pour prendre en compte l'espacement de 2 pixels
+        int tileOffsetY = yOffset + BUFFER; // Décalage vertical pour prendre en compte l'espacement de 2 pixels
+
         // Dessiner les tuiles du plateau de jeu
         for (int row = 0; row < 7; row++) {
             for (int col = 0; col < 7; col++) {
@@ -446,7 +460,10 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
                     try {
                         BufferedImage tileImage = imageStore.getTileImage(tileIndex, orientation, hasTreasure, treasureIndex);
-                        g.drawImage(tileImage, xOffset + col * TILE_SIZE, yOffset + row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
+
+                        // Dessiner la tuile à la position calculée, moins le BUFFER pour l'espacement
+                        g.drawImage(tileImage, tileOffsetX + col * TILE_SIZE, tileOffsetY + row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
+
                         // Afficher le type de la tuile dans la console
                         String tileType = tile.getType();
                         System.out.println("Tile at position (" + row + "," + col + ") has type: " + tileType);
@@ -461,6 +478,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Dessiner la tuile libre
         drawFreeTile(g, xOffset);
     }
+
 
     private void drawFreeTile(Graphics g, int xOffset) {
         int freeTileX = xOffset + BOARD_SIZE + PADDING + 70;
@@ -532,11 +550,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                     break;
                 case 2: // Joueur à gauche (index 2)
                     x = xOffset - PLAYER_SIZE / 1 - PLAYER_SPACING; // Décalage vers la gauche (ajout de PLAYER_SPACING)
-                    y = yOffset + 20 + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
+                    y = yOffset + 18 + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
                     break;
                 case 3: // Joueur à droite (index 3)
                     x = xOffset + BOARD_SIZE - PLAYER_SIZE / 150 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
-                    y = yOffset + 20 + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
+                    y = yOffset + 18 + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
                     break;
             }
 
@@ -632,19 +650,19 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         switch (playerIndex) {
             case 0:
-                startX = xOffset - 160;
+                startX = xOffset - 180;
                 startY = yOffset - 10;
                 break;
             case 1:
-                startX = xOffset + BOARD_SIZE + 100;
+                startX = xOffset + BOARD_SIZE + 120;
                 startY = yOffset - 10;
                 break;
             case 2:
-                startX = xOffset - 160;
+                startX = xOffset - 180;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
             case 3:
-                startX = xOffset + BOARD_SIZE + 100;
+                startX = xOffset + BOARD_SIZE + 120;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
         }

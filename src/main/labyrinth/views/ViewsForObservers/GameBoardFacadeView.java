@@ -113,8 +113,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         JButton exitButton = new JButton("x");
         exitButton.setBounds(1870, 13, 35, 35);  // Position du bouton à l'écran
         exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur
-        exitButton.setBackground(beige); // Changer la couleur d'arrière-plan
-        exitButton.setForeground(navy); // Changer la couleur du texte
+        exitButton.setBackground(new Color(0,0, 0, 100)); // Changer la couleur d'arrière-plan
+        exitButton.setForeground(beige); // Changer la couleur du texte
         exitButton.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         exitButton.setFocusable(false);
         Font exitFont = new Font("Arial", Font.BOLD, 10); // Choisir la police, style et taille

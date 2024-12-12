@@ -254,13 +254,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         System.out.println("Tuiles accessibles depuis " + currentPosition + ": " + accessibleTiles);
     }
 
-
-
-
-
-
-
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -271,8 +264,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Dessiner la bordure noire autour du plateau
         Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
         g2d.setColor(Color.DARK_GRAY);  // Couleur de la bordure
-        g2d.setStroke(new BasicStroke(5)); // Épaisseur de la bordure (5 pixels)
-        g2d.drawRect(xOffset - 2, yOffset - 2, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
+        g2d.setStroke(new BasicStroke(8)); // Épaisseur de la bordure (8 pixels)
+        g2d.drawRect(xOffset - 4, yOffset - 4, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
 
         // Dessiner le plateau de jeu
         drawGameboard(g, xOffset, yOffset);
@@ -398,9 +391,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         }
     }
 
-
-
-
     private void drawGameboard(Graphics g, int xOffset, int yOffset) {
         // Dessiner les tuiles du plateau de jeu
         for (int row = 0; row < 7; row++) {
@@ -429,8 +419,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Dessiner la tuile libre
         drawFreeTile(g, xOffset);
-
-
     }
 
     private void drawFreeTile(Graphics g, int xOffset) {

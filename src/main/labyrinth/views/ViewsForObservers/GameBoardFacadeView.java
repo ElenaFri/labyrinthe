@@ -527,11 +527,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                     break;
                 case 2: // Joueur à gauche (index 2)
                     x = xOffset - PLAYER_SIZE / 1 - PLAYER_SPACING; // Décalage vers la gauche (ajout de PLAYER_SPACING)
-                    y = yOffset + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
+                    y = yOffset + 20 + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
                     break;
                 case 3: // Joueur à droite (index 3)
                     x = xOffset + BOARD_SIZE - PLAYER_SIZE / 150 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
-                    y = yOffset + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
+                    y = yOffset + 20 + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
                     break;
             }
 
@@ -621,19 +621,19 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         switch (playerIndex) {
             case 0:
-                startX = xOffset -150;
+                startX = xOffset - 160;
                 startY = yOffset - 10;
                 break;
             case 1:
-                startX = xOffset + BOARD_SIZE + 70;
+                startX = xOffset + BOARD_SIZE + 100;
                 startY = yOffset - 10;
                 break;
             case 2:
-                startX = xOffset - 150;
+                startX = xOffset - 160;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
             case 3:
-                startX = xOffset + BOARD_SIZE + 80;
+                startX = xOffset + BOARD_SIZE + 100;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
         }

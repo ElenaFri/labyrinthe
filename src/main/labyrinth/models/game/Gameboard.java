@@ -131,7 +131,7 @@ public class Gameboard {
      */
 
     public Tile getFreeTile() {
-        return freeTile;
+        return this.freeTile;
     }
 
     /**
@@ -449,7 +449,7 @@ public class Gameboard {
         boolean moved = false;  // Indique si un mouvement a eu lieu
 
         // Vérifie si l'index de la ligne est valide
-        if (rowIndex < 0 || rowIndex >= _tiles.length) {
+        if (rowIndex < 0 || rowIndex >= this._tiles.length) {
             throw new IllegalArgumentException("Index de ligne invalide !");
 
         }
@@ -480,20 +480,20 @@ public class Gameboard {
         boolean moved = false;  // Indique si un mouvement a eu lieu
 
         // Vérifie si l'index de la ligne est valide
-        if (rowIndex < 0 || rowIndex >= _tiles.length) {
+        if (rowIndex < 0 || rowIndex >= this._tiles.length) {
             throw new IllegalArgumentException("Index de ligne invalide !");
         }
 
         // Stocke la dernière tuile avant de la déplacer
-        Tile lastTile = _tiles[rowIndex][_tiles[rowIndex].length - 1];
+        Tile lastTile = this._tiles[rowIndex][this._tiles[rowIndex].length - 1];
 
         // Décale toutes les tuiles vers la droite
         for (int col = _tiles[rowIndex].length - 1; col > 0; col--) {
-            _tiles[rowIndex][col] = _tiles[rowIndex][col - 1];
+            this._tiles[rowIndex][col] = this._tiles[rowIndex][col - 1];
         }
 
         // La première tuile de la ligne prend la freeTile
-        _tiles[rowIndex][0] = this.freeTile;
+        this._tiles[rowIndex][0] = this.freeTile;
 
         // Met à jour la freeTile avec la tuile initialement à la dernière position
         this.freeTile = lastTile;
@@ -510,21 +510,21 @@ public class Gameboard {
         boolean moved = false;  // Indique si un mouvement a eu lieu
 
         // Vérifie si l'index de la colonne est valide
-        if (colIndex < 0 || colIndex >= _tiles[0].length) {
+        if (colIndex < 0 || colIndex >= this._tiles[0].length) {
             throw new IllegalArgumentException("Index de colonne invalide !");
 
         }
 
         // Stocke la première tuile de la colonne avant de la déplacer
-        Tile firstTile = _tiles[0][colIndex];
+        Tile firstTile = this._tiles[0][colIndex];
 
         // Décale toutes les tuiles vers le haut
-        for (int row = 0; row < _tiles.length - 1; row++) {
-            _tiles[row][colIndex] = _tiles[row + 1][colIndex];
+        for (int row = 0; row < this._tiles.length - 1; row++) {
+            this._tiles[row][colIndex] = this._tiles[row + 1][colIndex];
         }
 
         // La dernière tuile de la colonne prend la freeTile
-        _tiles[_tiles.length - 1][colIndex] = this.freeTile;
+        this._tiles[this._tiles.length - 1][colIndex] = this.freeTile;
 
         // Met à jour la freeTile avec la tuile initialement à la première position
         this.freeTile = firstTile;
@@ -541,21 +541,21 @@ public class Gameboard {
         boolean moved = false;  // Flag pour indiquer si un mouvement a eu lieu
 
         // Vérifie si l'index de la colonne est valide
-        if (colIndex < 0 || colIndex >= _tiles[0].length) {
+        if (colIndex < 0 || colIndex >= this._tiles[0].length) {
             throw new IllegalArgumentException("Index de colonne invalide !");
 
         }
 
         // Stocke la dernière tuile de la colonne avant de la déplacer
-        Tile lastTile = _tiles[_tiles.length - 1][colIndex];
+        Tile lastTile = this._tiles[this._tiles.length - 1][colIndex];
 
         // Décale toutes les tuiles vers le bas
-        for (int row = _tiles.length - 1; row > 0; row--) {
+        for (int row = this._tiles.length - 1; row > 0; row--) {
             _tiles[row][colIndex] = _tiles[row - 1][colIndex];
         }
 
         // La première tuile de la colonne prend la freeTile
-        _tiles[0][colIndex] = this.freeTile;
+        this._tiles[0][colIndex] = this.freeTile;
 
         // Met à jour la freeTile avec la tuile initialement à la dernière position
         this.freeTile = lastTile;
@@ -578,7 +578,7 @@ public class Gameboard {
         Tile currentTile = getTile(position);
         System.out.println("Position actuelle : " + position + " -> Tuile : " + currentTile);
         // Récupérer et afficher les côtés ouverts de la tuile actuelle
-        Sides openSides = currentTile.getOpenSides();
+        Sides openSides =currentTile.getOpenSides();
      //   System.out.println("orientation d ela tuile ctuelle  : " + currentTile.get_orientation());
        // System.out.println("Côtés ouverts de la tuile actuelle : " + openSides);
 

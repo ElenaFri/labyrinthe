@@ -128,7 +128,7 @@ public abstract class Tile {
     @Override
     public String toString() {
         return "Tile[position=(" + get_position().getX() + ", " + get_position().getY() +
-                "), type=" + this._type+ "]";
+                "), type=" + this._type+ "]"+" d orientation"+get_orientation()+ "        "+getOpenSides();
     }
 
 

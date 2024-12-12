@@ -206,6 +206,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             gameFacade.getCurrentPlayer().setLastPosition(gameFacade.getCurrentPlayer().getCurrentTile()); // Stocker l'ancienne position
             gameFacadeController.changePlayerPosition(position, this); // Changer la position actuelle
             gameFacadeController.changePlayerObjective(this.gameboard,this);
+
             ///////:ici modifier a isFound
 
             System.out.println("/////////////////////////////////////////////////////////////////////: l index de l objectif current est "+ gameFacade.getCurrentPlayer().getCurrentObjective());
@@ -228,12 +229,13 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         });
 
         // Vérifier si le joueur reste sur la même case
-        if (currentPosition.equals(gameFacade.getCurrentPlayer().get_lastPosition())) {
+       if (currentPosition.equals(gameFacade.getCurrentPlayer().get_lastPosition())) {
             System.out.println("Le joueur reste sur la même position : " + currentPosition);
             JButton button = tileButtons.get(currentPosition);
             if (button != null) {
                 button.setEnabled(false);
                 button.setVisible(false);
+            /////////////////////////////////////////    gameFacade.nextPlayer();
             }
             return; // Sortir de la méthode car il n'y a pas de tuiles adjacentes à afficher
         }
@@ -241,7 +243,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Obtenir les tuiles accessibles adjacentes
         List<Position> accessibleTiles = gameboard.getAccessibleTiles(currentPosition);
 
-        for (Position position : accessibleTiles) {
+       for (Position position : accessibleTiles) {
             if (!position.equals(gameFacade.getCurrentPlayer().get_lastPosition())) { // Exclure la dernière position
                 JButton button = tileButtons.get(position);
                 if (button != null) {
@@ -304,22 +306,29 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             }
 
 
+
             // Appeler la méthode appropriée selon la direction du bouton
             switch (direction) {
                 case "droite":
                     gameboardController.shiftRow(index, 1);
+
                     break;
                 case "gauche":
                     gameboardController.shiftRow(index, 3);
+
                     break;
                 case "haut":
                     gameboardController.shiftColumn(index, 0);
+
                     break;
                 case "bas":
                     gameboardController.shiftColumn(index, 2);
+
                     break;
             }
+
             /////////////////////////////////////////////////////////newwwww//////////////////////////////////////////
+
             for (int x = 0; x < 7; x++) { // Parcourir les lignes
                 for (int y = 0; y < 7; y++) { // Parcourir les colonnes
                     Position position = new Position(x, y);
@@ -327,14 +336,19 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 }
             }
             Position start = gameFacade.getCurrentPlayer().getCurrentTile();
+
+
             showAdjacentAccessibleTiles(start); // Méthode pour activer/désactiver les boutons
             //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             System.out.println("Action exécutée pour " + direction + " !");
         });
 
+
+
         return button;
     }
+
 
 
 
@@ -454,6 +468,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 e.printStackTrace();
             }
         }
+        System.out.println(gameboard.getFreeTile().toString()+" //////////////////////////////// ////////////////////////////////");
     }
 
     private int getTileIndex(Tile tile) {
@@ -636,11 +651,14 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
    private void rotateFreeTile() {
         Tile freeTile = gameboard.getFreeTile();
+        ////////////////////////////////
+       System.out.println(gameboard.getFreeTile().toString()+" //////////////////////////////// ////////////////////////////////");
         if (freeTile != null) {
             int currentOrientation = freeTile.get_orientation();
             int newOrientation = (currentOrientation + 1) % 4;  // Rotation de 90 degrés
-            gameboardController.rotateTile(freeTile, newOrientation);  // Utilisation du contrôleur pour effectuer la rotation
-            repaint();  // Redessiner le panneau après la rotation
+            gameboardController.rotateTile(freeTile, newOrientation);
+            freeTile.setOpenSides();// Utilisation du contrôleur pour effectuer la rotation
+            //repaint();  // Redessiner le panneau après la rotation
         }
     }
 

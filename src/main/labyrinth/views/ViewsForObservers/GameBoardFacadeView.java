@@ -273,7 +273,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
-        g2d.fillRect(xOffset + 10, yOffset + 10, BOARD_SIZE, BOARD_SIZE); // Déplacement léger pour créer l'ombre
+        g2d.fillRect(xOffset + 12, yOffset + 16, BOARD_SIZE, BOARD_SIZE); // Déplacement léger pour créer l'ombre
 
         g2d.setColor(navy);  // Couleur de la bordure
         g2d.setStroke(new BasicStroke(8)); // Épaisseur de la bordure (8 pixels)
@@ -470,11 +470,19 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             int treasureIndex = freeTile.getTreasure();
 
             try {
+                // Dessiner l'ombre de la tuile libre avec des coins arrondis
+                Graphics2D g2d = (Graphics2D) g; // Convertir pour Graphics2D
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
+                RoundRectangle2D shadowRectangle = new RoundRectangle2D.Double(
+                        freeTileX + 10, freeTileY + 12, TILE_SIZE, TILE_SIZE, 20, 20);
+                g2d.fill(shadowRectangle); // Dessiner l'ombre avec coins arrondis
+
+                // Dessiner la tuile
                 BufferedImage tileImage = imageStore.getTileImage(tileIndex, orientation, hasTreasure, treasureIndex);
                 g.drawImage(tileImage, freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, null);
 
-                // Dessiner le cadre autour de la tuile libre avec des coins arrondis
-                Graphics2D g2d = (Graphics2D) g; // Convertir pour Graphics2D
+                // Dessiner le cadre de la tuile
                 g2d.setColor(navy); // Couleur du cadre
                 g2d.setStroke(new BasicStroke(4)); // Épaisseur du cadre (ajustez à votre goût)
                 RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(

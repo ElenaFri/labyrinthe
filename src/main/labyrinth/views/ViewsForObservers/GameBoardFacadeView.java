@@ -434,7 +434,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
     private void drawFreeTile(Graphics g, int xOffset) {
-        int freeTileX = xOffset + BOARD_SIZE + PADDING+70;
+        int freeTileX = xOffset + BOARD_SIZE + PADDING + 70;
         int freeTileY = (getHeight() - TILE_SIZE) / 2;
 
         Tile freeTile = gameboard.getFreeTile();
@@ -448,8 +448,14 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 BufferedImage tileImage = imageStore.getTileImage(tileIndex, orientation, hasTreasure, treasureIndex);
                 g.drawImage(tileImage, freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, null);
 
-                g.setColor(Color.BLACK);
-                g.drawRect(freeTileX, freeTileY, TILE_SIZE, TILE_SIZE); // Encadrer la tuile libre
+                // Dessiner le cadre autour de la tuile libre avec des coins arrondis
+                Graphics2D g2d = (Graphics2D) g; // Convertir pour Graphics2D
+                g2d.setColor(Color.DARK_GRAY); // Couleur du cadre
+                g2d.setStroke(new BasicStroke(4)); // Épaisseur du cadre (ajustez à votre goût)
+                RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(
+                        freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, 50, 50);  // 20 pixels pour le rayon des coins arrondis
+                g2d.draw(roundedRectangle); // Dessiner le cadre arrondi
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

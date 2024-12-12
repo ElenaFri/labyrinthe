@@ -52,7 +52,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private JButton selectedButton;
 
     private Position[] playerPositions;
-
+    private Position freeTilePosition;
 
     // Tableau de positions
 
@@ -281,6 +281,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Dessiner le plateau de jeu
         drawGameboard(g, xOffset, yOffset);
 
+        // Positionner le bouton
+        updateRotateButtonPosition(freeTilePosition, xOffset, yOffset);
+
         // Dessiner les joueurs et leurs pièces
         drawPlayersAndPieces(g, xOffset, yOffset);
 
@@ -291,6 +294,14 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         }
     }
 
+    private void updateRotateButtonPosition(Position freeTilePosition, int xOffset, int yOffset) {
+        if (freeTilePosition != null) {
+            int buttonX = xOffset + (freeTilePosition.getY() * TILE_SIZE) + TILE_SIZE - 5;
+            int buttonY = yOffset + (freeTilePosition.getX() * TILE_SIZE) + TILE_SIZE + 150; // Calculer Y pour le positionner en bas
+
+            rotateTileButton.setBounds(buttonX, buttonY, 130, 30); // Mettre à jour la position et la taille du bouton
+        }
+    }
 
     private JButton createArrowButton(String imagePath, int index, String direction) {
         JButton button = new JButton(new ImageIcon(imagePath));
@@ -451,6 +462,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         Tile freeTile = gameboard.getFreeTile();
         if (freeTile != null) {
+            freeTilePosition = new Position((freeTileY - PADDING - 70) / TILE_SIZE, (freeTileX - xOffset) / TILE_SIZE);
             int tileIndex = getTileIndex(freeTile);
             int orientation = freeTile.get_orientation();
             boolean hasTreasure = freeTile._hasTreasure;

@@ -84,10 +84,33 @@ public class GameFacadeController {
     /**
      * Advances the player's objective to the next one.
      */
-    public void changePlayerObjective(Gameboard gameboard) {
-        if(aAtteintObjectif(gameboard)){ gameFacade.playerNextObjective();}
-       // gameFacade.playerNextObjective();
+    /*public void changePlayerObjective(Gameboard gameboard) {
+        if(aAtteintObjectif(gameboard)){
+            gameFacade.playerNextObjective();
+
+
+
+
+        }
+    }*/
+    public void changePlayerObjective(Gameboard gameboard,GameBoardFacadeView gameBoardFacadeView) {
+        if (aAtteintObjectif(gameboard)) {
+            // Marquer l'objectif actuel comme trouvé
+            Player currentPlayer = this.getCurrentPlayer();
+            Card currentObjective = currentPlayer.getCurrentObjective();
+            currentObjective.setFound(true);
+            gameBoardFacadeView.afficherFelicitation(gameFacade.getCurrentPlayer());
+
+            // Passer à l'objectif suivant
+            currentPlayer.completeCurrentObjective();
+
+            // Optionnel : vérifier si le joueur a terminé tous ses objectifs
+            if (currentPlayer.hasCompletedAllObjectives()) {
+                System.out.println("Le joueur " + currentPlayer.getName() + " a terminé tous ses objectifs !");
+            }
+        }
     }
+
     public boolean aAtteintObjectif(Gameboard gameboard) {
         // Récupérer l'objectif actuel du joueur
         Card currentObjective = this.getCurrentPlayer().getCurrentObjective();

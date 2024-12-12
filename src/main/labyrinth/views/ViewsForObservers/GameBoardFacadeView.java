@@ -23,6 +23,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Timer;
+
+import java.util.TimerTask;
 
 
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
@@ -31,10 +34,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private List<Position> clickedTiles = new ArrayList<>();
 
-    private JButton arrowButton;  // Le bouton de flèche
+    private List<JButton> arrowButtons = new ArrayList<>();// les bottons fleches
+
     private JButton rotateTileButton;
     private final Gameboard gameboard;
-    private final TourController tourController;
+    //private final TourController tourController;
     private final GameFacade gameFacade;
     private final ImageStore imageStore;
     private final GameboardController gameboardController;
@@ -84,8 +88,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         this.gameFacade = gameFacade;
         this.imageStore = imageStore;
         this.gameboardController = new GameboardController(gameboard);
-        this.tourController=new TourController(gameFacade.getCurrentPlayer(),this.gameboard);
+
         this.gameFacadeController=new GameFacadeController(gameFacade);
+       // this.tourController=new TourController(gameFacade.getCurrentPlayer(),this.gameboard,this.gameFacadeController,this);
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
         // Initialisation du bouton Rotate Tile
@@ -97,16 +102,14 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         createArrowButtons();
         // Ajouter un bouton sur toutes les tuiles du plateau
-        for (int x = 0; x < 7; x++) { // Parcourir les lignes
+       /* for (int x = 0; x < 7; x++) { // Parcourir les lignes
             for (int y = 0; y < 7; y++) { // Parcourir les colonnes
                 Position position = new Position(x, y);
                 makeTileClickable(position);
             }
         }
-        Position start = gameFacade.getCurrentPlayer().getCurrentTile();
-        List<Position> accessibleTiles = gameboard.getAllAccessibleTiles(start);
-        System.out.println("Tuiles accessibles : " + accessibleTiles);
-        showAdjacentAccessibleTiles(start); // Méthode pour activer/désactiver les boutons
+       Position start = gameFacade.getCurrentPlayer().getCurrentTile();
+        showAdjacentAccessibleTiles(start); // Méthode pour activer/désactiver les boutons*/
 
 
 
@@ -202,7 +205,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             // Mettre à jour la position du joueur et la dernière position
             gameFacade.getCurrentPlayer().setLastPosition(gameFacade.getCurrentPlayer().getCurrentTile()); // Stocker l'ancienne position
             gameFacadeController.changePlayerPosition(position, this); // Changer la position actuelle
-            gameFacadeController.changePlayerObjective(this.gameboard);
+            gameFacadeController.changePlayerObjective(this.gameboard,this);
+            ///////:ici modifier a isFound
+
             System.out.println("/////////////////////////////////////////////////////////////////////: l index de l objectif current est "+ gameFacade.getCurrentPlayer().getCurrentObjective());
             // Afficher les nouvelles tuiles accessibles
             showAdjacentAccessibleTiles(position);
@@ -215,7 +220,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
 
-    private void showAdjacentAccessibleTiles(Position currentPosition) {
+    public void showAdjacentAccessibleTiles(Position currentPosition) {
         // Désactiver et masquer tous les boutons
         tileButtons.values().forEach(button -> {
             button.setEnabled(false);
@@ -251,9 +256,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
 
 
-    public List<Position> getClickedTiles() {
-        return clickedTiles;
-    }
 
 
 
@@ -294,36 +296,47 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Ajouter un ActionListener pour gérer la sélection du bouton
         button.addActionListener(e -> {
-            // Si un bouton est déjà sélectionné, le désactiver
-            if (selectedButton != null) {
-                selectedButton.setEnabled(true);  // Réactiver le bouton sélectionné précédemment
+            // Désactiver tous les autres boutons flèches
+            for (JButton b : arrowButtons) {
+                  // Si ce n'est pas le bouton cliqué
+                    b.setEnabled(false);
+
             }
-            // Désactiver tous les autres boutons
-            selectedButton = button;  // Mettre à jour le bouton sélectionné
-            selectedButton.setEnabled(false);  // Désactiver le bouton actuel
+
 
             // Appeler la méthode appropriée selon la direction du bouton
             switch (direction) {
                 case "droite":
-                    gameboardController.shiftRow(index,1);
+                    gameboardController.shiftRow(index, 1);
                     break;
                 case "gauche":
-                    gameboardController.shiftRow(index,3);
+                    gameboardController.shiftRow(index, 3);
                     break;
                 case "haut":
-                    gameboardController.shiftColumn(index,0);
+                    gameboardController.shiftColumn(index, 0);
                     break;
                 case "bas":
-                    gameboardController.shiftColumn(index,2);
+                    gameboardController.shiftColumn(index, 2);
                     break;
             }
+            /////////////////////////////////////////////////////////newwwww//////////////////////////////////////////
+            for (int x = 0; x < 7; x++) { // Parcourir les lignes
+                for (int y = 0; y < 7; y++) { // Parcourir les colonnes
+                    Position position = new Position(x, y);
+                    makeTileClickable(position);
+                }
+            }
+            Position start = gameFacade.getCurrentPlayer().getCurrentTile();
+            showAdjacentAccessibleTiles(start); // Méthode pour activer/désactiver les boutons
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             System.out.println("Action exécutée pour " + direction + " !");
         });
 
         return button;
     }
-    // Méthode pour récupérer et afficher les voisins disponibles à la position actuelle du joueur
+
+
 
 
     private void createArrowButtons() {
@@ -363,21 +376,25 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             JButton rightButton = createArrowButton("../res/img/arrows/arrowD.png", rowIndex, "droite");
             rightButton.setBounds(rightPositions[i][0], rightPositions[i][1], 50, 50);
             add(rightButton);
+            arrowButtons.add(rightButton);
 
             // Gauche
             JButton leftButton = createArrowButton("../res/img/arrows/arrowG.png", rowIndex, "gauche");
             leftButton.setBounds(leftPositions[i][0], leftPositions[i][1], 50, 50);
             add(leftButton);
+            arrowButtons.add(leftButton);
 
             // Haut
             JButton upButton = createArrowButton("../res/img/arrows/arrowH.png", rowIndex, "haut");
             upButton.setBounds(upPositions[i][0], upPositions[i][1], 50, 50);
             add(upButton);
+            arrowButtons.add(upButton);
 
             // Bas
             JButton downButton = createArrowButton("../res/img/arrows/arrowB.png", rowIndex, "bas");
             downButton.setBounds(downPositions[i][0], downPositions[i][1], 50, 50);
             add(downButton);
+            arrowButtons.add(downButton);
         }
     }
 
@@ -497,6 +514,44 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             g2d.drawString(players[i].getName(), x + 5, y + PLAYER_SIZE + 15);
         }
     }
+    public void afficherFelicitation(Player currentPlayer) {
+        // Créer une fenêtre pour afficher le message
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(700, 200); // Taille légèrement augmentée pour un meilleur affichage
+        frame.setTitle("Félicitations");
+
+        // Créer un panneau principal avec un fond vert
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBackground(new Color(46, 204, 113)); // Vert clair agréable
+
+        // Ajouter un message avec une belle police et couleur
+        JLabel label = new JLabel("Félicitations, " + currentPlayer.getName() + " ! Objectif trouvé !");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 20)); // Police plus grande et en gras
+        label.setForeground(Color.WHITE); // Texte en blanc pour le contraste
+
+        // Ajouter le label au panneau
+        panel.add(label, BorderLayout.CENTER);
+
+        // Ajouter un effet de bordure pour plus d'esthétique
+        panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5)); // Bordure blanche épaisse
+
+        // Ajouter le panneau à la fenêtre
+        frame.add(panel);
+        frame.setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
+        frame.setVisible(true);
+
+        // Utiliser un Timer pour fermer la fenêtre après 3 secondes
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                frame.dispose();
+            }
+        }, 3000);
+    }
 
     private void drawPieces(Graphics g, int xOffset, int yOffset) {
         for (int i = 0; i < playerPositions.length; i++) {
@@ -521,40 +576,39 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         int startX = 0, startY = 0;
 
         switch (playerIndex) {
-            case 0: // Joueur à gauche (index 0)
-                startX = xOffset - 150; // Position X pour le joueur à gauche
-                startY = yOffset - 10;  // Position Y pour le joueur à gauche
+            case 0:
+                startX = xOffset -150;
+                startY = yOffset - 10;
                 break;
-            case 1: // Joueur à droite (index 1)
-                startX = xOffset + BOARD_SIZE + 70; // Position X pour le joueur à droite
-                startY = yOffset - 10;  // Position Y pour le joueur à droite
+            case 1:
+                startX = xOffset + BOARD_SIZE + 70;
+                startY = yOffset - 10;
                 break;
-            case 2: // Joueur à gauche (index 2)
-                startX = xOffset - 150; // Position X pour le joueur à gauche
-                startY = yOffset + BOARD_SIZE - 90;  // Position Y pour le joueur à gauche
+            case 2:
+                startX = xOffset - 150;
+                startY = yOffset + BOARD_SIZE - 90;
                 break;
-            case 3: // Joueur à droite (index 3)
-                startX = xOffset + BOARD_SIZE + 80; // Position X pour le joueur à droite
-                startY = yOffset + BOARD_SIZE - 90;  // Position Y pour le joueur à droite
+            case 3:
+                startX = xOffset + BOARD_SIZE + 80;
+                startY = yOffset + BOARD_SIZE - 90;
                 break;
         }
 
-        // Dessiner la pile de cartes
         int currentIndex = player.get_currentObjectiveIndex();  // Récupère l'index de la carte à afficher
-        for (int i = currentIndex; i < playerCards.length; i++) {
-            Card card = playerCards[i];
+        if (currentIndex < playerCards.length) {
+            Card card = playerCards[currentIndex];
             int cardId = card.getTreasure();
             BufferedImage cardImage = imageStore.getCardWithTreasure(cardId, true);
 
             if (cardImage != null && !card.isFound()) {
-                // Décaler chaque carte légèrement vers le bas
                 int x = startX;
-                int y = startY + (i - currentIndex) * CARD_SPACING; // Décalage vertical pour créer l'effet de pile
-
+                int y = startY;
                 g.drawImage(cardImage, x, y, cardWidth, cardHeight, null);
             }
         }
     }
+
+
 
 
     @Override

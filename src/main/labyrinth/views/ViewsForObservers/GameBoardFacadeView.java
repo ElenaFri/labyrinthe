@@ -1,4 +1,5 @@
 package main.labyrinth.views.ViewsForObservers;
+
 import main.labyrinth.controllers.GameFacadeController;
 import main.labyrinth.controllers.GameboardController;
 import main.labyrinth.controllers.TourController;
@@ -24,17 +25,16 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Timer;
-
 import java.util.TimerTask;
 
-
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
+    private Runnable onNewGame; // Champ pour le callback
     private static final int PLAYER_SPACING = 20; // Espace supplémentaire entre les joueurs
     private static final int CARD_SPACING = 5; // Distance entre l'image du joueur et la première carte.
 
     private List<Position> clickedTiles = new ArrayList<>();
 
-    private List<JButton> arrowButtons = new ArrayList<>();// les bottons fleches
+    private List<JButton> arrowButtons = new ArrayList<>(); // les boutons flèches
 
     private JButton rotateTileButton;
     private final Gameboard gameboard;
@@ -42,7 +42,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private JPanel tourPanel;
     private JLabel tourLabel;
     private JLabel playerIconLabel;
-
 
     private final GameFacade gameFacade;
     private final ImageStore imageStore;
@@ -59,10 +58,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private Position[] playerPositions;
 
-
-    // Tableau de positions
-
-
     // Définir les nouvelles positions des joueurs
     public void setPlayerPositions(Position[] playerPositions) {
         // Vérifie si les positions sont valides (optionnel)
@@ -70,19 +65,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             throw new IllegalArgumentException("Il doit y avoir 4 joueurs.");
         }
         this.playerPositions = playerPositions;
-
     }
 
-
-
-
-
-
-    public GameBoardFacadeView(Gameboard gameboard, GameFacade gameFacade, ImageStore imageStore) {
+    public GameBoardFacadeView(Gameboard gameboard, GameFacade gameFacade, ImageStore imageStore, Runnable onNewGame) {
         // Initialisation du tableau playerPositions
         playerPositions = new Position[4];
-
-        // Remplissage du tableau playerPositions avec les positions des joueurs
         playerPositions[0] = gameFacade.getPlayer(0).getCurrentTile();
         playerPositions[1] = gameFacade.getPlayer(1).getCurrentTile();
         playerPositions[2] = gameFacade.getPlayer(2).getCurrentTile();
@@ -95,33 +82,29 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         this.imageStore = imageStore;
         this.gameboardController = new GameboardController(gameboard);
 
-        this.gameFacadeController=new GameFacadeController(gameFacade);
-        this.tourController=new TourController(gameFacadeController, this,gameFacade);
-        this.uiController=new UIController(gameboardController,gameFacadeController,tourController);
+        this.gameFacadeController = new GameFacadeController(gameFacade);
+        this.tourController = new TourController(gameFacadeController, this, gameFacade);
+        this.uiController = new UIController(gameboardController, gameFacadeController, tourController);
+        this.onNewGame = onNewGame; // Assignation du callback
+
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
+
         // Initialisation du bouton Rotate Tile
         rotateTileButton = new JButton("TOURNER");
         rotateTileButton.setBounds(1530, 600, 129, 30);  // Position du bouton à l'écran
-
         Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
         rotateTileButton.setFont(buttonFont);
-
         Color beige = new Color(222, 198, 150);
         rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
         rotateTileButton.setForeground(Color.DARK_GRAY); // Changer la couleur du texte
-
         rotateTileButton.addActionListener(e -> uiController.onRotateTileClicked());
-        setLayout(null); // Utilisation d'un layout absolu pour le positionnement
         add(rotateTileButton);
 
         createArrowButtons();
-        ////////////////////////////////
-        initTourPanel(gameFacade.getCurrentPlayer(),imageStore);
-
-
-
+        initTourPanel(gameFacade.getCurrentPlayer(), imageStore);
     }
+
     private Map<Position, JButton> tileButtons = new HashMap<>();
 
     public void makeTileClickable(Position position) {
@@ -150,25 +133,15 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Action au clic
         tileButton.addActionListener(e -> {
-            uiController.DeplacerJoueurEtObjectif( position, this,  gameFacade);
+            uiController.DeplacerJoueurEtObjectif(position, this, gameFacade);
             showAdjacentAccessibleTiles(position);
-
-
         });
 
         // Ajouter le bouton à l'interface
         add(tileButton);
         tileButtons.put(position, tileButton); // Stocker le bouton dans la map
     }
-    /* public void DeplacerJoueurEtObjectif(Position position)
-     {
-         System.out.println("Tuile cliquée : " + position);
 
-         // Mettre à jour la position du joueur et la dernière position
-         gameFacade.getCurrentPlayer().setLastPosition(gameFacade.getCurrentPlayer().getCurrentTile()); // Stocker l'ancienne position
-         gameFacadeController.changePlayerPosition(position, this); // Changer la position actuelle
-         gameFacadeController.changePlayerObjective(this.gameboard,this);
-     }*/
     public void initTourPanel(Player currentPlayer, ImageStore imageStore) {
         // Créer le panneau
         tourPanel = new JPanel();
@@ -219,16 +192,12 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             if (button != null) {
                 button.setEnabled(false);
                 button.setVisible(false);
-             // gameFacade.nextPlayer();
+                // gameFacade.nextPlayer();
                 tourController.TourSuivant();
-              // afficherTourSuivant(gameFacade.getCurrentPlayer());
-              //  ActiverFleche();
+                // afficherTourSuivant(gameFacade.getCurrentPlayer());
+                // ActiverFleche();
             }
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
             return; // Sortir de la méthode car il n'y a pas de tuiles adjacentes à afficher
-
         }
 
         // Obtenir les tuiles accessibles adjacentes
@@ -247,9 +216,26 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         System.out.println("Tuiles accessibles depuis " + currentPosition + ": " + accessibleTiles);
     }
 
+    // Méthode pour afficher la vue de fin de partie
+    public void showEndGameView(Player winner) {
+        this.removeAll(); // Retirer tous les composants actuels
+
+        // Récupérer les images depuis ImageStore
+        Image backgroundImage = imageStore.get_handBackground();
+        Image winnerImage = imageStore.getPlayerIcons(winner.get_id());
+
+        // Créer une instance de EndGameView avec le callback pour réinitialiser le jeu
+        EndGameView endGameView = new EndGameView(winner, backgroundImage, winnerImage, onNewGame);
+        endGameView.setBounds(0, 0, getWidth(), getHeight()); // Ajuster selon votre layout
+        add(endGameView);
+
+        // Revalider et redessiner le panneau
+        this.revalidate();
+        this.repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         g.drawImage(imageStore.get_handBackground(), 0, 0, getWidth(), getHeight(), this);
         int xOffset = (getWidth() - BOARD_SIZE) / 2;
@@ -274,22 +260,17 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         }
     }
 
-    public void DesactiverFleche()
-    {
+    public void DesactiverFleche() {
         // Désactiver tous les autres boutons flèches
         for (JButton b : arrowButtons) {
-
             b.setEnabled(false);
-
         }
     }
-    public void ActiverFleche()
-    {
-        // Désactiver tous les autres boutons flèches
+
+    public void ActiverFleche() {
+        // Activer tous les autres boutons flèches
         for (JButton b : arrowButtons) {
-
             b.setEnabled(true);
-
         }
     }
 
@@ -301,28 +282,22 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Ajouter un ActionListener pour gérer la sélection du bouton
         button.addActionListener(e -> {
-            //////attenstion///////////////////////////////////////////////////////////
+            System.out.println("Bouton flèche " + direction + " cliqué.");
+
             gameFacade.getCurrentPlayer().setLastPosition(null);
 
             DesactiverFleche();
 
             // Appeler la méthode appropriée selon la direction du bouton
-            uiController.onArrowButtonClicked(direction,index);
+            uiController.onArrowButtonClicked(direction, index);
 
-            /////////////////////////////////////////////////////////newwwww//////////////////////////////////////////
-            System.out.println("normalement on reafficheeeeee lesssssssssssssssssssssssssssssss tuileeeeeeeesssssssssssssssssss");
+            // Rendre les tuiles cliquables et afficher les tuiles adjacentes accessibles
+            System.out.println("Réaffichage des tuiles accessibles.");
             RendreTabCliquable();
             showAdjacentAccessibleTiles(gameFacade.getCurrentPlayer().getCurrentTile());
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             System.out.println("Action exécutée pour " + direction + " !");
         });
-
-
-
-
-
 
         return button;
     }
@@ -336,13 +311,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         }
     }
 
-
-
-
     private void createArrowButtons() {
         // Définir les indices spécifiques pour les lignes et les colonnes
         int[] rowIndices = {1, 3, 5};  // Indices pour les lignes
         int[] colIndices = {1, 3, 5};  // Indices pour les colonnes
+
         // Positionnement des boutons pour chaque direction
         int[][] rightPositions = {
                 {450, 220}, // Position pour 1ère ligne
@@ -399,7 +372,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
     private void drawGameboard(Graphics g, int xOffset, int yOffset) {
-        //    g.drawImage(imageStore.get_handBackground(), 0, 0, getWidth(), getHeight(), this);
         // Dessiner les tuiles du plateau de jeu
         for (int row = 0; row < 7; row++) {
             for (int col = 0; col < 7; col++) {
@@ -449,14 +421,14 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 g2d.setColor(Color.DARK_GRAY); // Couleur du cadre
                 g2d.setStroke(new BasicStroke(4)); // Épaisseur du cadre (ajustez à votre goût)
                 RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(
-                        freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, 50, 50);  // 20 pixels pour le rayon des coins arrondis
+                        freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, 50, 50);  // 50 pixels pour le rayon des coins arrondis
                 g2d.draw(roundedRectangle); // Dessiner le cadre arrondi
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println(gameboard.getFreeTile().toString()+" //////////////////////////////// ////////////////////////////////");
+        System.out.println(gameboard.getFreeTile().toString() + " //////////////////////////////// ////////////////////////////////");
     }
 
     private int getTileIndex(Tile tile) {
@@ -517,6 +489,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             g2d.drawString(players[i].getName(), x + 5, y + PLAYER_SIZE + 15);
         }
     }
+
     public void afficherFelicitation(Player currentPlayer) {
         // Créer une fenêtre pour afficher le message
         JFrame frame = new JFrame();
@@ -555,48 +528,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             }
         }, 3000);
     }
-    /* public void afficherTourSuivant(Player nextPlayer) {
-         // Créer une fenêtre pour afficher le message
-         JFrame frame = new JFrame();
-         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-         frame.setSize(700, 200); // Taille de la fenêtre
-         frame.setTitle("Tour suivant");
 
-         // Créer un panneau principal avec un fond bleu
-         JPanel panel = new JPanel();
-         panel.setLayout(new BorderLayout());
-         panel.setBackground(new Color(52, 152, 219)); // Bleu clair agréable
-
-         // Ajouter un message avec une belle police et couleur
-         JLabel label = new JLabel("C'est maintenant au tour de " + nextPlayer.getName() + " !");
-         label.setHorizontalAlignment(SwingConstants.CENTER);
-         label.setFont(new Font("Arial", Font.BOLD, 20)); // Police en gras et plus grande
-         label.setForeground(Color.WHITE); // Texte en blanc pour le contraste
-
-         // Ajouter le label au panneau
-         panel.add(label, BorderLayout.CENTER);
-
-         // Ajouter un effet de bordure pour plus d'esthétique
-         panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5)); // Bordure blanche épaisse
-
-         // Ajouter le panneau à la fenêtre
-         frame.add(panel);
-         frame.setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
-         frame.setVisible(true);
-
-         // Utiliser un Timer pour fermer la fenêtre après 3 secondes
-         Timer timer = new Timer();
-         timer.schedule(new TimerTask() {
-             @Override
-             public void run() {
-                 frame.dispose();
-             }
-         }, 3000);
-     }*/
- /*  public void afficherTourSuivant(Player nextPlayer) {
-       tourLabel.setText("Tour de " + nextPlayer.getName() + " !");
-       repaint();
-   }*/
     public void afficherTourSuivant(Player nextPlayer) {
         // Mettre à jour le texte. Même logique avec HTML.
         String textHtml = "<html><div style='text-align:center; width:50px;'>C'est à toi de jouer "
@@ -610,8 +542,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         repaint();
     }
-
-
 
     private void drawPieces(Graphics g, int xOffset, int yOffset) {
         for (int i = 0; i < playerPositions.length; i++) {
@@ -672,17 +602,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 g.drawImage(cardImage, x, y, cardWidth, cardHeight, null);
             }
         }
-
     }
-
-
-
-
-
 
     @Override
     public void update(Gameboard gameboard) {
-        System.out.println("game board updated!yoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+        System.out.println("game board updated!");
 
         this.repaint();     // Redessine le composant
     }
@@ -693,17 +617,20 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         System.out.println("Objectif du joueur mis à jour : " + objective);
         repaint(); // Cela redessinera les cartes du joueur
     }
+
     @Override
     public void UpdatePlayerPositionChanged(Position newPosition) {
         System.out.println("\nLa position a été mise à jour : " + newPosition);
         repaint();
     }
+
     @Override
     public void UpdateCurrentPlayerChanged(Player currentPlayer) {
         System.out.println("\nLe joueur actuel est maintenant : " + currentPlayer.getName());
-        repaint();
+        afficherTourSuivant(currentPlayer);
     }
-   /* private void rotateFreeTile() {
+
+    /*private void rotateFreeTile() {
         Tile freeTile = gameboard.getFreeTile();
         ////////////////////////////////
         System.out.println(gameboard.getFreeTile().toString()+" //////////////////////////////// ////////////////////////////////");
@@ -711,7 +638,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             int currentOrientation = freeTile.get_orientation();
             int newOrientation = (currentOrientation + 1) % 4;  // Rotation de 90 degrés
             gameboardController.rotateTile(freeTile, newOrientation);
-
         }
     }*/
 

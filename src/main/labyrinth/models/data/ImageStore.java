@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import main.labyrinth.models.data.Screen;
+
 
 // Provides resources for all graphical elements of the game.
 public class ImageStore {
@@ -17,7 +17,7 @@ public class ImageStore {
     private BufferedImage[] _pieceImages;      // 4 pions de couleurs différentes
     private BufferedImage _handBackground;     // Zone joueur
     private BufferedImage[] playerIcons;
-    private Screen _screen;
+
 
     /**
      * Constructs a new ImageStore instance, initializing various game-related
@@ -35,12 +35,7 @@ public class ImageStore {
         _pieceImages = chargerImagesPourPions();
         _handBackground = chargerImageDeFond();
         this.playerIcons = chargerImagesPourJoueurs();
-        try {
-            _screen = new Screen();
-        } catch (IOException e) {
-            e.printStackTrace();
-            _screen = null; // Optionnel, selon le comportement attendu.
-        }
+       
     }
 
 
@@ -166,17 +161,7 @@ public class ImageStore {
         return _handBackground;
     }
 
-    /**
-     * Retrieves the appropriate screen image based on the current game state.
-     * @param isRunning : a boolean indicating whether the game is currently running.
-     *                  If true, the main screen image is returned; if false, the
-     *                  game over screen image is returned.
-     * @return a BufferedImage representing the screen to be displayed for the
-     *         current game state
-     */
-    public BufferedImage getScreen(boolean isRunning) {
-        return _screen.getScreenImage(isRunning);
-    }
+
 
     /**
      * Loads an array of tile images from predefined file paths. This method

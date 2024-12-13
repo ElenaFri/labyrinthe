@@ -3,6 +3,7 @@ package main.labyrinth;
 import javax.swing.*;
 import java.awt.*;
 
+import main.labyrinth.controllers.GameController;
 import main.labyrinth.controllers.GameFacadeController;
 import main.labyrinth.controllers.TourController;
 import main.labyrinth.models.game.GameFacade;
@@ -24,46 +25,11 @@ public class Labyrinth {
 				mainFrame.setLayout(null); // Utilisation d'un layout nul (absolu).
 				mainFrame.setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
 
-				// Définir une méthode d'initialisation pour pouvoir la réutiliser
-				Runnable initializeGame = new Runnable() {
-					@Override
-					public void run() {
-						// Supprimer tous les composants existants pour réinitialiser
-						mainFrame.getContentPane().removeAll();
-						mainFrame.repaint();
+				// Créer une instance de GameController en passant la fenêtre principale
+				GameController gameController = new GameController(mainFrame);
 
-						// Initialiser le modèle
-						Gameboard gameboard = new Gameboard(); // Adapter selon votre constructeur
-						ImageStore imageStore = new ImageStore(); // Adapter selon votre constructeur
-						GameFacade gameFacade = new GameFacade(); // Adapter selon votre constructeur
-						GameFacadeController gameFacadeController = new GameFacadeController(gameFacade);
-
-						// Créer et afficher la vue principale du jeu avec le callback pour réinitialiser
-						GameBoardFacadeView gameView = new GameBoardFacadeView(gameboard, gameFacade, imageStore, this::run);
-						gameView.setBounds(0, 0, 1920, 1080); // Ajuster selon votre layout
-						mainFrame.add(gameView);
-
-						// Enregistrer la vue en tant qu'observateur
-						gameFacade.addGameFacadeObserver(gameView);
-
-						// Créer le TourController
-						TourController tourController = new TourController(gameFacadeController, gameView, gameFacade);
-
-
-
-						// Actualiser la fenêtre
-						mainFrame.revalidate();
-						mainFrame.repaint();
-					}
-
-
-				};
-
-				// Initialiser le jeu pour la première fois
-				initializeGame.run();
-
+				// Rendre la fenêtre visible
 				mainFrame.setVisible(true);
-
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Erreur lors de l'initialisation du jeu : " + e.getMessage());

@@ -39,6 +39,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private JButton rotateTileButton;
     private final Gameboard gameboard;
     private final TourController tourController;
+    private JPanel tourPanel;
+    private JLabel tourLabel;
+    private JLabel playerIconLabel;
+
+
     private final GameFacade gameFacade;
     private final ImageStore imageStore;
     private final GameboardController gameboardController;
@@ -91,7 +96,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         this.gameboardController = new GameboardController(gameboard);
 
         this.gameFacadeController=new GameFacadeController(gameFacade);
-        this.tourController=new TourController(gameFacade,gameboard,gameFacadeController, this);
+        this.tourController=new TourController(gameFacadeController, this,gameFacade);
         this.uiController=new UIController(gameboardController,gameFacadeController,tourController);
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
         setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
@@ -111,7 +116,10 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         add(rotateTileButton);
 
         createArrowButtons();
-        afficherTourSuivant(gameFacade.getCurrentPlayer());
+        ////////////////////////////////
+        initTourPanel(gameFacade.getCurrentPlayer(),imageStore);
+
+
 
     }
     private Map<Position, JButton> tileButtons = new HashMap<>();
@@ -145,22 +153,57 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             uiController.DeplacerJoueurEtObjectif( position, this,  gameFacade);
             showAdjacentAccessibleTiles(position);
 
+
         });
 
         // Ajouter le bouton à l'interface
         add(tileButton);
         tileButtons.put(position, tileButton); // Stocker le bouton dans la map
     }
-   /* public void DeplacerJoueurEtObjectif(Position position)
-    {
-        System.out.println("Tuile cliquée : " + position);
+    /* public void DeplacerJoueurEtObjectif(Position position)
+     {
+         System.out.println("Tuile cliquée : " + position);
 
-        // Mettre à jour la position du joueur et la dernière position
-        gameFacade.getCurrentPlayer().setLastPosition(gameFacade.getCurrentPlayer().getCurrentTile()); // Stocker l'ancienne position
-        gameFacadeController.changePlayerPosition(position, this); // Changer la position actuelle
-        gameFacadeController.changePlayerObjective(this.gameboard,this);
-    }*/
+         // Mettre à jour la position du joueur et la dernière position
+         gameFacade.getCurrentPlayer().setLastPosition(gameFacade.getCurrentPlayer().getCurrentTile()); // Stocker l'ancienne position
+         gameFacadeController.changePlayerPosition(position, this); // Changer la position actuelle
+         gameFacadeController.changePlayerObjective(this.gameboard,this);
+     }*/
+    public void initTourPanel(Player currentPlayer, ImageStore imageStore) {
+        // Créer le panneau
+        tourPanel = new JPanel();
+        tourPanel.setLayout(new BoxLayout(tourPanel, BoxLayout.Y_AXIS));
+        tourPanel.setBackground(new Color(174, 214, 241));
+        tourPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(127, 140, 141), 2),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
 
+        // Récupérer l'image du joueur et la redimensionner
+        Image originalImage = imageStore.getPlayerIcons(gameFacade.getCurrentPlayerIndex());
+        Image scaledImage = originalImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        playerIconLabel = new JLabel(new ImageIcon(scaledImage));
+
+        // Créer le texte avec une largeur fixée (50px),
+        // qui forcera le retour à la ligne si le texte est trop long
+        String textHtml = "<html><div style='text-align:center; width:50px;'>C'est à toi de jouer "
+                + currentPlayer.getName() + " !</div></html>";
+
+        tourLabel = new JLabel(textHtml);
+        tourLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        tourLabel.setForeground(new Color(44, 62, 80));
+        tourLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrer l'étiquette dans le panneau
+        playerIconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrer l'image aussi
+
+        // Ajouter l'image puis le texte au panneau
+        tourPanel.add(playerIconLabel);
+        tourPanel.add(Box.createVerticalStrut(10)); // Espace vertical entre l'image et le texte
+        tourPanel.add(tourLabel);
+
+        // Ajuster les dimensions et la position du panneau (selon ton layout)
+        tourPanel.setBounds(150, 400, 110, 200);
+        add(tourPanel);
+    }
 
     public void showAdjacentAccessibleTiles(Position currentPosition) {
         // Désactiver et masquer tous les boutons
@@ -176,14 +219,13 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             if (button != null) {
                 button.setEnabled(false);
                 button.setVisible(false);
-                /////////////////////////////////////////    gameFacade.nextPlayer();
+             // gameFacade.nextPlayer();
+                tourController.TourSuivant();
+              // afficherTourSuivant(gameFacade.getCurrentPlayer());
+              //  ActiverFleche();
             }
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            gameFacadeController.nextPlayer();
-            System.out.println("JJJJJJJJJJJJJJJJouueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeur est "+gameFacade.getCurrentPlayer());
-            ActiverFleche();
-            //AFFICHER A QUI LE TOUR MAINTENANT
-            afficherTourSuivant(gameFacade.getCurrentPlayer());
+
 
             return; // Sortir de la méthode car il n'y a pas de tuiles adjacentes à afficher
 
@@ -259,17 +301,17 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Ajouter un ActionListener pour gérer la sélection du bouton
         button.addActionListener(e -> {
+            //////attenstion///////////////////////////////////////////////////////////
+            gameFacade.getCurrentPlayer().setLastPosition(null);
+
             DesactiverFleche();
 
-
-
             // Appeler la méthode appropriée selon la direction du bouton
-           uiController.onArrowButtonClicked(direction,index);
+            uiController.onArrowButtonClicked(direction,index);
 
             /////////////////////////////////////////////////////////newwwww//////////////////////////////////////////
-
+            System.out.println("normalement on reafficheeeeee lesssssssssssssssssssssssssssssss tuileeeeeeeesssssssssssssssssss");
             RendreTabCliquable();
-
             showAdjacentAccessibleTiles(gameFacade.getCurrentPlayer().getCurrentTile());
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -513,44 +555,62 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             }
         }, 3000);
     }
+    /* public void afficherTourSuivant(Player nextPlayer) {
+         // Créer une fenêtre pour afficher le message
+         JFrame frame = new JFrame();
+         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+         frame.setSize(700, 200); // Taille de la fenêtre
+         frame.setTitle("Tour suivant");
+
+         // Créer un panneau principal avec un fond bleu
+         JPanel panel = new JPanel();
+         panel.setLayout(new BorderLayout());
+         panel.setBackground(new Color(52, 152, 219)); // Bleu clair agréable
+
+         // Ajouter un message avec une belle police et couleur
+         JLabel label = new JLabel("C'est maintenant au tour de " + nextPlayer.getName() + " !");
+         label.setHorizontalAlignment(SwingConstants.CENTER);
+         label.setFont(new Font("Arial", Font.BOLD, 20)); // Police en gras et plus grande
+         label.setForeground(Color.WHITE); // Texte en blanc pour le contraste
+
+         // Ajouter le label au panneau
+         panel.add(label, BorderLayout.CENTER);
+
+         // Ajouter un effet de bordure pour plus d'esthétique
+         panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5)); // Bordure blanche épaisse
+
+         // Ajouter le panneau à la fenêtre
+         frame.add(panel);
+         frame.setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
+         frame.setVisible(true);
+
+         // Utiliser un Timer pour fermer la fenêtre après 3 secondes
+         Timer timer = new Timer();
+         timer.schedule(new TimerTask() {
+             @Override
+             public void run() {
+                 frame.dispose();
+             }
+         }, 3000);
+     }*/
+ /*  public void afficherTourSuivant(Player nextPlayer) {
+       tourLabel.setText("Tour de " + nextPlayer.getName() + " !");
+       repaint();
+   }*/
     public void afficherTourSuivant(Player nextPlayer) {
-        // Créer une fenêtre pour afficher le message
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(700, 200); // Taille de la fenêtre
-        frame.setTitle("Tour suivant");
+        // Mettre à jour le texte. Même logique avec HTML.
+        String textHtml = "<html><div style='text-align:center; width:50px;'>C'est à toi de jouer "
+                + nextPlayer.getName() + " !</div></html>";
+        tourLabel.setText(textHtml);
 
-        // Créer un panneau principal avec un fond bleu
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBackground(new Color(52, 152, 219)); // Bleu clair agréable
+        // Mettre à jour l'image si nécessaire, si le joueur change
+        Image originalImage = imageStore.getPlayerIcons(gameFacade.getCurrentPlayerIndex());
+        Image scaledImage = originalImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        playerIconLabel.setIcon(new ImageIcon(scaledImage));
 
-        // Ajouter un message avec une belle police et couleur
-        JLabel label = new JLabel("C'est maintenant au tour de " + nextPlayer.getName() + " !");
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 20)); // Police en gras et plus grande
-        label.setForeground(Color.WHITE); // Texte en blanc pour le contraste
-
-        // Ajouter le label au panneau
-        panel.add(label, BorderLayout.CENTER);
-
-        // Ajouter un effet de bordure pour plus d'esthétique
-        panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5)); // Bordure blanche épaisse
-
-        // Ajouter le panneau à la fenêtre
-        frame.add(panel);
-        frame.setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
-        frame.setVisible(true);
-
-        // Utiliser un Timer pour fermer la fenêtre après 3 secondes
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                frame.dispose();
-            }
-        }, 3000);
+        repaint();
     }
+
 
 
     private void drawPieces(Graphics g, int xOffset, int yOffset) {

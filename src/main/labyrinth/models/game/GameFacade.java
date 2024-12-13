@@ -69,6 +69,9 @@ public class GameFacade {
         }
         return positions;
     }
+    public int getCurrentPlayerIndex(){
+        return this.currentPlayerIndex;
+    }
 
     /**
      * Moves the current player to a new position on the game board.
@@ -120,10 +123,20 @@ public class GameFacade {
      * It also triggers a notification to observers that the current player has changed.
      */
     public void nextPlayer() {
-        // Terminer le tour actuel, puis passer au joueur suivant
-        this.currentPlayerIndex = (currentPlayerIndex + 1) % 4; // Boucle sur les joueurs
+        // Incrémente l'indice du joueur actuel
+        this.currentPlayerIndex++;
+
+        // Si on dépasse l'index du dernier joueur, on revient au premier
+        if (this.currentPlayerIndex >= 4) {
+            ////////////////////////////////////////////////////////////////
+           // getCurrentPlayer().setLastPosition(null);
+            this.currentPlayerIndex = 0;
+        }
+
+        // Notifie que le joueur courant a changé
         notifyCurrentPlayerChange();
     }
+
 
     /**
      * Notifies all registered observers that the current player has changed.
@@ -186,6 +199,32 @@ public class GameFacade {
             }
         }
         return false; // La partie continue
+    }
+    public Player getWinner() {
+        for (Player player : _players) {
+            Position initialPosition;
+            switch (player.getName()) {
+                case "Joueur 1":
+                    initialPosition = new Position(0, 0);
+                    break;
+                case "Joueur 2":
+                    initialPosition = new Position(0, 6);
+                    break;
+                case "Joueur 3":
+                    initialPosition = new Position(6, 0);
+                    break;
+                case "Joueur 4":
+                    initialPosition = new Position(6, 6);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Joueur inconnu : " + player.getName());
+            }
+
+            if (player.hasCompletedAllObjectives() && player.getCurrentTile().equals(initialPosition)) {
+                return player; // On retourne le joueur qui a gagné
+            }
+        }
+        return null; // Aucun gagnant pour l'instant
     }
 
 

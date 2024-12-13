@@ -74,7 +74,7 @@ public class GameFacadeController {
         // Met à jour les positions sur le plateau
         gameBoardFacadeView.setPlayerPositions(updatedPositions); // Met à jour le plateau avec les nouvelles positions
 
-       ////////////:faux ajouter une methode updateon setposition
+        ////////////:faux ajouter une methode updateon setposition
 
     }
 
@@ -95,14 +95,19 @@ public class GameFacadeController {
     }*/
     public void changePlayerObjective(Gameboard gameboard,GameBoardFacadeView gameBoardFacadeView) {
         if (aAtteintObjectif(gameboard)) {
+
             // Marquer l'objectif actuel comme trouvé
             Player currentPlayer = this.getCurrentPlayer();
             Card currentObjective = currentPlayer.getCurrentObjective();
-            currentObjective.setFound(true);
-            gameBoardFacadeView.afficherFelicitation(gameFacade.getCurrentPlayer());
+            gameFacade.getCurrentPlayer().getCurrentObjective().setFound(true);
 
+
+        System.out.println("poooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"+ currentObjective.isFound());
+            gameBoardFacadeView.afficherFelicitation(gameFacade.getCurrentPlayer());
+            System.out.println("poooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
             // Passer à l'objectif suivant
-            currentPlayer.completeCurrentObjective();
+            gameFacade.playerNextObjective();
+            //gameBoardFacadeView.repaint();
 
             // Optionnel : vérifier si le joueur a terminé tous ses objectifs
             if (currentPlayer.hasCompletedAllObjectives()) {

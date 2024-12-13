@@ -19,6 +19,10 @@ public class GameboardController {
 
         this.gameboard = gameboard;
     }
+    public Gameboard getGameboard()
+    {
+        return this.gameboard;
+    }
 
 
     /**

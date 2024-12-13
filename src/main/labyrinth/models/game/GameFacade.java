@@ -121,7 +121,7 @@ public class GameFacade {
      */
     public void nextPlayer() {
         // Terminer le tour actuel, puis passer au joueur suivant
-        this.currentPlayerIndex = (currentPlayerIndex + 1) % _players.length; // Boucle sur les joueurs
+        this.currentPlayerIndex = (currentPlayerIndex + 1) % 4; // Boucle sur les joueurs
         notifyCurrentPlayerChange();
     }
 

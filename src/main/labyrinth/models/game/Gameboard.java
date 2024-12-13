@@ -440,7 +440,8 @@ public class Gameboard {
                 }
             }
         }
-        throw new IllegalArgumentException("L'objectif " + objectiveId + " n'est pas placé sur le plateau.");
+       // throw new IllegalArgumentException("L'objectif " + objectiveId + " n'est pas placé sur le plateau.");
+        return null;
     }
 
 

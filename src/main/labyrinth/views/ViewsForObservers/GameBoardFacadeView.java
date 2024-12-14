@@ -106,20 +106,24 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         this.onNewGame = onNewGame; // Assignation du callback
 
         setLayout(null);  // Layout absolu pour la gestion de la position des éléments
-        setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100)); // Marge supplémentaire pour l'affichage
+        setPreferredSize(new Dimension(BOARD_SIZE + 100, BOARD_SIZE + 100));
 
         // Initialisation du bouton Rotate Tile
         rotateTileButton = new JButton("TOURNER");
-        rotateTileButton.setBounds(1530, 600, 129, 30);  // Position du bouton à l'écran
-        Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
-        rotateTileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
+
+        Font buttonFont = new Font("Arial", Font.BOLD, 20);
         rotateTileButton.setFont(buttonFont);
+        FontMetrics metrics = getFontMetrics(buttonFont);
+        int buttonWidth = metrics.stringWidth("TOURNER") + 20; // Largeur du bouton avec un peu de remplissage
+        int buttonHeight = metrics.getHeight() + 40; // Hauteur du bouton, y compris un peu de remplissage
+
+        rotateTileButton.setBounds(1530, 600, buttonWidth, buttonHeight);  // Position du bouton à l'écran
+        rotateTileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
 
         rotateTileButton.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         rotateTileButton.setFocusable(false); // Pour désactiver le contour de focus
-
-        rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
-        rotateTileButton.setForeground(navy); // Changer la couleur du texte
+        rotateTileButton.setBackground(beige);
+        rotateTileButton.setForeground(navy);
 
         rotateTileButton.addActionListener(e -> uiController.onRotateTileClicked());
         add(rotateTileButton);
@@ -304,7 +308,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Dessiner les cartes pour chaque joueur
         Player[] players = gameFacade.get_players();
         for (int i = 0; i < players.length; i++) {
-            drawPlayerCards(g, players[i], xOffset, yOffset, 60, 100, -5, i);
+            drawPlayerCards(g, players[i], xOffset, yOffset, 60, 100, -8, i);
         }
     }
 
@@ -895,19 +899,19 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         switch (playerIndex) {
             case 0:
-                startX = xOffset - 150;
-                startY = yOffset - 10;
+                startX = xOffset - 160;
+                startY = yOffset + 30;
                 break;
             case 1:
-                startX = xOffset + BOARD_SIZE + 70;
-                startY = yOffset - 10;
+                startX = xOffset + BOARD_SIZE + 100;
+                startY = yOffset + 30;
                 break;
             case 2:
-                startX = xOffset - 150;
+                startX = xOffset - 160;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
             case 3:
-                startX = xOffset + BOARD_SIZE + 80;
+                startX = xOffset + BOARD_SIZE + 100;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
         }

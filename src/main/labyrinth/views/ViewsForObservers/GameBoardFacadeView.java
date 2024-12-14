@@ -112,10 +112,15 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         rotateTileButton = new JButton("TOURNER");
         rotateTileButton.setBounds(1530, 600, 129, 30);  // Position du bouton à l'écran
         Font buttonFont = new Font("Arial", Font.BOLD, 14); // Choisir la police, style et taille
+        rotateTileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur en un doigt qui pointe
         rotateTileButton.setFont(buttonFont);
-        Color beige = new Color(222, 198, 150);
+
+        rotateTileButton.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        rotateTileButton.setFocusable(false); // Pour désactiver le contour de focus
+
         rotateTileButton.setBackground(beige); // Changer la couleur d'arrière-plan
-        rotateTileButton.setForeground(Color.DARK_GRAY); // Changer la couleur du texte
+        rotateTileButton.setForeground(navy); // Changer la couleur du texte
+
         rotateTileButton.addActionListener(e -> uiController.onRotateTileClicked());
         add(rotateTileButton);
 
@@ -672,23 +677,31 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         Tile freeTile = gameboard.getFreeTile();
         if (freeTile != null) {
+            freeTilePosition = new Position((freeTileY - PADDING - 70) / TILE_SIZE, (freeTileX - xOffset) / TILE_SIZE);
             int tileIndex = getTileIndex(freeTile);
             int orientation = freeTile.get_orientation();
             boolean hasTreasure = freeTile._hasTreasure;
             int treasureIndex = freeTile.getTreasure();
 
             try {
+                // Dessiner l'ombre de la tuile libre avec des coins arrondis
+                Graphics2D g2d = (Graphics2D) g; // Convertir pour Graphics2D
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(shadow); // Ombre noire avec transparence
+                RoundRectangle2D shadowRectangle = new RoundRectangle2D.Double(
+                        freeTileX + 10, freeTileY + 12, TILE_SIZE, TILE_SIZE, 20, 20);
+                g2d.fill(shadowRectangle); // Dessiner l'ombre avec coins arrondis
+
+                // Dessiner la tuile
                 BufferedImage tileImage = imageStore.getTileImage(tileIndex, orientation, hasTreasure, treasureIndex);
                 g.drawImage(tileImage, freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, null);
 
-                // Dessiner le cadre autour de la tuile libre avec des coins arrondis
-                Graphics2D g2d = (Graphics2D) g; // Convertir pour Graphics2D
-                g2d.setColor(Color.DARK_GRAY); // Couleur du cadre
+                // Dessiner le cadre de la tuile
+                g2d.setColor(navy); // Couleur du cadre
                 g2d.setStroke(new BasicStroke(4)); // Épaisseur du cadre (ajustez à votre goût)
                 RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(
-                        freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, 50, 50);  // 50 pixels pour le rayon des coins arrondis
+                        freeTileX, freeTileY, TILE_SIZE, TILE_SIZE, 50, 50);  // 20 pixels pour le rayon des coins arrondis
                 g2d.draw(roundedRectangle); // Dessiner le cadre arrondi
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -38,6 +38,17 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private JButton rotateTileButton;
     private final Gameboard gameboard;
+    private String lastArrowDirection = null; // Direction de la dernière flèche cliquée
+    private int lastArrowIndex = -1;          // Indice de la dernière flèche cliquée
+
+    // Getters
+    public String getLastArrowDirection() {
+        return lastArrowDirection;
+    }
+
+    public int getLastArrowIndex() {
+        return lastArrowIndex;
+    }
     private final TourController tourController;
     private JPanel tourPanel;
     private JLabel tourLabel;
@@ -194,6 +205,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 button.setVisible(false);
                 // gameFacade.nextPlayer();
                 tourController.TourSuivant();
+                disableOppositeArrow();
                 // afficherTourSuivant(gameFacade.getCurrentPlayer());
                 // ActiverFleche();
             }
@@ -274,7 +286,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         }
     }
 
-    private JButton createArrowButton(String imagePath, int index, String direction) {
+   /* private JButton createArrowButton(String imagePath, int index, String direction) {
         JButton button = new JButton(new ImageIcon(imagePath));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
@@ -300,6 +312,94 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         });
 
         return button;
+    }*/
+   private JButton createArrowButton(String imagePath, int index, String direction) {
+       JButton button = new JButton(new ImageIcon(imagePath));
+       button.setBorderPainted(false);
+       button.setContentAreaFilled(false);
+       button.setFocusPainted(false);
+
+       // Définir des propriétés client pour identifier la direction et l'indice
+       button.putClientProperty("direction", direction);
+       button.putClientProperty("index", index);
+
+       // Ajouter un ActionListener pour gérer le clic
+       button.addActionListener(e -> {
+           System.out.println("Bouton flèche " + direction + " cliqué. Indice: " + index);
+
+           // Enregistrer la direction et l'indice de la dernière flèche cliquée
+           lastArrowDirection = direction;
+           lastArrowIndex = index;
+           System.out.println("Dernière flèche cliquée: Direction = " + lastArrowDirection + ", Indice = " + lastArrowIndex);
+           gameFacade.getCurrentPlayer().setLastPosition(null);
+
+           // Désactiver toutes les flèches
+           DesactiverFleche();
+
+           // Appeler la méthode appropriée selon la direction du bouton
+           uiController.onArrowButtonClicked(direction, index);
+
+           // Rendre les tuiles cliquables et afficher les tuiles adjacentes accessibles
+           System.out.println("Réaffichage des tuiles accessibles.");
+           RendreTabCliquable();
+           showAdjacentAccessibleTiles(gameFacade.getCurrentPlayer().getCurrentTile());
+
+
+       });
+
+       return button;
+   }
+
+    // Méthode pour obtenir la direction opposée
+    private String getOppositeDirection(String direction) {
+        switch (direction.toLowerCase()) {
+            case "droite":
+                return "gauche";
+            case "gauche":
+                return "droite";
+            case "haut":
+                return "bas";
+            case "bas":
+                return "haut";
+            default:
+                return null;
+        }
+    }
+
+    // Méthode pour désactiver la flèche opposée spécifique
+    public void disableOppositeArrow() {
+        if (lastArrowDirection == null || lastArrowIndex == -1) return;
+
+        String opposite = getOppositeDirection(lastArrowDirection);
+        if (opposite == null) return;
+
+        for (JButton button : arrowButtons) {
+            String buttonDirection = (String) button.getClientProperty("direction");
+            int buttonIndex = (int) button.getClientProperty("index");
+            if (opposite.equals(buttonDirection) && buttonIndex == lastArrowIndex) {
+                button.setEnabled(false);
+                System.out.println("Flèche " + opposite + " avec Indice " + buttonIndex + " désactivée pour le prochain joueur.");
+                break; // Désactiver uniquement une flèche spécifique
+            }
+        }
+    }
+
+    // Optionnel: Méthode pour réactiver la flèche opposée si nécessaire
+    public void enableOppositeArrow() {
+        if (lastArrowDirection == null || lastArrowIndex == -1) return;
+
+        String opposite = getOppositeDirection(lastArrowDirection);
+        if (opposite == null) return;
+
+        for (JButton button : arrowButtons) {
+            String buttonDirection = (String) button.getClientProperty("direction");
+            int buttonIndex = (int) button.getClientProperty("index");
+            if (opposite.equals(buttonDirection) && buttonIndex == lastArrowIndex) {
+                button.setEnabled(true);
+                System.out.println("Flèche " + opposite + " avec Indice " + buttonIndex + " réactivée.");
+                break;
+            }
+        }
     }
 
     public void RendreTabCliquable() {

@@ -100,6 +100,12 @@ public class GameFacade {
             observer.UpdatePlayerPositionChanged(newPosition);
         }
     }
+    public void notifyPlayerPositionChange(Position[] positions) {
+        for (GameFacadeObserver observer : gameFacadeObservers) {
+            observer.UpdatePlayerPositionChanged(positions);
+        }
+    }
+
 
     /**
      * Notifies all registered observers about a change in the player's objective.

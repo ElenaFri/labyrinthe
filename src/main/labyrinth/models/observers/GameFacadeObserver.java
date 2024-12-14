@@ -19,6 +19,7 @@ public interface GameFacadeObserver {
      *        coordinates of the player on the game board
      */
     void UpdatePlayerPositionChanged(Position newPosition);
+   void  UpdatePlayerPositionChanged(Position[] positions);
 
     /**
      * Notifies observers that the player's current objective has changed.

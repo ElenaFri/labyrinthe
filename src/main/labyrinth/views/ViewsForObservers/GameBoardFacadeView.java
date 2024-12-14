@@ -313,7 +313,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         return button;
     }*/
-   private JButton createArrowButton(String imagePath, int index, String direction) {
+  /* private JButton createArrowButton(String imagePath, int index, String direction) {
        JButton button = new JButton(new ImageIcon(imagePath));
        button.setBorderPainted(false);
        button.setContentAreaFilled(false);
@@ -348,7 +348,130 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
        });
 
        return button;
+   }*/
+   private JButton createArrowButton(String imagePath, int index, String direction) {
+
+       JButton button = new JButton(new ImageIcon(imagePath));
+       button.setBorderPainted(false);
+       button.setContentAreaFilled(false);
+       button.setFocusPainted(false);
+
+       // Définir des propriétés client pour identifier la direction et l'indice
+       button.putClientProperty("direction", direction);
+       button.putClientProperty("index", index);
+
+       // Ajouter un ActionListener pour gérer la sélection du bouton
+       button.addActionListener(e -> {
+           // Enregistrer la direction et l'indice de la dernière flèche cliquée
+           lastArrowDirection = direction;
+           lastArrowIndex = index;
+           System.out.println("Dernière flèche cliquée: Direction = " + lastArrowDirection + ", Indice = " + lastArrowIndex);
+           System.out.println("Bouton flèche " + direction + " cliqué.");
+           gameFacade.getCurrentPlayer().setLastPosition(null);
+
+           // Désactiver toutes les flèches
+           DesactiverFleche();
+
+           // Appeler la méthode appropriée selon la direction du bouton via GameFacadeController
+           if (direction.equalsIgnoreCase("droite") || direction.equalsIgnoreCase("gauche")) {
+               // Déterminer la direction numérique
+               int shiftDirection = direction.equalsIgnoreCase("droite") ? 1 : 3;
+               // Appeler le contrôleur pour déplacer la ligne
+              gameboardController.shiftRow(index, shiftDirection);
+               // Mettre à jour les joueurs sur la ligne déplacée
+               updatePlayersAfterRowShift(index, shiftDirection);
+           } else if (direction.equalsIgnoreCase("haut") || direction.equalsIgnoreCase("bas")) {
+               // Déterminer la direction numérique
+               int shiftDirection = direction.equalsIgnoreCase("haut") ? 0 : 2;
+               // Appeler le contrôleur pour déplacer la colonne
+              gameboardController.shiftColumn(index, shiftDirection);
+               // Mettre à jour les joueurs sur la colonne déplacée
+               updatePlayersAfterColumnShift(index, shiftDirection);
+           }
+
+           // Rendre les tuiles cliquables et afficher les tuiles adjacentes accessibles
+           System.out.println("Réaffichage des tuiles accessibles.");
+           RendreTabCliquable();
+           showAdjacentAccessibleTiles(gameFacade.getCurrentPlayer().getCurrentTile());
+           ///////////////////////////////////////////////////////////////////////////////////
+
+
+           System.out.println("Action exécutée pour " + direction + " !");
+       });
+
+       return button;
    }
+    private void updatePlayersAfterRowShift(int rowIndex, int direction) {
+        Player[] players = gameFacade.get_players();
+        for (Player player : players) {
+            Position pos = player.getCurrentTile();
+            if (pos.getX() == rowIndex) {
+                int newY = pos.getY();
+                if (direction == 1) { // Droite
+                    newY = pos.getY() + 1;
+                    if (newY >= 7) {
+                        newY = 0; // Réapparaître de l'autre côté
+                    }
+                } else if (direction == 3) { // Gauche
+                    newY = pos.getY() - 1;
+                    if (newY < 0) {
+                        newY = 6; // Réapparaître de l'autre côté
+                    }
+                }
+                // Mettre à jour les positions des joueurs
+                player.setLastPosition(new Position(pos.getX(), pos.getY()));
+                player.setCurrentTile(new Position(rowIndex, newY));
+                System.out.println("Joueur " + player.getName() + " déplacé à la position " + player.getCurrentTile());
+            }
+        }
+        // Notifier les observateurs que les positions des joueurs ont changé
+        gameFacade.notifyPlayerPositionChange(gameFacade.getPlayersPositions());
+    }
+
+    private void updatePlayersAfterColumnShift(int columnIndex, int direction) {
+        Player[] players = gameFacade.get_players();
+        for (Player player : players) {
+            Position pos = player.getCurrentTile();
+            if (pos.getY() == columnIndex) {
+                int newX = pos.getX();
+                if (direction == 0) { // Haut
+                    newX = pos.getX() - 1;
+                    if (newX < 0) {
+                        newX = 6; // Réapparaître de l'autre côté
+                    }
+                } else if (direction == 2) { // Bas
+                    newX = pos.getX() + 1;
+                    if (newX >= 7) {
+                        newX = 0; // Réapparaître de l'autre côté
+                    }
+                }
+                // Mettre à jour les positions des joueurs
+                player.setLastPosition(new Position(pos.getX(), pos.getY()));
+                player.setCurrentTile(new Position(newX, columnIndex));
+                System.out.println("Joueur " + player.getName() + " déplacé à la position " + player.getCurrentTile());
+            }
+        }
+        // Notifier les observateurs que les positions des joueurs ont changé
+        gameFacade.notifyPlayerPositionChange(gameFacade.getPlayersPositions());
+    }
+    @Override
+    public void UpdatePlayerPositionChanged(Position[] newPositions) {
+        System.out.println("\nLes positions des joueurs ont été mises à jour.");
+
+        // Mettre à jour le tableau des positions des joueurs
+        for (int i = 0; i < newPositions.length; i++) {
+            playerPositions[i] = newPositions[i];
+            System.out.println("Joueur " + gameFacade.get_players()[i].getName() + " à la position " + newPositions[i]);
+        }
+
+        // Redessiner l'interface
+        repaint();
+        //////////////////////////////////////////////////////////
+
+
+
+    }
+
 
     // Méthode pour obtenir la direction opposée
     private String getOppositeDirection(String direction) {

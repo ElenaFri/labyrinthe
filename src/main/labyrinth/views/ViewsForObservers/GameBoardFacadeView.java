@@ -764,8 +764,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
             BufferedImage playerImage = imageStore.getPlayerIcons(i);
             if (playerImage != null) {
-                g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire (avec transparence)
-                RoundRectangle2D shadowRectangle = new RoundRectangle2D.Double(x + 10, y + 12, PLAYER_SIZE, PLAYER_SIZE, 20, 20); // 20 pour le rayon des coins arrondis
+                g2d.setColor(shadow); // Ombre noire (avec transparence)
+                RoundRectangle2D shadowRectangle = new RoundRectangle2D.Double(x + 8, y + 10, PLAYER_SIZE, PLAYER_SIZE, 20, 20); // 20 pour le rayon des coins arrondis
                 g2d.fill(shadowRectangle); // Dessiner l'ombre
 
                 // Créer une forme arrondie
@@ -781,8 +781,31 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                 g2d.setClip(null);
             }
 
-            g2d.setColor(Color.BLACK);
-            g2d.drawString(players[i].getName(), x + 5, y + PLAYER_SIZE + 15);
+            // Définir la police de caractères
+            g2d.setFont(new Font("Arial", Font.BOLD, 12)); // Choisir la police en gros caractères
+            FontMetrics fm = g2d.getFontMetrics(); // Obtenir les métriques de la police
+
+            String playerName = players[i].getName().toUpperCase(); // Convertir le nom en majuscules
+
+            int textWidth = fm.stringWidth(playerName); // Largeur du texte
+
+            // Centrer le label
+            int labelX = x + (PLAYER_SIZE - textWidth) / 2 - 10; // Ajout de marge pour le label
+            int labelY = y + PLAYER_SIZE + 5; // Position y constante pour le label
+            int labelWidth = textWidth + 20; // Largeur du label (ajouter un peu de remplissage)
+            int labelHeight = 25;
+
+            // Dessiner le label arrondi
+            g2d.setColor(beige); // Couleur de fond du label
+            RoundRectangle2D labelRectangle = new RoundRectangle2D.Double(labelX, labelY, labelWidth, labelHeight, 10, 10); // Création du rectangle arrondi
+            g2d.fill(labelRectangle);
+
+            // Ecrire le nom
+            g2d.setColor(navy);
+            int textX = labelX + (labelWidth - textWidth) / 2; // Centrer le texte horizontalement dans le label
+            int textY = labelY + labelHeight / 2 + fm.getAscent() / 2 - 2; // Centrer verticalement (ajuster pour le décalage)
+
+            g2d.drawString(playerName, textX, textY);
         }
     }
 

@@ -74,7 +74,10 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     // Couleurs utilisées
     Color beige = new Color(222, 198, 150);
     Color navy = new Color(0, 0, 90);
+    Color orange = new Color(255, 165, 0);
+    Color menthol_green = new Color(46, 204, 113);
     Color shadow = new Color(0,0,0,100);
+
 
     // Définir les nouvelles positions des joueurs
     public void setPlayerPositions(Position[] playerPositions) {
@@ -820,40 +823,44 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Créer une fenêtre pour afficher le message
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(700, 200); // Taille légèrement augmentée pour un meilleur affichage
+        frame.setSize(700, 200);
         frame.setTitle("Félicitations");
 
         // Créer un panneau principal avec un fond vert
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBackground(new Color(46, 204, 113)); // Vert clair agréable
+        panel.setBackground(orange); // Fond orange
 
         // Ajouter un message avec une belle police et couleur
         JLabel label = new JLabel("Félicitations, " + currentPlayer.getName() + " ! Objectif trouvé !");
         label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 20)); // Police plus grande et en gras
-        label.setForeground(Color.WHITE); // Texte en blanc pour le contraste
+        label.setFont(new Font("Arial", Font.BOLD, 22));
+        label.setForeground(navy); // Texte en bleu très foncé
 
         // Ajouter le label au panneau
         panel.add(label, BorderLayout.CENTER);
 
         // Ajouter un effet de bordure pour plus d'esthétique
-        panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5)); // Bordure blanche épaisse
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(menthol_green, 5), // Bordure vert agréable
+                BorderFactory.createEmptyBorder(3, 3, 3, 3) // Espace de 3px à l'intérieur
+        ));
 
         // Ajouter le panneau à la fenêtre
         frame.add(panel);
         frame.setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
         frame.setVisible(true);
 
-        // Utiliser un Timer pour fermer la fenêtre après 3 secondes
+        // Utiliser un Timer pour fermer la fenêtre après 5 secondes
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 frame.dispose();
             }
-        }, 3000);
+        }, 5000);
     }
+
 
     public void afficherTourSuivant(Player nextPlayer) {
         // Mettre à jour le texte. Même logique avec HTML.

@@ -183,7 +183,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         // Créer le panneau
         tourPanel = new JPanel();
         tourPanel.setLayout(new BoxLayout(tourPanel, BoxLayout.Y_AXIS));
-        tourPanel.setBackground(new Color(174, 214, 241));
+        tourPanel.setBackground(beige);
         tourPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(127, 140, 141), 2),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
@@ -196,12 +196,12 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Créer le texte avec une largeur fixée (50px),
         // qui forcera le retour à la ligne si le texte est trop long
-        String textHtml = "<html><div style='text-align:center; width:50px;'>C'est à toi de jouer "
+        String textHtml = "<html><div style='text-align:center; width:50px;'>C'est à toi de jouer, "
                 + currentPlayer.getName() + " !</div></html>";
 
         tourLabel = new JLabel(textHtml);
         tourLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        tourLabel.setForeground(new Color(44, 62, 80));
+        tourLabel.setForeground(navy);
         tourLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrer l'étiquette dans le panneau
         playerIconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrer l'image aussi
 
@@ -586,27 +586,27 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Positionnement des boutons pour chaque direction
         int[][] rightPositions = {
-                {450, 220}, // Position pour 1ère ligne
-                {450, 500}, // Position pour 2ème ligne
-                {450, 730}  // Position pour 3ème ligne
+                {450, 260}, // Position pour 1ère ligne
+                {450, 515}, // Position pour 2ème ligne
+                {450, 775}  // Position pour 3ème ligne
         };
 
         int[][] leftPositions = {
-                {1420, 220},
-                {1420, 500},
-                {1420, 730}
+                {1417, 260},
+                {1417, 515},
+                {1417, 775}
         };
 
         int[][] upPositions = {
-                {680, 960},
-                {920, 960},
-                {1200, 960}
+                {680, 1000},
+                {935, 1000},
+                {1190, 1000}
         };
 
         int[][] downPositions = {
-                {680, 10},
-                {920, 10},
-                {1200, 10}
+                {680, 30},
+                {935, 30},
+                {1190, 30}
         };
 
         // Création des boutons pour chaque direction
@@ -749,21 +749,25 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
                     y = yOffset - PLAYER_SIZE / 4; // Ajustement vertical
                     break;
                 case 1: // Joueur à droite (index 1)
-                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
+                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 150 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
                     y = yOffset - PLAYER_SIZE / 4; // Ajustement vertical
                     break;
                 case 2: // Joueur à gauche (index 2)
                     x = xOffset - PLAYER_SIZE / 1 - PLAYER_SPACING; // Décalage vers la gauche (ajout de PLAYER_SPACING)
-                    y = yOffset + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
+                    y = yOffset + 18 + BOARD_SIZE - PLAYER_SIZE / 1; // Ajustement vertical
                     break;
                 case 3: // Joueur à droite (index 3)
-                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 100 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
-                    y = yOffset + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
+                    x = xOffset + BOARD_SIZE - PLAYER_SIZE / 150 + PLAYER_SPACING; // Décalage vers la droite (ajout de PLAYER_SPACING)
+                    y = yOffset + 18 + BOARD_SIZE - PLAYER_SIZE; // Ajustement vertical
                     break;
             }
 
             BufferedImage playerImage = imageStore.getPlayerIcons(i);
             if (playerImage != null) {
+                g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire (avec transparence)
+                RoundRectangle2D shadowRectangle = new RoundRectangle2D.Double(x + 10, y + 12, PLAYER_SIZE, PLAYER_SIZE, 20, 20); // 20 pour le rayon des coins arrondis
+                g2d.fill(shadowRectangle); // Dessiner l'ombre
+
                 // Créer une forme arrondie
                 RoundRectangle2D roundedRectangle = new RoundRectangle2D.Double(x, y, PLAYER_SIZE, PLAYER_SIZE, 20, 20); // 20 pixels de rayon pour les coins arrondis
 

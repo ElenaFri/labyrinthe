@@ -195,16 +195,15 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         // Récupérer l'image du joueur et la redimensionner
         Image originalImage = imageStore.getPlayerIcons(gameFacade.getCurrentPlayerIndex());
-        Image scaledImage = originalImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        Image scaledImage = originalImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Image redimensionnée à 200x200
         playerIconLabel = new JLabel(new ImageIcon(scaledImage));
 
-        // Créer le texte avec une largeur fixée (50px),
-        // qui forcera le retour à la ligne si le texte est trop long
-        String textHtml = "<html><div style='text-align:center; width:50px;'>C'est à toi de jouer, "
+        // Avec retour à la ligne avant le nom du personnage
+        String textHtml = "<html><div style='text-align:center; width:140px;'>C'est à toi de jouer, <br />"
                 + currentPlayer.getName() + " !</div></html>";
 
         tourLabel = new JLabel(textHtml);
-        tourLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        tourLabel.setFont(new Font("Arial", Font.PLAIN, 18)); // Taille de police de 14 pixels pour le texte
         tourLabel.setForeground(navy);
         tourLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrer l'étiquette dans le panneau
         playerIconLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrer l'image aussi
@@ -214,8 +213,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         tourPanel.add(Box.createVerticalStrut(10)); // Espace vertical entre l'image et le texte
         tourPanel.add(tourLabel);
 
-        // Ajuster les dimensions et la position du panneau (selon ton layout)
-        tourPanel.setBounds(150, 400, 110, 200);
+        // Ajuster les dimensions et la position du panneau (ajustez en fonction de vos besoins)
+        tourPanel.setBounds(125, 400, 200, 275); // Ajuster la taille pour le rendre suffisamment grand
         add(tourPanel);
     }
 
@@ -854,17 +853,19 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     public void afficherTourSuivant(Player nextPlayer) {
         // Mettre à jour le texte. Même logique avec HTML.
-        String textHtml = "<html><div style='text-align:center; width:50px;'>C'est à toi de jouer "
+        // Avec retour à la ligne avant le nom du personnage
+        String textHtml = "<html><div style='text-align:center; width:140px;'>C'est à toi de jouer, <br />"
                 + nextPlayer.getName() + " !</div></html>";
         tourLabel.setText(textHtml);
 
         // Mettre à jour l'image si nécessaire, si le joueur change
         Image originalImage = imageStore.getPlayerIcons(gameFacade.getCurrentPlayerIndex());
-        Image scaledImage = originalImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        Image scaledImage = originalImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         playerIconLabel.setIcon(new ImageIcon(scaledImage));
 
         repaint();
     }
+
 
     private void drawPieces(Graphics g, int xOffset, int yOffset) {
         for (int i = 0; i < playerPositions.length; i++) {

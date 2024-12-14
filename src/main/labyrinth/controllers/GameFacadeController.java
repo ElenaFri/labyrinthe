@@ -74,35 +74,28 @@ public class GameFacadeController {
         // Met à jour les positions sur le plateau
         gameBoardFacadeView.setPlayerPositions(updatedPositions); // Met à jour le plateau avec les nouvelles positions
 
-       ////////////:faux ajouter une methode updateon setposition
 
     }
 
 
 
 
-    /**
-     * Advances the player's objective to the next one.
-     */
-    /*public void changePlayerObjective(Gameboard gameboard) {
-        if(aAtteintObjectif(gameboard)){
-            gameFacade.playerNextObjective();
 
-
-
-
-        }
-    }*/
     public void changePlayerObjective(Gameboard gameboard,GameBoardFacadeView gameBoardFacadeView) {
         if (aAtteintObjectif(gameboard)) {
+
             // Marquer l'objectif actuel comme trouvé
             Player currentPlayer = this.getCurrentPlayer();
             Card currentObjective = currentPlayer.getCurrentObjective();
-            currentObjective.setFound(true);
-            gameBoardFacadeView.afficherFelicitation(gameFacade.getCurrentPlayer());
+            gameFacade.getCurrentPlayer().getCurrentObjective().setFound(true);
 
+
+        System.out.println("poooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"+ currentObjective.isFound());
+            gameBoardFacadeView.afficherFelicitation(gameFacade.getCurrentPlayer());
+            System.out.println("poooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
             // Passer à l'objectif suivant
-            currentPlayer.completeCurrentObjective();
+            gameFacade.playerNextObjective();
+            //gameBoardFacadeView.repaint();
 
             // Optionnel : vérifier si le joueur a terminé tous ses objectifs
             if (currentPlayer.hasCompletedAllObjectives()) {
@@ -123,12 +116,11 @@ public class GameFacadeController {
     }
 
 
+
     /**
      * Advances the game to the next player.
      */
-    public void nextPlayer() {
-        gameFacade.nextPlayer();
-    }
+
     public void changePlayerLastPosition(Position position)
     {
         this.getCurrentPlayer().setLastPosition(position);
@@ -142,38 +134,9 @@ public class GameFacadeController {
         return gameFacade.getCurrentPlayer();
     }
 
-    /**
-     * Displays a message to the player indicating it's their turn.
-     * @return A string message for the current player
-     */
-    public String displayTurnMessage() {
-        Player currentPlayer = gameFacade.getCurrentPlayer();
-        return "C'est à votre tour, " + currentPlayer.getName() + ". Votre objectif actuel est : " + getCurrentPlayerObjective();
-    }
 
-    /**
-     * Checks if it is the given player's turn.
-     * @param player : the player to check
-     * @return true if it is the player's turn, false otherwise
-     */
-    public boolean isPlayerTurn(Player player) {
-        return player.equals(gameFacade.getCurrentPlayer());
-    }
 
-    /**
-     * Ends the current player's turn and moves to the next player.
-     */
-    public void endTurn() {
-        System.out.println("Fin du tour de " + getCurrentPlayer().getName());
-        nextPlayer();
-        System.out.println("C'est maintenant le tour de " + getCurrentPlayer().getName());
-    }
 
-    /**
-     * Checks if the game is over.
-     * @return true if the game is over, false otherwise
-     */
-    public boolean isGameOver() {
-        return gameFacade.isGameOver();
-    }
+
+
 }

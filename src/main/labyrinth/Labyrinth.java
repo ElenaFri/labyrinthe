@@ -1,43 +1,40 @@
 package main.labyrinth;
 
-import main.labyrinth.models.data.ImageStore;
-import main.labyrinth.models.game.GameFacade;
-import main.labyrinth.models.game.Gameboard;
-import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
-
 import javax.swing.*;
 import java.awt.*;
 
+import main.labyrinth.controllers.GameController;
+import main.labyrinth.controllers.GameFacadeController;
+import main.labyrinth.controllers.TourController;
+import main.labyrinth.models.game.GameFacade;
+import main.labyrinth.models.game.Gameboard;
+import main.labyrinth.models.game.Player;
+import main.labyrinth.models.data.ImageStore;
+import main.labyrinth.models.geometry.Position;
+import main.labyrinth.views.ViewsForObservers.EndGameView;
+import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
+
 public class Labyrinth {
-
 	public static void main(String[] args) {
-		// Initialisation du modèle et des composants nécessaires
-		Gameboard gameboard = new Gameboard();
-		GameFacade gameFacade = new GameFacade();
-		ImageStore imageStore = new ImageStore();
+		SwingUtilities.invokeLater(() -> {
+			try {
+				// Créer la fenêtre principale
+				JFrame mainFrame = new JFrame("Mon Jeu Labyrinthe");
+				mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				mainFrame.setSize(1920, 1080);
+				mainFrame.setLayout(null); // Utilisation d'un layout nul (absolu).
+				mainFrame.setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
 
-		// Créez l'interface graphique
-		JFrame frame = new JFrame("Labyrinth Game");
-		GameBoardFacadeView view = new GameBoardFacadeView(gameboard, gameFacade, imageStore);
+				// Créer une instance de GameController en passant la fenêtre principale
+				GameController gameController = new GameController(mainFrame);
 
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(view);
-		frame.pack(); // Ajuste la taille de la fenêtre pour contenir le JPanel
-
-		// Maximiser la fenêtre à son ouverture
-		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Ouvrir en mode maximisé
-		// Passer en mode plein écran
-		GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice graphicsDevice = graphicsEnvironment.getDefaultScreenDevice();
-
-		// Vérifiez si le mode plein écran est supporté
-		if (graphicsDevice.isFullScreenSupported()) {
-			frame.dispose(); // Fermer la fenêtre actuelle
-			frame.setUndecorated(true); // Supprimer les bordures de la fenêtre
-			graphicsDevice.setFullScreenWindow(frame); // Mettre la fenêtre en plein écran
-		}
-
-		frame.setLocationRelativeTo(null); // Centrer la fenêtre
-		frame.setVisible(true);
+				// Rendre la fenêtre visible
+				mainFrame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Erreur lors de l'initialisation du jeu : " + e.getMessage());
+				System.exit(1);
+			}
+		});
 	}
 }

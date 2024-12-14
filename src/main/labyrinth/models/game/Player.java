@@ -41,6 +41,10 @@ public class Player {
         return _name;
     }
 
+    public int get_id() {
+        return _id;
+    }
+
     /**
      * Retrieves the index of the player's current objective.
      * @return current objective index of the player, ranging from 0 to 5

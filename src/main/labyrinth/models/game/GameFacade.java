@@ -69,6 +69,9 @@ public class GameFacade {
         }
         return positions;
     }
+    public int getCurrentPlayerIndex(){
+        return this.currentPlayerIndex;
+    }
 
     /**
      * Moves the current player to a new position on the game board.
@@ -97,6 +100,12 @@ public class GameFacade {
             observer.UpdatePlayerPositionChanged(newPosition);
         }
     }
+    public void notifyPlayerPositionChange(Position[] positions) {
+        for (GameFacadeObserver observer : gameFacadeObservers) {
+            observer.UpdatePlayerPositionChanged(positions);
+        }
+    }
+
 
     /**
      * Notifies all registered observers about a change in the player's objective.
@@ -120,10 +129,20 @@ public class GameFacade {
      * It also triggers a notification to observers that the current player has changed.
      */
     public void nextPlayer() {
-        // Terminer le tour actuel, puis passer au joueur suivant
-        this.currentPlayerIndex = (currentPlayerIndex + 1) % _players.length; // Boucle sur les joueurs
+        // Incrémente l'indice du joueur actuel
+        this.currentPlayerIndex++;
+
+        // Si on dépasse l'index du dernier joueur, on revient au premier
+        if (this.currentPlayerIndex >= 4) {
+            ////////////////////////////////////////////////////////////////
+           // getCurrentPlayer().setLastPosition(null);
+            this.currentPlayerIndex = 0;
+        }
+
+        // Notifie que le joueur courant a changé
         notifyCurrentPlayerChange();
     }
+
 
     /**
      * Notifies all registered observers that the current player has changed.
@@ -159,33 +178,37 @@ public class GameFacade {
     }
     // Méthode pour vérifier si la partie est terminée
     public boolean isGameOver() {
-        for (Player player : _players) {
-            Position initialPosition;
+        for (int i = 0; i < _players.length; i++) {
+            Player player = _players[i];
+            Position initialPosition = getInitialPositionForIndex(i);
 
-            // Définir les positions initiales en fonction du joueur
-            switch (player.getName()) { // Identifier le joueur
-                case "Joueur 1":
-                    initialPosition = new Position(0, 0);
-                    break;
-                case "Joueur 2":
-                    initialPosition = new Position(0, 6);
-                    break;
-                case "Joueur 3":
-                    initialPosition = new Position(6, 0);
-                    break;
-                case "Joueur 4":
-                    initialPosition = new Position(6, 6);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Joueur inconnu : " + player.getName());
-            }
-
-            // Vérifier si le joueur a complété ses objectifs et est retourné à sa position initiale
             if (player.hasCompletedAllObjectives() && player.getCurrentTile().equals(initialPosition)) {
                 return true; // La partie est terminée
             }
         }
         return false; // La partie continue
+    }
+    public Player getWinner() {
+        for (int i = 0; i < _players.length; i++) {
+            Player player = _players[i];
+            Position initialPosition = getInitialPositionForIndex(i);
+
+            if (player.hasCompletedAllObjectives() && player.getCurrentTile().equals(initialPosition)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    private Position getInitialPositionForIndex(int index) {
+        switch (index) {
+            case 0: return new Position(0, 0);
+            case 1: return new Position(0, 6);
+            case 2: return new Position(6, 0);
+            case 3: return new Position(6, 6);
+            default:
+                throw new IllegalArgumentException("Index de joueur inconnu : " + index);
+        }
     }
 
 
@@ -210,23 +233,27 @@ public class GameFacade {
         Card backCard = deck.remove(deck.size() - 1); // Retirer la carte dos
         Collections.shuffle(deck); // Mélanger les autres cartes
 
-        int cardsPerPlayer = 6; // Chaque joueur reçoit 6 cartes
-
         for (int i = 0; i < 4; i++) {
-            Card[] playerCards = new Card[cardsPerPlayer];
-            for (int j = 0; j < cardsPerPlayer; j++) {
-                playerCards[j] = deck.remove(0); // Attribuer la carte et la retirer du deck
+            int cardsToDeal = (i == 0) ? 1 : 6; // Premier joueur reçoit 1 carte, les autres 6
+            Card[] playerCards = new Card[cardsToDeal];
+            for (int j = 0; j < cardsToDeal; j++) {
+                if (!deck.isEmpty()) {
+                    playerCards[j] = deck.remove(0); // Attribuer la carte et la retirer du deck
+                } else {
+                    throw new IllegalStateException("Le deck est épuisé avant la distribution complète.");
+                }
             }
             _players[i].setCards(playerCards); // Attribuer les cartes au joueur
         }
 
-        // Vérification de la carte restante
+        // Vérification des cartes restantes
         if (!deck.isEmpty()) {
-            throw new IllegalStateException("Le deck devrait être vide après la distribution.");
+            System.out.println("Le deck a " + deck.size() + " cartes restantes."); // Log au lieu de lancer une exception
         }
 
         System.out.println("Carte dos conservée : " + backCard);
     }
+
 
     /**
      * Retrieves the player at the specified index from the list of players.

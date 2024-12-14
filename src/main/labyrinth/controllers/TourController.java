@@ -9,32 +9,45 @@ import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 import java.util.List;
 
 public class TourController {
-    private GameFacade gameFacade;
-    private Gameboard gameboard;
+
     private GameFacadeController gameFacadeController;
     private GameBoardFacadeView gameBoardFacadeView;
-    private Player currentPlayer;
 
-    public TourController(GameFacade gameFacade, Gameboard gameboard, GameFacadeController gameFacadeController, GameBoardFacadeView gameBoardFacadeView) {
-        this.gameFacade = gameFacade;
-        this.gameboard = gameboard;
+    private GameFacade gameFacade;
+
+
+    public TourController( GameFacadeController gameFacadeController, GameBoardFacadeView gameBoardFacadeView,GameFacade gameFacade) {
+
         this.gameFacadeController = gameFacadeController;
         this.gameBoardFacadeView = gameBoardFacadeView;
-        this.currentPlayer = gameFacade.getCurrentPlayer();
+        this.gameFacade=gameFacade;
+
+
     }
 
-    // Méthode pour afficher les tuiles accessibles et gérer le déplacement
-   /* public void handlePlayerTurn() {
-        //gameBoardFacadeView.cliquerSurButtonFleche();
-        Position start = gameFacade.getCurrentPlayer().getCurrentTile();
-        List<Position> accessibleTiles = gameboard.getAllAccessibleTiles(start);
-        System.out.println("Tuiles accessibles : " + accessibleTiles);
-        gameBoardFacadeView.showAdjacentAccessibleTiles(start); // Méthode pour activer/désactiver les boutons
-       // gameBoardFacadeView.gererDeplacementPionParPionEtTrouverObjectif();
-        gameFacadeController.nextPlayer();
-    }*/
+    public void TourSuivant() {
+        gameFacade.nextPlayer();
+        this.gameBoardFacadeView.ActiverFleche();
+        this.gameBoardFacadeView.afficherTourSuivant(gameFacade.getCurrentPlayer());
+
+        // Vérifier si le jeu est terminé
+        if (gameFacade.isGameOver()) {
+            Player winner = gameFacade.getWinner();
+            if (winner != null) {
+                showEndGameView(winner);
+            }
+        }
+    }
+
+    // Méthode pour afficher la vue de fin de partie
+    public void showEndGameView(Player winner) {
+        gameBoardFacadeView.showEndGameView(winner);
+    }
 
 
-    // Méthode pour attendre que le joueur choisisse une tuile
+
+
+
+
 
 }

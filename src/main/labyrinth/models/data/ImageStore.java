@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import main.labyrinth.models.data.Screen;
+
 
 // Provides resources for all graphical elements of the game.
 public class ImageStore {
@@ -17,8 +17,7 @@ public class ImageStore {
     private BufferedImage[] _pieceImages;      // 4 pions de couleurs différentes
     private BufferedImage _handBackground;     // Zone joueur
     private BufferedImage[] playerIcons;
-    private Screen _screen;
-    private BufferedImage _gameBoardBackground; // Fond du tableau
+
 
     /**
      * Constructs a new ImageStore instance, initializing various game-related
@@ -35,14 +34,8 @@ public class ImageStore {
         _treasureImages = chargerImagesPourTresors();
         _pieceImages = chargerImagesPourPions();
         _handBackground = chargerImageDeFond();
-        _gameBoardBackground = chargerImageFondTableau();
         this.playerIcons = chargerImagesPourJoueurs();
-        try {
-            _screen = new Screen();
-        } catch (IOException e) {
-            e.printStackTrace();
-            _screen = null; // Optionnel, selon le comportement attendu.
-        }
+       
     }
 
 
@@ -63,7 +56,7 @@ public class ImageStore {
             // Sinon, on retourne l'image du dos de la carte (index 24).
             if (isOpen) {
                 // Essayer de fusionner l'image de la carte avec le trésor associé
-                return ImageHelper.merge_central(
+                return ImageHelper.merge(
                         "../res/img/cards/cardFront.png",
                         "../res/img/treasures/treasure" + index + ".png"
                 );
@@ -168,18 +161,6 @@ public class ImageStore {
         return _handBackground;
     }
 
-    /**
-     * Retrieves the appropriate screen image based on the current game state.
-     * @param isRunning : a boolean indicating whether the game is currently running.
-     *                  If true, the main screen image is returned; if false, the
-     *                  game over screen image is returned.
-     * @return a BufferedImage representing the screen to be displayed for the
-     *         current game state
-     */
-    public BufferedImage getScreen(boolean isRunning) {
-        return _screen.getScreenImage(isRunning);
-    }
-
 
 
     /**
@@ -279,11 +260,6 @@ public class ImageStore {
         return loadImage("../res/img/screens/main_screen.png");
     }
 
-    private BufferedImage chargerImageFondTableau() {
-        return loadImage("../res/img/screens/gameboard.png");
-    }
-
-    public BufferedImage getGameBoardBackground() { return _gameBoardBackground; }
 
     /**
      * Loads an image from the specified file path.

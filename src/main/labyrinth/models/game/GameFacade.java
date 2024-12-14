@@ -235,6 +235,7 @@ public class GameFacade {
 
         for (int i = 0; i < 4; i++) {
             int cardsToDeal = (i == 0) ? 1 : 6; // Premier joueur reçoit 1 carte, les autres 6
+            //int cardsToDeal = 6;
             Card[] playerCards = new Card[cardsToDeal];
             for (int j = 0; j < cardsToDeal; j++) {
                 if (!deck.isEmpty()) {

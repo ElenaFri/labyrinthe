@@ -768,6 +768,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private void drawPieces(Graphics g, int xOffset, int yOffset) {
         for (int i = 0; i < playerPositions.length; i++) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Activer l'anti-aliasing pour améliorer le rendu
+
             Position position = playerPositions[i];  // Accéder à la position du joueur à l'index i
 
             // Obtenir les coordonnées x et y depuis l'objet Position
@@ -777,6 +780,12 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             // Charger l'image de la pièce du joueur
             BufferedImage pieceImage = imageStore.getPieceImage(i);
             if (pieceImage != null) {
+                // Dessiner l'ombre
+                g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
+                int shadowOffsetX = 5;
+                int shadowOffsetY = 5;
+                // Dessiner l'ombre derrière le pion
+                g2d.fillOval(x + shadowOffsetX + 30, y + shadowOffsetY + 30, PLAYER_SIZE - 22, PLAYER_SIZE - 24); // Utiliser fillOval pour l'ombre
                 // Dessiner l'image de la pièce centrée dans la case
                 g.drawImage(pieceImage, x + (TILE_SIZE - PLAYER_SIZE) / 2, y + (TILE_SIZE - PLAYER_SIZE) / 2, PLAYER_SIZE, PLAYER_SIZE, null);
             }

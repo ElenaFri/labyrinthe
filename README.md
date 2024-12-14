@@ -23,7 +23,9 @@ Nous nous limiterons à un nombre fixe de **4 joueurs**.
 Captures d'écran
 -----------------
 
-Plateau complet (flèches à ajuster) ![Plateau](screenshots/gameboard.png)
+Ève rejoue. On voit qu'elle a déjà trouvé deux trésors :
+
+![Plateau](screenshots/gameboard.png)
 
 
 Les fonctionnalités

@@ -16,7 +16,8 @@ public class ImageStore {
     private BufferedImage[] _treasureImages;   // Trésors à superposer
     private BufferedImage[] _pieceImages;      // 4 pions de couleurs différentes
     private BufferedImage _handBackground;     // Zone joueur
-    private BufferedImage[] playerIcons;
+    private BufferedImage[] _playerIcons;
+    private BufferedImage _gameBoardBackground; // Fond du tableau
 
 
     /**
@@ -34,8 +35,8 @@ public class ImageStore {
         _treasureImages = chargerImagesPourTresors();
         _pieceImages = chargerImagesPourPions();
         _handBackground = chargerImageDeFond();
-        this.playerIcons = chargerImagesPourJoueurs();
-       
+        _playerIcons = chargerImagesPourJoueurs();
+        _gameBoardBackground = chargerImageFondTableau();
     }
 
 
@@ -147,8 +148,8 @@ public class ImageStore {
      *         or null if the index is out of bounds
      */
     public BufferedImage getPlayerIcons(int index) {
-        if (index >= 0 && index < playerIcons.length) {
-            return playerIcons[index];
+        if (index >= 0 && index < _playerIcons.length) {
+            return _playerIcons[index];
         }
         return null;  // or handle the case where the index is out of bounds
     }
@@ -260,6 +261,11 @@ public class ImageStore {
         return loadImage("../res/img/screens/main_screen.png");
     }
 
+    private BufferedImage chargerImageFondTableau() {
+        return loadImage("../res/img/screens/gameboard.png");
+    }
+
+    public BufferedImage getGameBoardBackground() { return _gameBoardBackground; }
 
     /**
      * Loads an image from the specified file path.

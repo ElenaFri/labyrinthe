@@ -61,13 +61,20 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private final UIController uiController;
 
     private static final int TILE_SIZE = 128;
-    private static final int BOARD_SIZE = 900;
+    private static final int BOARD_SIZE = 896;
     private static final int PADDING = 50;
     private static final int PLAYER_SIZE = 90;
     // Variable pour suivre le bouton sélectionné
     private JButton selectedButton;
 
+    // Positions de certains éléments
     private Position[] playerPositions;
+    private Position freeTilePosition;
+
+    // Couleurs utilisées
+    Color beige = new Color(222, 198, 150);
+    Color navy = new Color(0, 0, 90);
+    Color shadow = new Color(0,0,0,100);
 
     // Définir les nouvelles positions des joueurs
     public void setPlayerPositions(Position[] playerPositions) {
@@ -253,14 +260,24 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         int xOffset = (getWidth() - BOARD_SIZE) / 2;
         int yOffset = (getHeight() - BOARD_SIZE) / 2;
 
-        // Dessiner la bordure noire autour du plateau
+        // Dessiner l'ombre du plateau
         Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
-        g2d.setColor(Color.DARK_GRAY);  // Couleur de la bordure
-        g2d.setStroke(new BasicStroke(8)); // Épaisseur de la bordure (8 pixels)
-        g2d.drawRect(xOffset - 4, yOffset - 4, BOARD_SIZE + 4, BOARD_SIZE + 4); // Dessine le rectangle
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
+        RoundRectangle2D shadowRect = new RoundRectangle2D.Double(xOffset +18, yOffset + 20, BOARD_SIZE, BOARD_SIZE, 15, 15); // Arrondie de 3px
+        g2d.fill(shadowRect);
+
+        // Dessiner la bordure du plateau
+        g2d.setColor(navy);  // Couleur de la bordure
+        g2d.setStroke(new BasicStroke(10)); // Épaisseur de la bordure
+        RoundRectangle2D roundRect = new RoundRectangle2D.Double(xOffset - 5, yOffset - 5, BOARD_SIZE + 10, BOARD_SIZE + 10, 15, 15); // Rayon de 5 pixels
+        g2d.draw(roundRect);
 
         // Dessiner le plateau de jeu
         drawGameboard(g, xOffset, yOffset);
+
+        // Positionner le bouton
+        updateRotateButtonPosition(freeTilePosition, xOffset, yOffset);
 
         // Dessiner les joueurs et leurs pièces
         drawPlayersAndPieces(g, xOffset, yOffset);
@@ -269,6 +286,15 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         Player[] players = gameFacade.get_players();
         for (int i = 0; i < players.length; i++) {
             drawPlayerCards(g, players[i], xOffset, yOffset, 60, 100, -5, i);
+        }
+    }
+
+    private void updateRotateButtonPosition(Position freeTilePosition, int xOffset, int yOffset) {
+        if (freeTilePosition != null) {
+            int buttonX = xOffset + (freeTilePosition.getY() * TILE_SIZE) + TILE_SIZE - 4;
+            int buttonY = yOffset + (freeTilePosition.getX() * TILE_SIZE) + TILE_SIZE + 150; // Calculer Y pour le positionner en bas
+
+            rotateTileButton.setBounds(buttonX, buttonY, 130, 30); // Mettre à jour la position et la taille du bouton
         }
     }
 
@@ -595,6 +621,22 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
     private void drawGameboard(Graphics g, int xOffset, int yOffset) {
+       // Dessiner l'image de fond du plateau
+       BufferedImage gameBoardBackground = imageStore.getGameBoardBackground(); // Obtenez le fond du tableau depuis ImageStore
+
+        if (gameBoardBackground != null) {
+            g.drawImage(gameBoardBackground, xOffset, yOffset, BOARD_SIZE, BOARD_SIZE, null); // Dessiner l'image de fond
+        } else {
+            System.err.println("Le fond du tableau n'a pas pu être chargé.");
+        }
+
+        // Ajouter un buffer pour l'espacement entre le plateau et les bords
+        int BUFFER = 2;
+
+        // Calculez les décalages pour centrer les tuiles selon l'espacement
+        int tileOffsetX = xOffset + BUFFER;
+        int tileOffsetY = yOffset + BUFFER;
+
         // Dessiner les tuiles du plateau de jeu
         for (int row = 0; row < 7; row++) {
             for (int col = 0; col < 7; col++) {

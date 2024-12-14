@@ -875,20 +875,36 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             Position position = playerPositions[i];  // Accéder à la position du joueur à l'index i
 
             // Obtenir les coordonnées x et y depuis l'objet Position
-            int x = xOffset + position.getY() * TILE_SIZE;  // position.getY() pour la coordonnée x
-            int y = yOffset + position.getX() * TILE_SIZE;  // position.getX() pour la coordonnée y
+            int x = xOffset + position.getY() * TILE_SIZE;
+            int y = yOffset + position.getX() * TILE_SIZE;
 
             // Charger l'image de la pièce du joueur
             BufferedImage pieceImage = imageStore.getPieceImage(i);
             if (pieceImage != null) {
-                // Dessiner l'ombre
-                g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
+                // Dessiner l'ombre pour tous les pions, y compris celui qui est zoomé
+                g2d.setColor(shadow); // Ombre noire avec transparence
                 int shadowOffsetX = 5;
                 int shadowOffsetY = 5;
-                // Dessiner l'ombre derrière le pion
-                g2d.fillOval(x + shadowOffsetX + 30, y + shadowOffsetY + 30, PLAYER_SIZE - 22, PLAYER_SIZE - 24); // Utiliser fillOval pour l'ombre
-                // Dessiner l'image de la pièce centrée dans la case
-                g.drawImage(pieceImage, x + (TILE_SIZE - PLAYER_SIZE) / 2, y + (TILE_SIZE - PLAYER_SIZE) / 2, PLAYER_SIZE, PLAYER_SIZE, null);
+
+                // Dessiner l'ombre ovale derrière le pion
+                g2d.fillOval(x + shadowOffsetX + 30, y + shadowOffsetY + 30, PLAYER_SIZE - 22, PLAYER_SIZE - 24);
+
+                // Vérifier si le joueur est le joueur courant
+                if (i == gameFacade.getCurrentPlayerIndex()) {
+                    // Zoomer sur le pion du joueur courant
+                    int zoomFactor = 130; // Facteur de zoom
+                    int zoomedCenterX = x + (TILE_SIZE - zoomFactor) / 2;
+                    int zoomedCenterY = y + (TILE_SIZE - zoomFactor) / 2;
+
+                    // Dessiner l'ombre du pion zoomé
+                    g2d.fillOval(zoomedCenterX + shadowOffsetX + 15, zoomedCenterY + shadowOffsetY + 15, zoomFactor - 30, zoomFactor - 32); // Ombre pour le pion zoomé
+
+                    // Dessiner l'image du pion zoomé
+                    g.drawImage(pieceImage, zoomedCenterX, zoomedCenterY, zoomFactor, zoomFactor, null);
+                } else {
+                    // Dessiner l'image de la pièce centrée dans la case
+                    g.drawImage(pieceImage, x + (TILE_SIZE - PLAYER_SIZE) / 2, y + (TILE_SIZE - PLAYER_SIZE) / 2, PLAYER_SIZE, PLAYER_SIZE, null);
+                }
             }
         }
     }

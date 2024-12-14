@@ -29,7 +29,7 @@ import java.util.TimerTask;
 
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
     private Runnable onNewGame; // Champ pour le callback
-    private static final int PLAYER_SPACING = 20; // Espace supplémentaire entre les joueurs
+    private static final int PLAYER_SPACING = 40; // Espace supplémentaire entre les joueurs
     private static final int CARD_SPACING = 5; // Distance entre l'image du joueur et la première carte.
 
     private List<Position> clickedTiles = new ArrayList<>();
@@ -899,19 +899,19 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
         switch (playerIndex) {
             case 0:
-                startX = xOffset - 160;
+                startX = xOffset - 180;
                 startY = yOffset + 30;
                 break;
             case 1:
-                startX = xOffset + BOARD_SIZE + 100;
+                startX = xOffset + BOARD_SIZE + 120;
                 startY = yOffset + 30;
                 break;
             case 2:
-                startX = xOffset - 160;
+                startX = xOffset - 180;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
             case 3:
-                startX = xOffset + BOARD_SIZE + 100;
+                startX = xOffset + BOARD_SIZE + 120;
                 startY = yOffset + BOARD_SIZE - 90;
                 break;
         }

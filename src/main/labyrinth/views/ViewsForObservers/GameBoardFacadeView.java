@@ -124,6 +124,20 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         rotateTileButton.addActionListener(e -> uiController.onRotateTileClicked());
         add(rotateTileButton);
 
+        // Initialiser un bouton de sortie
+        JButton exitButton = new JButton("x");
+        exitButton.setBounds(1870, 13, 35, 35);  // Position du bouton à l'écran
+        exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Transforme le curseur
+        exitButton.setBackground(shadow);
+        exitButton.setForeground(beige);
+        exitButton.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        exitButton.setFocusable(false);
+        Font exitFont = new Font("Arial", Font.BOLD, 10);
+        exitButton.addActionListener(e -> {
+            System.exit(0);
+        });
+        add(exitButton);
+
         createArrowButtons();
         initTourPanel(gameFacade.getCurrentPlayer(), imageStore);
     }

@@ -33,7 +33,6 @@ public class ImageHelper {
 		g2d.dispose();
 		return mergedImage;
 	}
-
 	public static BufferedImage merge_central(String backgroundPath, String... foregroundPaths) throws IOException {
 		BufferedImage image1 = ImageIO.read(new File(backgroundPath));
 		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);

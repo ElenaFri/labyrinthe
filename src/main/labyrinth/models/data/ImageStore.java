@@ -56,7 +56,7 @@ public class ImageStore {
             // Sinon, on retourne l'image du dos de la carte (index 24).
             if (isOpen) {
                 // Essayer de fusionner l'image de la carte avec le trésor associé
-                return ImageHelper.merge(
+                return ImageHelper.merge_central(
                         "../res/img/cards/cardFront.png",
                         "../res/img/treasures/treasure" + index + ".png"
                 );

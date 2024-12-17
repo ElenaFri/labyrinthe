@@ -29,10 +29,19 @@ _smth_
 
 ### Questionnements divers
 
-- _q1_
+Nous ne décrirons ici, il va sans dire, que les soucis majeurs auquels nous avons fait face en développant.
+
+- Nous nous sommes heurtées au problème de la tuile manquante, toujours une seule.
+  - Nous avons testé en essayant de la faire bouger jusqu'au bord du plateau : elle était effectivement _null_.
+  - Une tuile vide n'apparaissait qu'à l'initialisation d'une partie.
 - _q2_
 
 ### Améliorations possibles
 
-- _a1_
-- _a2_
+- Côté **conception** :
+  - Il n'y a pas de liason entre `GameFacadeController` et `GameboardController`, ce qui nous oblige, par exemple, à réaliser le déplacement du joueur évincé par un déplacement dans la vue : le principe de séparation des préoccupations s'en trouve violé.
+  - dfq
+  - dqf
+- Côté **GUI** :
+  - Afin de permettre un redimensionnement parfait de la fenêtre du jeu, il faudrait donner une position relative aux flèches (tous les autres éléments l'ont déjà).
+  - dfqf

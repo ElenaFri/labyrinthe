@@ -578,7 +578,8 @@ public class Gameboard {
         // Récupérer la tuile à la position donnée
         Tile currentTile = getTile(position);
         System.out.println("Position actuelle : " + position + " -> Tuile : " + currentTile);
-        // Récupérer et afficher les côtés ouverts de la tuile actuelle
+        // Récupérer et afficher les côtés ouverts de la tuile
+        // actuelle
         Sides openSides =currentTile.getOpenSides();
      //   System.out.println("orientation d ela tuile ctuelle  : " + currentTile.get_orientation());
        // System.out.println("Côtés ouverts de la tuile actuelle : " + openSides);

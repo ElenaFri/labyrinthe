@@ -35,7 +35,16 @@ Nous ne décrirons ici, il va sans dire, que les soucis majeurs auquels nous avo
 
 - Nous nous sommes heurtées au problème de la tuile manquante, toujours une seule.
   - Nous avons testé en essayant de la faire bouger jusqu'au bord du plateau : elle était effectivement _null_.
-  - Une tuile vide n'apparaissait qu'à l'initialisation d'une partie.
+  - La tuile vide n'apparaissait qu'à l'initialisation d'une partie.
+  - La tuile vide était toujours de propriété _movable_ (non fixe, distribuée au début du jeu).
+  - En comptant les tuiles par type, on a constaté que la tuile manquante devait toujours être de type droite ; pire, on a vu qu'en fait, même quand aucune tuile ne manquait, on en fabriquait 11 et non pas 12 !!!
+
+En fait, nous oubliions que la tuile libre était créée séparément, dans le constructeur de `Gameboard`. Ceci dit, essayer de générér simplement 15 tuiles angle au lieu de 16 n'a pas automatiquement corrigé le problème.
+
+C'est augmenter le nombre de tentatives de placement (200, seuil conseillé que nous avons pu déduire des sources consultées) qui a résolu le problème.
+
+En revanche, on peut se demande ce que cela coûte en termes d'optimisation.
+
 - _q2_
 
 ### Améliorations possibles

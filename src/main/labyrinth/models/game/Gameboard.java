@@ -27,12 +27,13 @@ public class Gameboard {
      * Calls the initializeBoard method to fill the board with tiles.
      */
     public Gameboard() {
-        _tiles = new Tile[7][7]; // Créer un tableau de 7x7 de tuiles
-
-        tileFactory = new TileFactory(); // Initialisation de la factory
         random = new Random();
+
         freeTile = new AngledTile();
-        initializeBoard();
+        _tiles = new Tile[7][7]; // Créer un tableau de 7x7 de tuiles
+        tileFactory = new TileFactory(); // Initialisation de la factory
+
+        initializeBoard(); // Remplir le tableau
     }
     public List<Position> getAllAccessibleTiles(Position start) {
         visited.clear(); // Réinitialise les tuiles visitées avant chaque appel
@@ -161,6 +162,7 @@ public class Gameboard {
      */
     private void initializeBoard() {
         // Remplir chaque case avec une tuile, en respectant les contraintes de tuiles fixes et déplaçables
+
         placeFixedTiles(); // Placer les tuiles fixes
         placeMovableTiles(); // Placer les tuiles déplaçables
         placeObjectives();
@@ -266,8 +268,10 @@ public class Gameboard {
      */
     private void placeMovableTiles() {
         // Placer les tuiles angulaires déplaçables
-        for (int i = 0; i < 16; i++) {
-            placeMovableTileAngled();
+
+        // Placer toutes les tuiles droites déplaçables
+        for (int i = 0; i < 12; i++) {
+            placeMovableTileStraight();
         }
 
         // Placer les tuiles "T" déplaçables
@@ -275,9 +279,8 @@ public class Gameboard {
             placeMovableTileTShaped();
         }
 
-        // Placer toutes les tuiles droites déplaçables
-        for (int i = 0; i < 12; i++) {
-            placeMovableTileStraight();
+        for (int i = 0; i < 15; i++) { // la 16e est la freeTile !
+            placeMovableTileAngled();
         }
     }
 
@@ -339,13 +342,14 @@ public class Gameboard {
     private void placeMovableTile(Tile tile) {
         int row, col;
         int attemptCount = 0;
+
         do {
             row = random.nextInt(7);
             col = random.nextInt(7);
             attemptCount++;
 
-            if (attemptCount > 49) {
-                System.out.println("Impossible de placer une tuile après 50 tentatives.");
+            if (attemptCount > 200) {
+                System.out.println("Impossible de placer une tuile après " + attemptCount + " tentatives.");
                 return;
             }
         } while (_tiles[row][col] != null);

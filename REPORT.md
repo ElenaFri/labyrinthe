@@ -6,7 +6,7 @@
 
 Le bilan principal que nous pouvons faire au bout de ce projet : le jeu est fonctionnel, implémenté au niveau 3 du cahier des charges, avec génération aléatoire de tous les éléments qui peuvent l'être.
 
-L'interface utilisateur reproduit fidèlement l'apparence du jeu physique.
+L'interface utilisateur reproduit fidèlement l'apparence du jeu physique. Les images des joueurs ont été générées par une IA.
 
 #### Brainstorming
 

@@ -17,6 +17,16 @@ public class Sides {
             this._openSides.add(false); // then initialize all to false
         }
     }
+
+    /**
+     * Provides a textual representation of the sides of a tile that are open.
+     * Each open side (top, right, bottom, left) is appended to the string in
+     * a human-readable format.
+     * @return a string describing the open sides of the tile. The format is
+     *         "Côtés ouverts : " followed by the names of the open sides
+     *         (e.g., "Haut", "Droite", "Bas", "Gauche"), separated by spaces.
+     *         If no sides are open, "Côtés ouverts :" is returned.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Côtés ouverts : ");
@@ -27,24 +37,25 @@ public class Sides {
         return sb.toString().trim();
     }
 
-
     /**
      * Sides getter.
      * @return an array of booleans
      */
     public ArrayList<Boolean> getSides() { return this._openSides; }
+
     /**
-     * Getter pour un côté spécifique.
-     * @param i : index du côté (0 = haut, 1 = droite, 2 = bas, 3 = gauche).
-     * @return true si le côté est ouvert, false sinon.
+     * Retrieves the state of a specific side of the tile.
+     * A side is considered open if its value is true.
+     * @param i : index of the side (0 for top, 1 for right, 2 for bottom, 3 for left)
+     * @return true if the specified side is open, false otherwise
+     * @throws IllegalArgumentException if the index is not between 0 and 3
      */
     public Boolean getSide(int i) {
-        if (i < 0 || i > 3) {
+        if (i < 0 || i > 3) {array
             throw new IllegalArgumentException("Index must be between 0 and 3.");
         }
         return this._openSides.get(i);
     }
-
 
     /**
      * Sides setter.
@@ -66,7 +77,14 @@ public class Sides {
         // Assigns the new value.
         this._openSides.set(i, isOpen);
     }
-    // Nouvelle méthode pour vérifier si un côté est ouvert
+
+    /**
+     * New method to check if a specific side of the tile is open.
+     * A side is considered open if its value is true.
+     * @param side : index of the side to check (0 for top, 1 for right, 2 for bottom, 3 for left)
+     * @return true if the specified side is open, false otherwise
+     * @throws IllegalArgumentException if the index is not between 0 and 3
+     */
     public boolean isSideOpen(int side) {
         return getSide(side);
     }

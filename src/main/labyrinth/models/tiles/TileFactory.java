@@ -7,7 +7,6 @@ public class TileFactory {
      * Constructor of the Factory.
      */
     public TileFactory() {
-
     }
 
     /**

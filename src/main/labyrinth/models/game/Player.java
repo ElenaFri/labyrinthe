@@ -41,6 +41,10 @@ public class Player {
         return _name;
     }
 
+    /**
+     * Retrieves the unique identifier of the player.
+     * @return the player's ID as an integer
+     */
     public int get_id() {
         return _id;
     }
@@ -111,6 +115,13 @@ public class Player {
 
         }
     }
+
+    /**
+     * Checks whether the player has completed all their objectives.
+     * It iterates through the player's objective cards and verifies
+     * if each card's treasure has been found.
+     * @return true if all objective cards are marked as found; false otherwise
+     */
     public boolean hasCompletedAllObjectives() {
         for (Card objective : _cards) {
             if (!objective.isFound()) {
@@ -119,12 +130,14 @@ public class Player {
         }
         return true;
     }
+
+    /**
+     * Returns the string representation of the Player object, including the player's name
+     * and their current objective number (1-indexed).
+     * @return a string containing the player's name and the current objective number.
+     */
     @Override
     public String toString() {
         return "Player: " + _name + ", Current Objective Number: " + (_currentObjectiveIndex + 1);
     }
-
-
-
-
 }

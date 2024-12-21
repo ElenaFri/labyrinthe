@@ -35,6 +35,15 @@ public class Gameboard {
 
         initializeBoard(); // Remplir le tableau
     }
+
+    /**
+     * Retrieves all accessible tiles starting from a given position on the game board.
+     * The method explores the board to find all reachable positions, considering
+     * the paths and connections between tiles starting from the specified position.
+     * The visited tiles are reset before each call to ensure accurate exploration.
+     * @param start : starting position used to determine accessible tiles
+     * @return list of positions representing all accessible tiles from the start position
+     */
     public List<Position> getAllAccessibleTiles(Position start) {
         visited.clear(); // Réinitialise les tuiles visitées avant chaque appel
         List<Position> accessibleTiles = new ArrayList<>();
@@ -42,6 +51,13 @@ public class Gameboard {
         return accessibleTiles;
     }
 
+    /**
+     * Recursively explores and identifies accessible tiles starting from the given position.
+     * Checks each direction from the current position and proceeds recursively
+     * to explore connected tiles that have open sides and are valid positions.
+     * @param current : current position being explored
+     * @param accessibleTiles : list of tiles that have been identified as accessible
+     */
     private void explore(Position current, List<Position> accessibleTiles) {
         // Condition d'arrêt : si déjà visitée
         if (visited.contains(current)) {
@@ -84,6 +100,14 @@ public class Gameboard {
             }
         }
     }
+
+    /**
+     * Retrieves a list of neighboring positions adjacent to the given position
+     * on the game board. Positions are determined based on their immediate
+     * cardinal directions: up, down, left, and right.
+     * @param current : current position for which neighbors need to be retrieved
+     * @return a list of positions adjacent to the current position
+     */
     public List<Position> getNeighbors(Position current) {
         List<Position> neighbors = new ArrayList<>();
         int x = current.getX();
@@ -96,8 +120,6 @@ public class Gameboard {
 
         return neighbors;
     }
-
-
 
     /**
      * Adds a GameBoardObserver to the list of observers for the gameboard.
@@ -116,7 +138,6 @@ public class Gameboard {
      * It is used to inform observers that they should refresh or reconsider their state
      * due to changes that occur in the gameboard.
      */
-
     public void notifyGameboardChange() {
         // Notifier tous les observateurs du changement d'état du plateau
         for (GameBoardObserver observer : gameBoardObservers) {
@@ -124,13 +145,11 @@ public class Gameboard {
         }
     }
 
-
     /**
      * Retrieves the free tile currently available for movement or placement on the gameboard.
      *
      * @return the tile that is currently free, ready to be inserted into the board
      */
-
     public Tile getFreeTile() {
         return this.freeTile;
     }
@@ -168,10 +187,6 @@ public class Gameboard {
         placeObjectives();
 
     }
-
-
-
-
 
     /**
      * Places all fixed tiles on the game board according to predefined rules and positions.
@@ -419,6 +434,11 @@ public class Gameboard {
             }
         }
     }
+
+    /**
+     * Retrieves a list of positions where objectives (treasures) are located on the tiles.
+     * @return : list of 'Position' objects representing the coordinates of all tiles containing objectives.
+     */
     public List<Position> getObjectivePositions() {
         List<Position> objectivePositions = new ArrayList<>();
 
@@ -436,6 +456,13 @@ public class Gameboard {
         ////////////////////////////////////:
 
     }
+
+    /**
+     * Retrieves the position of a specific objective on the game board.
+     * @param objectiveId : the unique identifier of the objective to locate.
+     * @return position of the objective as a {@code Position} object if found,
+     *         or {@code null} if the objective is not on the board.
+     */
     public Position getObjectivePosition(int objectiveId) {
         for (int i = 0; i < _tiles.length; i++) {
             for (int j = 0; j < _tiles[i].length; j++) {
@@ -448,8 +475,15 @@ public class Gameboard {
         return null;
     }
 
-
-
+    /**
+     * Shifts all tiles in the specified row one position to the left. The leftmost
+     * tile will be replaced by the current "free tile", and the rightmost tile
+     * in the row will become the new "free tile".
+     * @param rowIndex : index of the row to shift to the left. Must be within the
+     *        bounds of the gameboard's rows.
+     * @return true if the row was successfully shifted to the left.
+     * @throws IllegalArgumentException if the specified row index is invalid.
+     */
     public boolean shiftRowLeft(int rowIndex) {
         boolean moved = false;  // Indique si un mouvement a eu lieu
 
@@ -480,7 +514,13 @@ public class Gameboard {
         return moved;
     }
 
-
+    /**
+     * Shifts all the tiles in the specified row one position to the right. The last tile in the row
+     * is moved to a free tile storage, and the first tile in the row is replaced with the free tile.
+     * @param rowIndex : index of the row to shift. Must be a valid row index within the bounds of the game board.
+     * @return true if the row was successfully shifted; otherwise, false.
+     * @throws IllegalArgumentException if the specified row index is out of range.
+     */
     public boolean shiftRowRight(int rowIndex) {
         boolean moved = false;  // Indique si un mouvement a eu lieu
 
@@ -510,7 +550,14 @@ public class Gameboard {
         return moved;
     }
 
-
+    /**
+     * Shifts all the tiles in the specified column up by one position. The first tile in the column
+     * moves to the free tile, and the free tile replaces the last tile in the column.
+     * Notifies the gameboard of the change after the operation is completed.
+     * @param colIndex : index of the column to be shifted up
+     * @return true if the operation was performed successfully, false otherwise
+     * @throws IllegalArgumentException if the column index is invalid
+     */
     public boolean shiftColumnUp(int colIndex) {
         boolean moved = false;  // Indique si un mouvement a eu lieu
 
@@ -541,7 +588,15 @@ public class Gameboard {
         return moved;
     }
 
-
+    /**
+     * Shifts all tiles in the specified column down by one position.
+     * The last tile in the column is moved to a separate "free tile" placeholder,
+     * while the column's first position is filled by the current free tile.
+     * Notifies the game board of changes if an update occurs.
+     * @param colIndex : index of the column to shift down. Must be a valid column index.
+     * @return boolean indicating whether the column was successfully shifted down.
+     * @throws IllegalArgumentException If the provided column index is out of bounds.
+     */
     public boolean shiftColumnDown(int colIndex) {
         boolean moved = false;  // Flag pour indiquer si un mouvement a eu lieu
 
@@ -571,10 +626,13 @@ public class Gameboard {
 
         return moved;
     }
-    // Méthode pour récupérer les tuiles accessibles adjacentes, en évitant les tuiles déjà visitées
 
-
-
+    /**
+     * Determines the list of accessible tiles from a given position based on the open sides of
+     * the current tile and the validity of adjacent tiles.
+     * @param position : current position to evaluate for accessible tiles.
+     * @return list of positions representing the tiles that are accessible from the given position.
+     */
     public List<Position> getAccessibleTiles(Position position) {
         List<Position> accessibleTiles = new ArrayList<>();
         accessibleTiles.add(position);
@@ -658,12 +716,12 @@ public class Gameboard {
         return accessibleTiles;
     }
 
-
-
-
-
-
-    // Méthode pour vérifier si un côté opposé d'une tuile est ouvert
+    /**
+     * Checks if the opposite side of the neighboring tile at the specified position is open.
+     * @param position : position of the neighboring tile to be checked
+     * @param oppositeSide : side of the neighboring tile to verify if it is open
+     * @return true if the opposite side of the neighboring tile is open; false otherwise
+     */
     public boolean isOppositeSideOpen(Position position, int oppositeSide) {
         Tile neighborTile = getTile(position);
         if (neighborTile != null) {
@@ -678,15 +736,16 @@ public class Gameboard {
         return false;
     }
 
-
-    // Méthode pour vérifier si la position est valide (dans les limites du plateau)
+    /**
+     * Checks if the given position is valid within the boundaries of a 7x7 grid.
+     * @param position : position to validate, containing X and Y coordinates
+     * @return true if the position is within the bounds of the grid, false otherwise
+     */
     private boolean isPositionValid(Position position) {
         boolean valid = position.getX() >= 0 && position.getX() < 7 && position.getY() >= 0 && position.getY() < 7; // Vérifier si la position X et Y sont dans les limites du plateau
         System.out.println("Vérification de la validité de la position " + position + " : " + (valid ? "Valide" : "Invalide"));
         return valid;
     }
-
-
 }
 
 

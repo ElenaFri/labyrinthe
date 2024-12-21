@@ -34,8 +34,6 @@ public abstract class Tile {
         this._openSides = new Sides();
     }
 
-
-
     /**
      * Tile constructor with position.
      * Cannot be instantiated directly, to be used by children only.
@@ -50,6 +48,12 @@ public abstract class Tile {
         this._orientation = 0;
         this._openSides = new Sides();
     }
+
+    /**
+     * Determines the index of the tile image based on the type of tile.
+     * @param tile : tile whose index is to be determined. It should be an instance of the Tile class or its subclasses.
+     * @return an integer representing the index of the tile. Returns 0 for AngledTile, 2 for TShapedTile, and 1 as the default for other tile types.
+     */
     public int getTileIndex(Tile tile) {
         // Détermine l'index de l'image en fonction du type de tuile
         if (tile instanceof main.labyrinth.models.tiles.AngledTile) return 0;
@@ -130,8 +134,4 @@ public abstract class Tile {
         return "Tile[position=(" + get_position().getX() + ", " + get_position().getY() +
                 "), type=" + this._type+ "]"+" d orientation"+get_orientation()+ "        "+getOpenSides();
     }
-
-
-
-
 }

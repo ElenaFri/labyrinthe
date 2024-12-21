@@ -47,7 +47,6 @@ public class ImageStore {
      * @return A BufferedImage of the card with the treasure if open; otherwise, the back of the card
      * @throws IllegalArgumentException if the index is invalid (not between 0 and 23)
      */
-
     public BufferedImage getCardWithTreasure(int index, boolean isOpen) {
         if (index < 0 || index >= 24) { // 24 cartes au total
             throw new IllegalArgumentException("Index de carte invalide.");
@@ -134,6 +133,11 @@ public class ImageStore {
 
         return _pieceImages[index];
     }
+
+    /**
+     * Retrieves the background image for the player's hand area.
+     * @return a BufferedImage representing the background of the player's hand area.
+     */
     public BufferedImage get_handBackground()
     {
         return this._handBackground;
@@ -162,8 +166,6 @@ public class ImageStore {
         return _handBackground;
     }
 
-
-
     /**
      * Loads an array of tile images from predefined file paths. This method
      * attempts to load three distinct tile images from the specified directory
@@ -180,7 +182,6 @@ public class ImageStore {
         return tileImages;
     }
 
-
     /**
      * Loads images for 24 card fronts and 1 card back to be used in the labyrinth game.
      * This method initializes an array of BufferedImages and sequentially loads each image
@@ -189,10 +190,6 @@ public class ImageStore {
      * @return a BufferedImage array containing 24 images for card fronts and 1 image
      *         for the card back
      */
-
-
-    // Charger les images des cartes (recto et verso)
-
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
         for (int i = 0; i < 25; i++) {
@@ -265,6 +262,10 @@ public class ImageStore {
         return loadImage("../res/img/screens/gameboard.png");
     }
 
+    /**
+     * Retrieves the background image of the game board.
+     * @return a BufferedImage representing the background of the game board.
+     */
     public BufferedImage getGameBoardBackground() { return _gameBoardBackground; }
 
     /**

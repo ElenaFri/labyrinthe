@@ -18,6 +18,13 @@ public class Position {
 		this._x = x;
 		this._y = y;
 	}
+
+	/**
+	 * Compares this position to the specified object. Returns true if the specified
+	 * object is also a Position instance with the same X and Y coordinates.
+	 * @param o : object to be compared for equality with this position
+	 * @return true if the specified object is equal to this position, false otherwise
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -26,6 +33,13 @@ public class Position {
 		return _x == position._x && _y == position._y;
 	}
 
+	/**
+	 * Computes and returns the hash code value for this object, based on its
+	 * X and Y coordinates. This method is consistent with the equals(Object)
+	 * method; if two objects are equal according to the {@code equals(Object)} method,
+	 * then calling hashCode() on each of them must produce the same integer result.
+	 * @return an integer hash code value derived from the X and Y coordinates of this object
+	 */
 	@Override
 	public int hashCode() {
 		return

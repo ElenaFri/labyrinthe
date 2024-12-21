@@ -63,9 +63,6 @@ public class GameController {
         mainFrame.repaint();
     }
 
-
-
-
     /**
      * Réinitialise le jeu en appelant initializeGame().
      */

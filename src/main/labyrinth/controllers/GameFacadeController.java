@@ -77,10 +77,14 @@ public class GameFacadeController {
 
     }
 
-
-
-
-
+    /**
+     * Changes the current objective of the player in the game.
+     * This method checks if the player has reached their current objective and,
+     * if so, progresses the player to the next objective.
+     * Additionally, it validates if the player has completed all objectives.
+     * @param gameboard : current gameboard containing the layout and objectives
+     * @param gameBoardFacadeView : interface view to facilitate player notifications and updates in the game
+     */
     public void changePlayerObjective(Gameboard gameboard,GameBoardFacadeView gameBoardFacadeView) {
         if (aAtteintObjectif(gameboard)) {
 
@@ -104,6 +108,11 @@ public class GameFacadeController {
         }
     }
 
+    /**
+     * Determines whether the current player has reached their objective on the gameboard.
+     * @param gameboard : current gameboard containing the layout and objectives
+     * @return true if the current player's position matches the objective's position, false otherwise
+     */
     public boolean aAtteintObjectif(Gameboard gameboard) {
         // Récupérer l'objectif actuel du joueur
         Card currentObjective = this.getCurrentPlayer().getCurrentObjective();
@@ -115,12 +124,9 @@ public class GameFacadeController {
         return this.getCurrentPlayer().getCurrentTile().equals(objectivePosition);
     }
 
-
-
     /**
      * Advances the game to the next player.
      */
-
     public void changePlayerLastPosition(Position position)
     {
         this.getCurrentPlayer().setLastPosition(position);
@@ -133,10 +139,4 @@ public class GameFacadeController {
     public Player getCurrentPlayer() {
         return gameFacade.getCurrentPlayer();
     }
-
-
-
-
-
-
 }

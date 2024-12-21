@@ -33,38 +33,13 @@ public class ImageHelper {
 		g2d.dispose();
 		return mergedImage;
 	}
-	public static BufferedImage merge_central(String backgroundPath, String... foregroundPaths) throws IOException {
-		BufferedImage image1 = ImageIO.read(new File(backgroundPath));
-		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = mergedImage.createGraphics();
-
-		// Dessiner l'image de fond (background)
-		g2d.drawImage(image1, 0, 0, null);
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-
-		// Pour chaque chemin d'image de premier plan (foreground)
-		for (String path : foregroundPaths) {
-			BufferedImage image2 = ImageIO.read(new File(path));
-			// Calculer les coordonnées pour centrer l'image de premier plan
-			int x = (mergedImage.getWidth() - image2.getWidth()) / 2; // Centrer horizontalement
-			int y = (mergedImage.getHeight() - image2.getHeight()) / 2; // Centrer verticalement
-
-			// Dessiner l'image de premier plan à la position centrée
-			g2d.drawImage(image2, x, y, null);
-		}
-
-		g2d.dispose();
-		return mergedImage;
-	}
-
 
 	/**
-	 *  Rotate an original image from the center by a defined angle.
-	 *  The original image MUST HAVE the same width and height.
-	 *
-	 * @param original is the input image to rotate
-	 * @param angle is the angle of rotation in radian
-	 * @return a new image representing the original image rotated of angle radian from its center.
+	 * Rotates a given square image by the specified angle around its center.
+	 * @param original : the input square image to rotate
+	 * @param angle : the angle in radians by which the image should be rotated
+	 * @return a new BufferedImage representing the rotated image
+	 * @throws IllegalArgumentException if the input image is not square (width != height)
 	 */
 	public static BufferedImage rotate( final BufferedImage original, double angle ) throws IllegalArgumentException {
 		if ( original.getWidth() != original.getHeight() )

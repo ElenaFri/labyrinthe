@@ -11,6 +11,15 @@ public class EndGameView extends JPanel {
     private Image winnerImage;
     private Runnable onNewGame;
 
+    /**
+     * Creates an EndGameView that displays the winner, winner image, and options to start a new game
+     * or quit the application.
+     * @param winner : player who won the game. Must not be null.
+     * @param backgroundImage : background image to be displayed in the view.
+     * @param winnerImage : image to represent the winner. Can be null.
+     * @param onNewGame : a callback to handle starting a new game. Can be null.
+     * @throws IllegalArgumentException if the winner is null.
+     */
     public EndGameView(Player winner, Image backgroundImage, Image winnerImage, Runnable onNewGame) {
         if (winner == null) {
             System.out.println("Erreur : Le gagnant est null lors de la création d'EndGameView.");
@@ -62,6 +71,11 @@ public class EndGameView extends JPanel {
         add(quitButton);
     }
 
+    /**
+     * Overrides the paintComponent method to render the background image of the EndGameView panel.
+     * The background image is resized to fit the entire panel.
+     * @param g : Graphics object used to perform the drawing operations. Must be not null.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

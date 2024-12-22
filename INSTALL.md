@@ -30,7 +30,7 @@ Si vous avez compilé à la main, il suffit d'exécuter depuis le répertoire so
 java main/labyrinth/Labyrinth
 ```
 
-Vous pouvez également, bien entendu, utiliser votre IDE préférée pour exécuter le fichier `main/labyrinth/Labyrinth`.
+Vous pouvez également, bien entendu, utiliser votre IDE préféré pour exécuter le fichier `main/labyrinth/Labyrinth`.
 
 ### Java Doc
 

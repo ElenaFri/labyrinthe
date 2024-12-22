@@ -4,9 +4,18 @@
 
 ### Rapport au 22/12/24
 
-Le bilan principal que nous pouvons faire au bout de ce projet : le jeu est fonctionnel, implémenté au niveau 3 du cahier des charges, avec génération aléatoire de tous les éléments qui peuvent l'être et réalisation des bonus suggérés.
+Le cahier des charges proposé a été réalisé dans son intégralité :
 
-L'interface utilisateur reproduit fidèlement l'apparence du jeu physique. Les images des joueurs ont été générées par une IA.
+- Le jeu est fonctionnel ;
+- Implémenté au niveau maximum ; 
+- Génération aléatoire de tous les éléments qui le sont, possibilité de tourner la tuile libre ;
+- Les bonus ont été implémentés.
+
+L'interface utilisateur reproduit fidèlement l'apparence du jeu physique. 
+
+Les images des joueurs ont été générées par une IA, chacune à la couleur associée au joueur concerné.
+
+En ce qui concerne le partage du code et le versionnement, nous avons utilisé les fonctionnalités _Issues_ et _Milestones_ de Git, ainsi que les _Tags_ pour marquer des jalons importants. Afin de minimiser le risque de détérioration voire de pertes de données au cours du développement, nous avons forké le dépôt pour travailler dessus. 
 
 #### Brainstorming
 
@@ -19,25 +28,30 @@ L'interface utilisateur reproduit fidèlement l'apparence du jeu physique. Les i
       - **algo du labyrinthe**, justement !
 - L'écran de fin du jeu serait simple : le nom (et la tête ?) du vainqueur seront affichés, éventuellement accompagnés des trésors qu'il a trouvés (sans cartes).
 
+A posteriori, nous pouvons considérer que l'implémentation d'un déplacement direct (plutôt que case par case), ainsi que l'affichage détaillé de la fin sont des pistes d'amélioration. 
+
 ### Choix conceptuels
 
-- Les vues texte sont complétées par les vues graphiques, en Swing. Elles sont couplées avec `ImageHelper`, qui, à son tour, puise dans `ImageStore`, data au niveau des modèles. 
-- Suggestion : utiliser directement un algo de recherche de chemin dans un labyrinthe, il en existe plusieurs (seule variation, on ne cherche pas la sortie mais un point précis sur la grille).
+- Comme on peut le retracer à travers les _commits_ de cette seconde partie, nous étions partis de vues textes avant d'implémenter la vue graphique. 
+- Les _design patterns_ principaux restent **Facade** (pour regrouper les fonctionnalités complexes de gestion du plateau, d'une part, et celle des joueurs avec leurs cartes et leur position sur le plateau, d'autre part) et **Factory** (pour générer les tuiles), sans parler de **MVC couplé à Observer**. Après avoir étudié plusieurs possibilités, nous avons décidé d'en rester à des solutions simples.
+- Nous avons veillé à respecter les principes **SOLID**, avec un peu moins de succès pour la vue (voir ci-dessous) :
+- **Injection de dépendances** dans les contrôleurs.
 
 #### Interface graphique
 
-- _i1_
-- _i2_
+- Nous avons utilisé des _layouts_ à l'intérieur d''éléments du jeu, mais un positionnement relatif / ancrage pour les disposer dans la fenêtre principale. Sauf pour les flèches, qui mériteraient d'être peaufinées, la fenêtre est parfaitement redimensionnable. Ceci dit, le jeu est lancé par défaut en mode plein écran.
+- `ImageHelper` a été modifié pour faciliter la création des cartes avec le trésor au centre, et non pas sur le côté (méthode `merge_center()` ; en revanche, nous avons utilisé la `merge()` d'origine pour créer les tuiles avec trésors).
+- Nous avons défini une palette de couleurs minimale pour l'interface, en variables globales de la classe.
+- Nous avions hésité entre rendre la tuile libre cliquable, afin de pouvoir la tourner, et ajouter un bouton. Finalement, le mouvement et l'affichage sont dissociés.
+- Un accomagnement musical a été rajouté (bibliothèque `javax.sound.sampled`). 
 
 #### Nommage
 
-- La convention de nommage utilisée est le _Camel Case_.
+- La convention de nommage utilisée est _Camel Case_.
 - Les attibuts privés sont préfixés par un underscore.
-- Nous nous sommes efforcées à nommer nos attributs et nos méthodes en anglais - bien que certains noms devraient être corrigés pour harmoniser le tout.
+- Nous nous sommes efforcées à nommer nos attributs et nos méthodes en anglais - bien que certains noms doivent être corrigés pour harmoniser le nommage.
 
-### Questionnements divers
-
-Nous ne décrirons ici, il va sans dire, que les soucis majeurs auquels nous avons fait face en développant.
+### Questionnements
 
 - Nous nous sommes heurtées au problème de la tuile manquante, toujours une seule.
   - Nous avons testé en essayant de la faire bouger jusqu'au bord du plateau : elle était effectivement _null_.
@@ -51,14 +65,19 @@ C'est augmenter le nombre de tentatives de placement (200, seuil conseillé que 
 
 En revanche, on peut se demande ce que cela coûte en termes d'optimisation.
 
-- _q2_
+- Au départ, nous avions prévu des vues séparées pour les éléments distincts du jeu, dans le respect du principe _SRP_. Malheureusement, nous n'avons pas su mettre cette idée en pratique tout en assurant l'interaction correctee de ces éléments. Dans la version actuelle, tout est donc regroupé dans une vue, `GameBordFacadeView`, devenu très lourde et peu lisible. Bien qu'elle fonctionne telle quelle, nous sommes conscients des inconvénients que cette solution présente : difficulté de maintenance (nous avons pu le constater nous-mêmes, en travaillant sur le projet), réutilisabilité réduite, peu de flexibilité.
+
+- La gestion des déplacements présente une petite faille fonctionnelle : deux pions arrivent sans problème à se retrouver sur une même tuile. Or, les règles classiques ne le permettent pas : on doit soit se mettre sur la case suivante, derrière celle occupée, soit s'arrêter juste devant. 
+	- Cela pose en plus un problème d'affichage, les deux images de pions se superposant l'une à l'autre : un des deux (ou deux des trois, ou trois des quatre !) joueurs n'est plus visible quand cela se produit.
+	- Comme solution provisoire, on pourrait s'entendre de respecter la règle soi-même en attendant, sans y être forcé par l'application) : s'arrêter avant, ou continuer au-dela de la case problématique.
 
 ### Améliorations possibles
 
 - Côté **conception** :
   - Il n'y a pas de liason entre `GameFacadeController` et `GameboardController`, ce qui nous oblige, par exemple, à réaliser le déplacement du joueur évincé par un déplacement dans la vue : le principe de séparation des préoccupations s'en trouve violé.
-  - dfq
-  - dqf
+  - Trop de dépendances « haut niveau », impliquant les contrôleurs. À corriger absolument, si une version ultérieure devait voir le jour !
+  - Implémenter un algorithme de parcours du labyrinthe : pour épargner au joueur le déplacement case par case, mais également dans un souci d'optimisation.
+  - Préparer une batterie de tests ! C'est le seul ticket (sur 15) que nous n'avons pas fermé.
 - Côté **GUI** :
-  - Afin de permettre un redimensionnement parfait de la fenêtre du jeu, il faudrait donner une position relative aux flèches (tous les autres éléments l'ont déjà).
-  - dfqf
+  - Afin de permettre un redimensionnement parfait de la fenêtre du jeu, il faudrait donner une position relative aux flèches (tous les autres éléments l'ont déjà) - ou refaire le tout avec un _layout_ adapté.
+  - Peaufiner la fenêtre de fin de jeu.

@@ -9,8 +9,6 @@ public class Player {
     private String _name;
     private Position _currentTile;
     private Position _lastPosition;  // Dernière position du joueur
-
-
     private Card[] _cards;            // Les 6 cartes d'objectifs du joueur
     private int _currentObjectiveIndex; // L'index de l'objectif en cours (0 à 5)
 
@@ -64,9 +62,19 @@ public class Player {
     public Position getCurrentTile() {
         return _currentTile;
     }
+    
+    /**
+     * Retrieves the last position of the player.
+     * @return a Position
+     */
     public Position get_lastPosition() {
         return _lastPosition;
     }
+    
+    /**
+     * Attributes a last position value.
+     * @param position : a Position instance
+     */
     public void setLastPosition(Position position)
     {
         this._lastPosition=position;

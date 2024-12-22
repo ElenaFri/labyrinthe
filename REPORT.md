@@ -29,6 +29,12 @@ L'interface utilisateur reproduit fidèlement l'apparence du jeu physique. Les i
 - _i1_
 - _i2_
 
+#### Nommage
+
+- La convention de nommage utilisée est le _Camel Case_.
+- Les attibuts privés sont préfixés par un underscore.
+- Nous nous sommes efforcées à nommer nos attributs et nos méthodes en anglais - bien que certains noms devraient être corrigés pour harmoniser le tout.
+
 ### Questionnements divers
 
 Nous ne décrirons ici, il va sans dire, que les soucis majeurs auquels nous avons fait face en développant.

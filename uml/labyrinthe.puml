@@ -13,9 +13,10 @@ class Labyrinthe
 package views
 {
 	package helpers {
-		'classe fournie :
+		'classe fournie ; nous n'avons ajouté que la méthode merge_central(..)
 		class ImageHelper {
 			+ merge(backgroundPath : String, foregroundPaths : String[*]) : BufferedImage
+			+ merge_central(backgroundPath : String, foregroundPaths : String[*]) : BufferedImage
 			+ rotate(original : BufferedImage, angle : Double) : BufferedImage
 			+ rotateClockwise(original : BufferedImage) : BufferedImage
 			+ rotateCounterClockwise(original : BufferedImage) : BufferedImage
@@ -23,14 +24,7 @@ package views
 	}
 
 	package ViewsForObservers{
-	  class GameboardTextView{
-
-               +<<create>> GameBoardTextView(gameboard: Gameboard)
-               + update(updatedGameboard: Gameboard)
-               + displayBoard()
-               - formatTile(tile: Tile): String
-	  }
-	  class GameFacadeTextView{
+	  class GameBoardFacadeView {
 
               + <<create>> GameFacadeTextView(gameFacade: GameFacade)
               + displayGameState()
@@ -142,7 +136,10 @@ package models
 			- _openSides : Boolean[*]
 			+ « Create » Sides()
 			+ getSides() : Boolean[*]
+			+ getSide(i : Integer) : Boolean
 			+ setSide(i : Integer, isOpen : Boolean)
+			+ isSideOpen(side : Integer
+			+ toString() : String {redefines}
 		}
 
 		class Position {
@@ -151,37 +148,47 @@ package models
 			+ « Create » Position(x: Integer, y: Integer)
 			+ getX() : Integer
 			+ getY() : Integer
-			+ setPosition(x: Integer, y: Integer)
+			+ setPosition(x : Integer, y : Integer)
+			+ equals(o : Object) : Boolean {redefines}
+			+ hashCode() : Integer {redefines} 
+			+ toString() : String {redefines}
 		}
 	}
 
 	package game {
-
-
 		class GameFacade {
-
                -  _currentPlayerIndex:integer
                + <<create>> GameFacade()
-               + addGameFacadeObserver(gameFacadeObserver:GameFacadeObserver)
-               + PlayernextObjective()
-               + movePlayer(position :Position)
-               + notifyPlayerPositionChange(position :Position)
-               + notifyPlayerObjectiveChange(index : Integer)
-               + nextPlayer()
-               + notifyCurrentPlayerChange()
+               + addGameFacadeObserver(gameFacadeObserver : GameFacadeObserver)
+               + playerNextObjective()
+               + getPlayer(n : Integer) : Player
+               + getPlayersPositions() : Position
+               + getCurrentPlayerIndex() : Integer
                + getCurrentPlayer() : Player
-               + get_players() : Player[]
+               + getPlayers() : Player[*]
+               + setPlayers(players : Player[*])
                + deal()
-               + getPlayer(index : Integer)) : Player
+               + movePlayer(position : Position, player : Player)
+               + nextPlayer()
+               + isGameOver() : Boolean
+               + getWinner() : Player
+               - getInitialPositionForIndex(index : Integer) : Position
+               - notifyPlayerPositionChange(newPosition : Position)
+               - notifyPlayerObjectiveChange(objective : Integer)
+               - notifyCurrentPlayerChange()
 		}
 
 		class Gameboard {
-               -  _tiles:Tile[][]
-               -  random:Random
-               +<<create>> Gameboard()
+               -  random : Random
+               + <<create>> Gameboard()
+               + getAllAccessibleTiles(start : Position) : Position[*]
+               + explore(current : Position, accessibleTiles : Position[*])
+               + getNeighbors(current : Position) : Position[*]
                + addGameboardObserver(GameBoardObserver)
-               + notifyGameboardChange()
+               + getTile(position : Position) : Tile
                + getFreeTile() : Tile
+               + getObjectivePositions() : Position[*]
+               + getObjectivePosition(objectiveId : Integer) : Position
                + setFreeTile(tile: Tile))
                - initializeBoard()
                - placeFixedTiles()
@@ -190,21 +197,25 @@ package models
                - placeMovableTileTShaped()
                - placeMovableTileStraight()
                - placeMovableTile(tile:Tile)
-               + getTile(position : Position) : Tile
                - placeObjectives()
-               + checkNeighbors(position: Position) : Map<String, Boolean>
-               - canConnect((tile1: Tile, (tile2: Tile, (index : Integer) : boolean
+               - notifyGameboardChange()
+               + shiftRowLeft(rowIndex : Integer) : Boolean
+               + shiftRowRight(rowIndex : Integer) : Boolean
+			   + shiftColumnUp(colIndex : Integer) : Boolean
+			   + shiftColumnDown(colIndex : Integer) : Boolean
+			   + getAccessibleTiles(position : Position) : Position[*]
+			   + isOppositeSideOpen(position : Position, oppositeSide : Integer) : Boolean
+			   + isPositionValid(position : Position)
 		}
-		'class Hallway {}
 
 		class Card {
-		    - _treasure : Integer
-		    ' si l'objectif est rempli
+		    - {final} _treasure : Integer
 			- _isFound : Boolean
 			' génération du trésor aléatoire, dans la limite des trésors encore disponibles
 			+ « Create » Card(treasure : Integer)
 			+ getTreasure() : Integer
-			+ checkIfFound() : Boolean
+			+ isFound() : Boolean
+			+ getName() : String
 			' Un trésor trouvé ne peut pas être re-caché, on ne peut donc pas remettre isFound à false :
 			+ setFound()
 			+ isBackCard() : Boolean
@@ -212,19 +223,23 @@ package models
 		}
 
 		class Player {
-			        - _id: integer[[0..3]
-                    - _name: String
-
-                    - _currentObjectiveIndex: integer
-                    + <<create>> Player(id: integer, name: String)
-                    + getName(): String
-                    + get_currentObjectiveIndex(): integer
-                    + getCurrentTile(): Position
-                    + getCards(): Card[]
-                    + setCurrentTile(position: Position)
-                    + setCards(cards: Card[])
-                    + getCurrentObjective(): Card
-                    + completeCurrentObjective()
+			- _id: Integer[[0..3]
+            - _name: String
+			- _currentObjectiveIndex: Integer
+            + <<create>> Player(id: Integer, name: String)
+            + getName(): String
+            + getId() : Integer
+            + getCurrentObjectiveIndex(): integer
+            + getCurrentTile(): Position
+            + getLastPosition() : Position
+            + getCards(): Card[*]
+            + getCurrentObjective(): Card
+            + setLastPosition(position : Position)        
+            + setCurrentTile(position: Position)
+            + setCards(cards: Card[*])
+            + completeCurrentObjective()
+            + hasCompletedAllObjectives() : Boolean
+            + toString() : String {redefines}
 		}
     }
 
@@ -261,35 +276,17 @@ package models
 	}
 }
 
-Labyrinthe ...> GameFacadeTextView
-Labyrinthe ...> GameboardTextView
-GameFacadeController "1" o--> "1\n - _gamefacade" GameFacade
-GameFacadeController ..> Position
-GameboardController "1" o--> "1\n - _gameboard" Gameboard
-GameboardController ..> Position
-GameboardController ..> Tile
-Gameboard "1" *--> "1\n - _tileFactory" TileFactory
-Gameboard "1" *--> "1\n - _freetile" Tile
-Player "1" *-> "6\n - _cards" Card
-Player "1" o--> "1\n - _currentTile" Position
+Labyrinthe ..> GameBoardFacadeView
+
 GameFacade "1" *--> "4\n - _players" Player
-GameFacade ..> Card
-GameFacade ..> Position
-ImageStore "1" *--> "1\n - _screen" Screen
-Tile "1" o-> "1\n # _position" Position
-Tile "1" *---> "1\n # _openSides" Sides
-TileFactory ..> AngledTile
-TileFactory ..> StraightTile
-TileFactory ..> TShapedTile
-TileFactory ..> Tile
-GameFacade "1" o-> "1\n - _gamefacadeobservers" GameFacadeObserver
-Gameboard "1" o--> "1\n - _gameboardobservers" GameboardObserver
-UIController .> GameFacade
-ImageHelper ..> ImageStore
-UIController "1" o--> "1\n - _boardController" GameboardController
-UIController "1" o--> "1\n - _view" GameboardTextView
-GameboardTextView ..|> GameboardObserver
-GameFacadeTextView ..|> GameFacadeObserver
-GameboardTextView "1" o--> "1\n - _gameboard" Gameboard
-GameFacadeTextView "1" o--> "1\n - _gamefacade" GameFacade
+GameFacade "1" o--> "*\n - _gameFacadeObservers" GameFacadeObserver
+Gameboard "1" o--> "7x7\n - _tiles" Tile
+Gameboard "1" *--> "1\n _freeTile" Tile
+Gameboard "1" *--> "7x7\n - _visited" Position
+Gameboard "1" o--> "1\n - _tileFactory" TileFactory
+Player "1" *--> "1\n - _currentTile" Position
+Player "1" *--> "1\n - lastPosition" Position
+Player "1" *--> "*\n - _cards" Card
+
+
 @enduml

@@ -6,7 +6,7 @@ _remarques générales_
 
 ###  Compilation
 
-Pour compiler « Labyrinthe » à la main, placez-vous dans le répertoire `srch` et compilez avec `javac` :
+Pour compiler « Labyrinthe » à la main, placez-vous dans le répertoire `src` et compilez avec `javac` :
 
 ```
 javac main/labyrinth/views/GameBoard/FacadeView 
@@ -26,7 +26,7 @@ _explications_
 
 La documentation est disponible dans le répertoire `doc/`.
 
-Pour modifier / re-générer la Java Doc en ligne de commande :
+Pour modifier / re-générer la Java Doc en ligne de commande, lancez depuis la racine du projet :
 
 ```aiignore
 javadoc -d ./doc -sourcepath ./src -subpackages main.labyrinth

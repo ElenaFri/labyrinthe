@@ -34,6 +34,30 @@ public class ImageHelper {
 		return mergedImage;
 	}
 
+	public static BufferedImage merge_central(String backgroundPath, String... foregroundPaths) throws IOException {
+		BufferedImage image1 = ImageIO.read(new File(backgroundPath));
+		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = mergedImage.createGraphics();
+
+		// Dessiner l'image de fond (background)
+		g2d.drawImage(image1, 0, 0, null);
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+
+		// Pour chaque chemin d'image de premier plan (foreground)
+		for (String path : foregroundPaths) {
+			BufferedImage image2 = ImageIO.read(new File(path));
+			// Calculer les coordonnées pour centrer l'image de premier plan
+			int x = (mergedImage.getWidth() - image2.getWidth()) / 2; // Centrer horizontalement
+			int y = (mergedImage.getHeight() - image2.getHeight()) / 2; // Centrer verticalement
+
+			// Dessiner l'image de premier plan à la position centrée
+			g2d.drawImage(image2, x, y, null);
+		}
+
+		g2d.dispose();
+		return mergedImage;
+	}
+
 	/**
 	 * Rotates a given square image by the specified angle around its center.
 	 * @param original : the input square image to rotate

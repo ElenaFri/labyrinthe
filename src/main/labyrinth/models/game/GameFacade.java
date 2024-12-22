@@ -115,6 +115,19 @@ public class GameFacade {
     }
 
     /**
+     * Notifies all registered observers about changes in the positions of players.
+     * This method iterates through the list of `GameFacadeObserver` instances and
+     * calls their `UpdatePlayerPositionChanged` method, passing the updated positions.
+     * @param positions : an array of `Position` objects representing the updated coordinates of all players on the game board.
+     */
+    public void notifyPlayerPositionChange(Position[] positions) {
+        for (GameFacadeObserver observer : gameFacadeObservers) {
+            observer.UpdatePlayerPositionChanged(positions);
+        }
+    }
+
+
+    /**
      * Notifies all registered observers about a change in the player's objective.
      * This method iterates through the list of GameFacadeObserver instances and calls
      * their UpdatePlayerObjectiveChanged method, passing the updated objective.
@@ -183,11 +196,7 @@ public class GameFacade {
     public Player[] get_players() {
         return _players;
     }
-    
-    /**
-     * Methods that says if the game is over.
-     * @return true if finished, false if still playing
-     */
+    // Méthode pour vérifier si la partie est terminée
     public boolean isGameOver() {
         for (int i = 0; i < _players.length; i++) {
             Player player = _players[i];

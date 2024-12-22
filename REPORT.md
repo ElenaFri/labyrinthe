@@ -4,7 +4,7 @@
 
 ### Rapport au 22/12/24
 
-Le bilan principal que nous pouvons faire au bout de ce projet : le jeu est fonctionnel, implémenté au niveau 3 du cahier des charges, avec génération aléatoire de tous les éléments qui peuvent l'être.
+Le bilan principal que nous pouvons faire au bout de ce projet : le jeu est fonctionnel, implémenté au niveau 3 du cahier des charges, avec génération aléatoire de tous les éléments qui peuvent l'être et réalisation des bonus suggérés.
 
 L'interface utilisateur reproduit fidèlement l'apparence du jeu physique. Les images des joueurs ont été générées par une IA.
 

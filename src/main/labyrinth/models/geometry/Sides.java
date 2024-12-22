@@ -51,7 +51,7 @@ public class Sides {
      * @throws IllegalArgumentException if the index is not between 0 and 3
      */
     public Boolean getSide(int i) {
-        if (i < 0 || i > 3) {array
+        if (i < 0 || i > 3) {
             throw new IllegalArgumentException("Index must be between 0 and 3.");
         }
         return this._openSides.get(i);

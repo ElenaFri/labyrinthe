@@ -40,32 +40,44 @@ package views
 
 package controllers
 {
-
    class GameboardController {
-
-          + <<create>> GameboardController(gameboard : Gameboard)
-          + getAvailableMoves(position : Position) : Map<String, Boolean>
-          + shiftRow(index : Integer, direction : Integer)
-          + shiftColumn(index : Integer, direction : Integer)
-          + rotateTile(tile: Tile, direction: integer)
+        + <<create>> GameboardController(gameboard : Gameboard)
+        + getGameboard() : Gameboard
+        + shiftRow(index : Integer, direction : Integer)
+        + shiftColumn(index : Integer, direction : Integer)
+        + rotateTile(tile: Tile, direction: integer)
    }
+   
+   class GameController {
+		+ «create» GameController(mainFrame : JFrame)
+		+ initializeGame()
+		+ resetGame()
+   }
+   
    class GameFacadeController {
-
-          +<<create>> GameFacadeController(gameFacade:GameFacade)
-          + getCurrentPlayerPosition() : Position
-          + getCurrentPlayerObjective() : String
-          + notifyPlayerPosition(position : Position)
-          + notifyPlayerObjective(objective: integer)
-          + nextPlayer()
-          + getCurrentPlayer() : Player
-
+        +<<create>> GameFacadeController(gameFacade : GameFacade)
+        + getCurrentPlayer() : Player
+        + getCurrentPlayerPosition() : Position
+        + getCurrentPlayerObjective() : String
+        + changePlayerPosition(newPosition : Position, gameBoardFacadeView : GameBoardFacadeView)
+        + changePlayerObjective(gameboard : Gameboard, gameBoardFacadeView : GameBoardFacadeView)
+        + changePlayerLastPosition(position : Position)
+        + aAtteintObjectif(gameboard : Gameboard)
+        - notifyPlayerPosition(position : Position)
+        - notifyPlayerObjective(objective: Integer)
+   }
+   
+   class TourController {
+		+ « create » TourController(gameFacadeController : GameFacadeController, gameBoardFacadeView : GameBoardFacadeView, gameFacade : GameFacade)
+		+ tourSuivant()
+		+ showEndGameView(winner : Player)
    }
 
    class UIController {
-       + handleTileClick(position: Position)
-       + handleObjectiveFound(player: Player)
-       + updateView(): void
-       + displayGameOver(winner: Player)
+       + « create » UIController(gameboardController : GameboardController, gameFacadeController : GameFacadeController, tourController : TourController)
+       + onRotateTileClicked()
+       + onArrowButtonClicked(direction : String, index : Integer)
+       + deplacerJoueurEtObjectif(position : Position, gameBoardFacadeView : GameBoardFacadeView, gameFacade : GameFacade)
    }
 }
 
@@ -282,15 +294,30 @@ GameBoardFacadeView "1" o--> "1\n - _gameboard" Gameboard
 GameBoardFacadeView "1" o--> "1\n - _gameFacade" GameFacade
 GameBoardFacadeView "1" *--> "1\n - _imageStore" ImageStore
 
+GameboardController "1" o--> "1\n - _gameboard" Gameboard
+GameFacadeController "1" o--> "1\n - _gameFacade" GameFacade
+TourController "1" o--> "1\n - _gameFacadeController" GameFacadeController
+TourController "1" o--> "1\n - _gameBoardFacadeView" GameBoardFacadeView
+TourController "1" o--> "1\n - _gameFacade" GameFacade
+GameController "1" o--> "1\n - _gameboard" Gameboard
+GameController "1" o--> "1\n - _imageStore" ImageStore
+GameController "1" o--> "1\n - _gameFacade" GameFacade
+GameController "1" o--> "1\n - _gameFacadeController" GameFacadeController
+GameController "1" o--> "1\n - _tourController" TourController
+GameController "1" o--> "1\n - _gameView" GameBoardFacadeView
+UIController "1" o--> "1\n - gameboardController" GameboardController
+UIController "1" o--> "1\n - gameFacadeController" GameFacadeController
+UIController "1" o--> "1\n - tourController" TourController
+
 GameFacade "1" *--> "4\n - _players" Player
-GameFacade "1" o--> "*\n - _gameFacadeObservers" GameFacadeObserver
+GameFacade "1" o-> "*\n - _gameFacadeObservers" GameFacadeObserver
 Gameboard "1" o--> "7x7\n - _tiles" Tile
 Gameboard "1" *--> "1\n _freeTile" Tile
 Gameboard "1" *--> "7x7\n - _visited" Position
 Gameboard "1" o--> "1\n - _tileFactory" TileFactory
 Player "1" *--> "1\n - _currentTile" Position
 Player "1" *--> "1\n - lastPosition" Position
-Player "1" *--> "*\n - _cards" Card
+Player "1" *-> "*\n - _cards" Card
 Tile "1" *--> "1\n - _openSides" Sides
 Tile "1" *--> "1\n - _position" Position
 TileFactory ..> Tile

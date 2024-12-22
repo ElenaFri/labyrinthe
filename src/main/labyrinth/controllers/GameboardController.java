@@ -19,6 +19,11 @@ public class GameboardController {
 
         this.gameboard = gameboard;
     }
+    
+    /**
+     * Returns the (current) gameboard.
+     * @return a Gameboard instance
+     */
     public Gameboard getGameboard()
     {
         return this.gameboard;

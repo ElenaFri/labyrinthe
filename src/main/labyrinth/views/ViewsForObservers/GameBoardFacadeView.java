@@ -73,11 +73,18 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     Color shadow = new Color(0,0,0,100);
 
 
-    // Getters
+    /**
+     * Last arrow direction getter.
+     * @return the direction as a string
+     */
     public String getLastArrowDirection() {
         return lastArrowDirection;
     }
 
+	/**
+	 * Last arrow getter.
+	 * @return : the arrow index
+	 */
     public int getLastArrowIndex() {
         return lastArrowIndex;
     }

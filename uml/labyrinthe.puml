@@ -23,19 +23,60 @@ package views
 		}
 	}
 
-	package ViewsForObservers{
-	  class GameBoardFacadeView {
-
-              + <<create>> GameFacadeTextView(gameFacade: GameFacade)
-              + displayGameState()
-              - displayPlayers()
-              + onCurrentPlayerChanged(currentPlayer: Player)
-              + onPlayerPositionChanged(newPosition: Position)
-              + onPlayerObjectiveChanged(objective: integer)
-
-	  }
+	package ViewsForObservers{	
+		class GameBoardFacadeView {
+			- rotateTileButton : JButton
+			- lastArrowDirection : String
+			- lastArrowIndex : Integer
+			- tourPanel : JPanel
+			- tourLabel : JLabel
+			- playerIconLabel : JLabel
+			- selectedButton : JButton
+			- tileButtons : Position[*]
+            + <<create>> GameFacadeTextView(gameboard : Gameboard, gameFacade: GameFacade, imageStore : ImageStore, onNewGame : Runnable)
+            + getLastArrowDirection() : String
+			+ getLastArrowIndex() : Integer
+			+ setPlayerPositions(playerPositions : Position[*])
+			+ makeTileClickable(position : Position)
+			+ initTourPanel(currentPlayer : Player, imageStore : ImageStore)
+			+ showAdjacentAccessibleTiles(currentPosition : Position)
+			+ showEndGameView(winner : Player)
+			+ paintComponent(g : Graphics) {redefines}
+			+ updateRotateButtonPosition(freeTilePosition : Position, xOffset : Integer, yOffset : Integer)
+			+ desactiverFleches()
+			+ activerFleches()
+			+ createArrowButton(imagePath : String, index : Integer, direction : String)
+			+ updatePlayersAfterRowShift(rowIndex : Integer, direction : Integer)
+			+ updatePlayersAfterColumnShift(columnIndex : Integer, direction : Integer)
+			+ updatePlayerPositionChanged(newPositions : Position[*])
+			+ getOppositeDirection(direction : String)
+			+ disableOppositeArrow()
+			+ enableOppositeArrow()
+			+ rendreTabCliquable()
+			+ createArrowButtons()
+			+ drawGameboard(g : Graphics, xOffset : Integer, yOffset : Integer)
+			+ drawFreeTile(g : Graphics, xOffset : Integer)
+			+ getTileIndex(tile : Tile) : Integer
+			+ drawPlayersAndPieces(g : Graphics, xOffset : Integer, yOffset : Integer)
+			+ drawPlayers(g : Graphics, xOffset : Integer, yOffset : Integer)
+			+ afficherFelicitation(currentPlayer : Player)
+			+ afficherTourSuivant(nextPlayer : Player)
+			+ drawPieces(g : Graphics, xOffset : Integer, yOffset : Integer)
+			+ drawPlayerCards(g : Graphics, player : Player, xOffset : Integer, yOffset : Integer, cardWidth : Integer, cardHeight : Integer, cardOverlap : Integer, playerIndex : Integer)
+			+ update(gameboard : Gameboard) {redefines}
+			+ updatePlayerObjectiveChanged(objective : Integer) {redefines}
+			+ updatePlayerPositionChanged(newPosition : Position) {redefines}
+			+ updateCurrentPlayerChanged(currentPlayer : Player) {redefines}
+		}
+	  
+		class EndGameView {
+			- backgroundImage : Image
+			- winnerImage : Image
+			- onNewGame : Runnable
+			+ «create» EndGameView(winner : Player, backgroundImage : Image, winnerImage : Image, onNewGame : Runnable)
+			+ paintComponent(g : Graphics) {redefines}
+		}
 	}
-	
 }
 
 package controllers
@@ -287,12 +328,20 @@ package models
 	}
 }
 
-Labyrinthe ..> GameBoardFacadeView
+Labyrinthe ...> GameBoardFacadeView
+Labyrinthe ...> EndGameView
 
 GameBoardFacadeView "1" o--> "*\n - _clickedTiles" Position
 GameBoardFacadeView "1" o--> "1\n - _gameboard" Gameboard
 GameBoardFacadeView "1" o--> "1\n - _gameFacade" GameFacade
-GameBoardFacadeView "1" *--> "1\n - _imageStore" ImageStore
+GameBoardFacadeView "1" o--> "1\n - _imageStore" ImageStore
+GameBoardFacadeView "1" o--> "1\n - _gameboardController" GameboardController
+GameBoardFacadeView "1" o--> "1\n - _gameFacadeController" GameFacadeController
+GameBoardFacadeView "1" o--> "1\n - _uiController" UIController
+GameBoardFacadeView "1" o--> "*\n - _playerPositions" Position
+GameBoardFacadeView "1" o--> "1\n - _freeTilePosition" Position
+GameBoardFacadeView ..> ImageHelper
+EndGameView ....> Player
 
 GameboardController "1" o--> "1\n - _gameboard" Gameboard
 GameFacadeController "1" o--> "1\n - _gameFacade" GameFacade
@@ -309,8 +358,13 @@ UIController "1" o--> "1\n - gameboardController" GameboardController
 UIController "1" o--> "1\n - gameFacadeController" GameFacadeController
 UIController "1" o--> "1\n - tourController" TourController
 
+GameboardObserver .> Gameboard
+GameFacadeObserver .> Player
+GameFacadeObserver .> Position
+
 GameFacade "1" *--> "4\n - _players" Player
-GameFacade "1" o-> "*\n - _gameFacadeObservers" GameFacadeObserver
+GameFacade "1" o--> "*\n - _gameFacadeObservers" GameFacadeObserver
+Gameboard "1" o--> "*\n - gameboardObservers" GameboardObserver
 Gameboard "1" o--> "7x7\n - _tiles" Tile
 Gameboard "1" *--> "1\n _freeTile" Tile
 Gameboard "1" *--> "7x7\n - _visited" Position
@@ -318,8 +372,8 @@ Gameboard "1" o--> "1\n - _tileFactory" TileFactory
 Player "1" *--> "1\n - _currentTile" Position
 Player "1" *--> "1\n - lastPosition" Position
 Player "1" *-> "*\n - _cards" Card
-Tile "1" *--> "1\n - _openSides" Sides
-Tile "1" *--> "1\n - _position" Position
-TileFactory ..> Tile
+Tile "1" *-> "1\n - _openSides" Sides
+Tile "1" *-> "1\n - _position" Position
+TileFactory .> Tile
 
 @enduml

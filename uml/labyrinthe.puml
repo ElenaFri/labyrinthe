@@ -73,9 +73,9 @@ package models
 {
     package observers {
         interface GameFacadeObserver {
-            +UpdateCurrentPlayerChanged( currentPlayer : Player);
-            +UpdatePlayerPositionChanged(newPosition : Position );
-           + UpdatePlayerObjectiveChanged(objective: integer);
+            + updateCurrentPlayerChanged(currentPlayer : Player);
+            + updatePlayerPositionChanged(newPosition : Position );
+            + updatePlayerObjectiveChanged(objective: integer);
         }
 
         interface GameboardObserver {
@@ -96,17 +96,20 @@ package models
 			# _hasTreasure : Boolean
 			# _treasure : Integer[0..23]
 			# _canMove : Boolean
-			# _isOnBoard : Boolean
 			# _orientation : Integer[0..3]
 			+ « Create » Tile()
 			+ « Create » Tile(position : Position)
+			+ getTileIndex(tile : Tile) : Integer
 			+ getType() : String
+			+ getOrientation() : Integer
+			+ getPosition() : Position
 			'récupérer les voies de passage :
 			+ getOpenSides() : Sides
 			+ getTreasure() : Integer
-			+ checkIfTreasure() : Integer
+			+ checkIfTreasure() : Boolean
 			+ checkIfMoves() : Boolean
 			+ setTreasure(treasure : Integer)
+			+ setCanMove()
 			+ {abstract} initOrientation()
 			+ {abstract} setOrientation(orientation : Integer)
 			+ {abstract} setOpenSides()
@@ -245,38 +248,39 @@ package models
 
     package data {
 		class ImageStore {
-			    -  _tileImages : BufferedImage[]
-                -  _cardImages : BufferedImage[]
-                -  _treasureImages:BufferedImage[]
-                -  _pieceImages : BufferedImage[]
-                -  _handBackground : BufferedImage
-
-                + <<create>> ImageStore()
-                + getTileImage(index: integer,direction: integer, withtreasure: boolean,indextreasure: integer) : BufferedImage
-                + getCardImage(index :integer, isOpen: boolean) : BufferedImage
-                + getPieceImage(index : Integer) : BufferedImage
-                + getHandBackground() : BufferedImage
-                + getScreen(isRunning : boolean) : BufferedImage
-                - chargerImagesPourTuiles() : BufferedImage[]
-                - chargerImagesPourCartes() : BufferedImage[]
-                - chargerImagesPourTresors() : BufferedImage[]
-                - chargerImagesPourPions() : BufferedImage[]
-                - chargerImageDeFond() : BufferedImage
-                - loadImage( chemin: String) : BufferedImage
-		}
-
-		class Screen {
-		    - _mainScreen : BufferedImage
-            -  _gameoverScreen : BufferedImage
-            + << create>> Screen()
-            + getScreenImage(isRunning: boolean) : BufferedImage
-			'si le jeu est toujours en cours, retourner l'écran principal :
-
+			-  _tileImages : BufferedImage[*]
+            -  _cardImages : BufferedImage[*]
+            -  _treasureImages:BufferedImage[*]
+            -  _pieceImages : BufferedImage[*]
+            -  _handBackground : BufferedImage
+            + <<create>> ImageStore()
+            + getCardWithTreasure(index : Integer, isOpen : Boolean) : BufferedImage
+            + getTileImage(index: Integer, direction: Integer, withtreasure: Boolean,indextreasure: Integer) : BufferedImage
+            + getPieceImage(index : Integer) : BufferedImage
+            + getHandBackground() : BufferedImage
+            + getPlayerIcon(index : Integer) : BufferedImage
+            + getGameBoardBackground() : BufferedImage
+            + getCardBackImage() : BufferedImage
+            + getCardImage() : BufferedImage
+            + getCardImagePath(card : Card) : String
+            - chargerImagesPourTuiles() : BufferedImage[*]
+            - chargerImagesPourCartes() : BufferedImage[*]
+            - chargerImagesPourTresors() : BufferedImage[*]
+            - chargerImagesPourJoueurs() : BufferedImage[*]
+            - chargerImagesPourPions() : BufferedImage[*]
+            - chargerImageDeFond() : BufferedImage
+            - chargerImageFondTableau() : BufferedImage
+            - loadImage(path : String) : BufferedImage
 		}
 	}
 }
 
 Labyrinthe ..> GameBoardFacadeView
+
+GameBoardFacadeView "1" o--> "*\n - _clickedTiles" Position
+GameBoardFacadeView "1" o--> "1\n - _gameboard" Gameboard
+GameBoardFacadeView "1" o--> "1\n - _gameFacade" GameFacade
+GameBoardFacadeView "1" *--> "1\n - _imageStore" ImageStore
 
 GameFacade "1" *--> "4\n - _players" Player
 GameFacade "1" o--> "*\n - _gameFacadeObservers" GameFacadeObserver
@@ -287,6 +291,8 @@ Gameboard "1" o--> "1\n - _tileFactory" TileFactory
 Player "1" *--> "1\n - _currentTile" Position
 Player "1" *--> "1\n - lastPosition" Position
 Player "1" *--> "*\n - _cards" Card
-
+Tile "1" *--> "1\n - _openSides" Sides
+Tile "1" *--> "1\n - _position" Position
+TileFactory ..> Tile
 
 @enduml

@@ -71,6 +71,11 @@ public abstract class Tile {
      * @return current tile orientation
      */
     public int get_orientation() { return this._orientation; }
+    
+    /**
+     * Position getter.
+     * @return current tile position
+     */
     public Position get_position() { return this._position; }
 
 

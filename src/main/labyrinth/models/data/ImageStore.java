@@ -159,14 +159,6 @@ public class ImageStore {
     }
 
     /**
-     * Retrieves the background image for the player's hand area.
-     * @return a BufferedImage representing the background of the hand area
-     */
-    public BufferedImage getHandBackground() {
-        return _handBackground;
-    }
-
-    /**
      * Loads an array of tile images from predefined file paths. This method
      * attempts to load three distinct tile images from the specified directory
      * and returns them as an array of BufferedImages.

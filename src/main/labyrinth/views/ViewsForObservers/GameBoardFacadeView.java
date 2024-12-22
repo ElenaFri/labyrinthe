@@ -41,15 +41,6 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     private final Gameboard gameboard;
     private String lastArrowDirection = null; // Direction de la dernière flèche cliquée
     private int lastArrowIndex = -1;          // Indice de la dernière flèche cliquée
-
-    // Getters
-    public String getLastArrowDirection() {
-        return lastArrowDirection;
-    }
-
-    public int getLastArrowIndex() {
-        return lastArrowIndex;
-    }
     private final TourController tourController;
     private JPanel tourPanel;
     private JLabel tourLabel;
@@ -81,6 +72,15 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     Color menthol_green = new Color(46, 204, 113);
     Color shadow = new Color(0,0,0,100);
 
+
+    // Getters
+    public String getLastArrowDirection() {
+        return lastArrowDirection;
+    }
+
+    public int getLastArrowIndex() {
+        return lastArrowIndex;
+    }
 
     /**
      * Sets the positions of the four players on the gameboard.

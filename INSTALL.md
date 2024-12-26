@@ -30,7 +30,7 @@ Si vous avez compilé à la main, il suffit d'exécuter depuis le répertoire so
 java -cp bin labyrinth.Labyrinth
 ```
 
-Vous pouvez également, bien entendu, utiliser votre IDE préféré pour exécuter le fichier `main/labyrinth/Labyrinth`.
+Vous pouvez également, bien entendu, utiliser votre IDE préféré pour exécuter le fichier `qlabyrinth/Labyrinth`.
 
 ### Java Doc
 
@@ -39,7 +39,7 @@ La documentation est disponible dans le répertoire `doc/`.
 Pour modifier / re-générer la Java Doc en ligne de commande, lancez depuis la racine du projet :
 
 ```aiignore
-javadoc -d ./doc -sourcepath ./src -subpackages main.labyrinth
+ javadoc -d ./doc -sourcepath ./src/main -subpackages labyrinth
 ```
 
 Ceci dit, rien n'empêche d'utiliser les fonctionnalités de votre IDE pour ce faire.

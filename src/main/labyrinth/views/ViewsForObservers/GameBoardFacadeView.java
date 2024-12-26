@@ -620,28 +620,28 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             int rowIndex = rowIndices[i];
 
             // Droite
-            JButton rightButton = createArrowButton("../res/img/arrows/arrowD.png", rowIndex, "droite");
+            JButton rightButton = createArrowButton("res/img/arrows/arrowD.png", rowIndex, "droite");
             rightButton.setBounds(rightPositions[i][0], rightPositions[i][1], 50, 50);
             rightButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             add(rightButton);
             arrowButtons.add(rightButton);
 
             // Gauche
-            JButton leftButton = createArrowButton("../res/img/arrows/arrowG.png", rowIndex, "gauche");
+            JButton leftButton = createArrowButton("res/img/arrows/arrowG.png", rowIndex, "gauche");
             leftButton.setBounds(leftPositions[i][0], leftPositions[i][1], 50, 50);
             leftButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             add(leftButton);
             arrowButtons.add(leftButton);
 
             // Haut
-            JButton upButton = createArrowButton("../res/img/arrows/arrowH.png", rowIndex, "haut");
+            JButton upButton = createArrowButton("res/img/arrows/arrowH.png", rowIndex, "haut");
             upButton.setBounds(upPositions[i][0], upPositions[i][1], 50, 50);
             upButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             add(upButton);
             arrowButtons.add(upButton);
 
             // Bas
-            JButton downButton = createArrowButton("../res/img/arrows/arrowB.png", rowIndex, "bas");
+            JButton downButton = createArrowButton("res/img/arrows/arrowB.png", rowIndex, "bas");
             downButton.setBounds(downPositions[i][0], downPositions[i][1], 50, 50);
             downButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Rétablir le curseur pointer
             add(downButton);

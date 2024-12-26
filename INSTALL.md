@@ -16,10 +16,10 @@ Pour améliorer votre expérience utilisateur, pensez à activer votre sortie so
 
 ###  Compilation
 
-Pour compiler « Labyrinthe » à la main, placez-vous dans le répertoire source `src` et compilez avec `javac` :
+Pour compiler « Labyrinthe » à la main, depuis la racine du projet :
 
-```
-javac main/labyrinth/Labyrinth.java
+```aiignore
+find src -name "*.java" -print | xargs javac -d bin
 ```
 
 ### Lancement
@@ -27,7 +27,7 @@ javac main/labyrinth/Labyrinth.java
 Si vous avez compilé à la main, il suffit d'exécuter depuis le répertoire source `src` (l'ensemble des classes sera compilé grâce aux _import_) :
 
 ```aiignore
-java main/labyrinth/Labyrinth
+java -cp bin labyrinth.Labyrinth
 ```
 
 Vous pouvez également, bien entendu, utiliser votre IDE préféré pour exécuter le fichier `main/labyrinth/Labyrinth`.

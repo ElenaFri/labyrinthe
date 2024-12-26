@@ -15,6 +15,8 @@
 
 ### Corrections réalisées
 
+- Chemins relatifs des ressources corrigés pour être lisible à la fois pour l'IDE et le compilateur de Java.
+- Instructions d'installation revues pour être plus universelles.
 
 
 ### Améliorations réalisées

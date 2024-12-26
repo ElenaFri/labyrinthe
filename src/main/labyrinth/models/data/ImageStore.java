@@ -57,8 +57,8 @@ public class ImageStore {
             if (isOpen) {
                 // Essayer de fusionner l'image de la carte avec le trésor associé
                 return ImageHelper.merge_central(
-                        "../res/img/cards/cardFront.png",
-                        "../res/img/treasures/treasure" + index + ".png"
+                        "res/img/cards/cardFront.png",
+                        "res/img/treasures/treasure" + index + ".png"
                 );
             } else {
                 // Si la carte est fermée, retourner l'image du dos de la carte
@@ -97,8 +97,8 @@ public class ImageStore {
         BufferedImage tileWithTreasure = baseTile;
         if (withTreasure) {
             tileWithTreasure = ImageHelper.merge(
-                    "../res/img/tiles/tile_" + index + ".png",
-                    "../res/img/treasures/treasure" + treasureIndex + ".png"
+                    "res/img/tiles/tile_" + index + ".png",
+                    "res/img/treasures/treasure" + treasureIndex + ".png"
             );
         }
 
@@ -169,7 +169,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTuiles() {
         BufferedImage[] tileImages = new BufferedImage[3]; // 3 typestuiles
         for (int i = 0; i < 3; i++) {
-            tileImages[i] = loadImage("../res/img/tiles/tile_" + i + ".png");
+            tileImages[i] = loadImage("res/img/tiles/tile_" + i + ".png");
         }
         return tileImages;
     }
@@ -185,9 +185,9 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
         for (int i = 0; i < 25; i++) {
-            cardImages[i] = loadImage("../res/img/cards/cardFront.png");
+            cardImages[i] = loadImage("res/img/cards/cardFront.png");
         }
-        cardImages[24] = loadImage("../res/img/cards/cardBack.png"); // Carte verso
+        cardImages[24] = loadImage("res/img/cards/cardBack.png"); // Carte verso
         return cardImages;
     }
 
@@ -201,7 +201,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourTresors() {
         BufferedImage[] treasureImages = new BufferedImage[14];
         for (int i = 0; i < 14; i++) {
-            treasureImages[i] = loadImage("../res/img/treasures/treasure" + i + ".png");
+            treasureImages[i] = loadImage("res/img/treasures/treasure" + i + ".png");
         }
         return treasureImages;
     }
@@ -217,10 +217,10 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourJoueurs() {
         BufferedImage[] playersImages = new BufferedImage[4];
 
-        playersImages[0] = loadImage("../res/img/players/redplayer.png");
-        playersImages[1] = loadImage("../res/img/players/greenplayer.png");
-        playersImages[2] = loadImage("../res/img/players/blueplayer.png");
-        playersImages[3] = loadImage("../res/img/players/yellowplayer.png");
+        playersImages[0] = loadImage("res/img/players/redplayer.png");
+        playersImages[1] = loadImage("res/img/players/greenplayer.png");
+        playersImages[2] = loadImage("res/img/players/blueplayer.png");
+        playersImages[3] = loadImage("res/img/players/yellowplayer.png");
 
         return playersImages;
     }
@@ -235,7 +235,7 @@ public class ImageStore {
     private BufferedImage[] chargerImagesPourPions() {
         BufferedImage[] pieceImages = new BufferedImage[4]; // 4 pions de couleurs différentes
         for (int i = 0; i < 4; i++) {
-            pieceImages[i] = loadImage("../res/img/pieces/piece_" + i + ".png");
+            pieceImages[i] = loadImage("res/img/pieces/piece_" + i + ".png");
         }
         return pieceImages;
     }
@@ -247,11 +247,11 @@ public class ImageStore {
      * @return a BufferedImage representing the background of the labyrinth, or null if the image cannot be loaded
      */
     private BufferedImage chargerImageDeFond() {
-        return loadImage("../res/img/screens/main_screen.png");
+        return loadImage("res/img/screens/main_screen.png");
     }
 
     private BufferedImage chargerImageFondTableau() {
-        return loadImage("../res/img/screens/gameboard.png");
+        return loadImage("res/img/screens/gameboard.png");
     }
 
     /**
@@ -290,7 +290,7 @@ public class ImageStore {
      */
     public BufferedImage getCardBackImage() {
         try {
-            return ImageIO.read(new File("../res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
+            return ImageIO.read(new File("res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -321,6 +321,6 @@ public class ImageStore {
      */
     private String getCardImagePath(Card card) {
         // Ex: Return image path based on card type or name
-        return "../res/img/cards/" + card.getName() + ".png";
+        return "res/img/cards/" + card.getName() + ".png";
     }
 }

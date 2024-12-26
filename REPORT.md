@@ -15,4 +15,8 @@
 
 ### Corrections réalisées
 
+
+
 ### Améliorations réalisées
+
+- Simplification : package `main.labyrinth` renommé en `labyrinth`.

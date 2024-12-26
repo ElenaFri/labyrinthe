@@ -22,7 +22,7 @@ public class Labyrinth {
 		SwingUtilities.invokeLater(() -> {
 			// Démarrer la lecture de la musique dans un thread séparé
 			new Thread(() -> {
-				playMusic("../res/snd/la_moldau.wav");
+				playMusic("res/snd/la_moldau.wav");
 			}).start();
 
 			// Jeu

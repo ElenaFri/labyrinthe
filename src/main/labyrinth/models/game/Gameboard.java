@@ -1,8 +1,8 @@
-package main.labyrinth.models.game;
+package labyrinth.models.game;
 
-import main.labyrinth.models.geometry.*;
-import main.labyrinth.models.observers.GameBoardObserver;
-import main.labyrinth.models.tiles.*;
+import labyrinth.models.geometry.*;
+import labyrinth.models.observers.GameBoardObserver;
+import labyrinth.models.tiles.*;
 
 import java.awt.*;
 import java.util.*;

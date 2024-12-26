@@ -1,6 +1,6 @@
-package main.labyrinth.views.ViewsForObservers;
+package labyrinth.views.ViewsForObservers;
 
-import main.labyrinth.models.game.Player;
+import labyrinth.models.game.Player;
 
 import javax.swing.*;
 import java.awt.*;

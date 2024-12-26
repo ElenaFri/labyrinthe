@@ -1,18 +1,18 @@
-package main.labyrinth.views.ViewsForObservers;
+package labyrinth.views.ViewsForObservers;
 
-import main.labyrinth.controllers.GameFacadeController;
-import main.labyrinth.controllers.GameboardController;
-import main.labyrinth.controllers.TourController;
-import main.labyrinth.controllers.UIController;
-import main.labyrinth.models.game.Gameboard;
-import main.labyrinth.models.tiles.Tile;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.models.observers.GameBoardObserver;
-import main.labyrinth.models.observers.GameFacadeObserver;
-import main.labyrinth.models.data.ImageStore;
-import main.labyrinth.models.game.GameFacade;
-import main.labyrinth.models.game.Player;
-import main.labyrinth.models.game.Card;
+import labyrinth.controllers.GameFacadeController;
+import labyrinth.controllers.GameboardController;
+import labyrinth.controllers.TourController;
+import labyrinth.controllers.UIController;
+import labyrinth.models.game.Gameboard;
+import labyrinth.models.tiles.Tile;
+import labyrinth.models.geometry.Position;
+import labyrinth.models.observers.GameBoardObserver;
+import labyrinth.models.observers.GameFacadeObserver;
+import labyrinth.models.data.ImageStore;
+import labyrinth.models.game.GameFacade;
+import labyrinth.models.game.Player;
+import labyrinth.models.game.Card;
 
 import javax.swing.*;
 import java.awt.*;
@@ -735,8 +735,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     private int getTileIndex(Tile tile) {
         // Détermine l'index de l'image en fonction du type de tuile
-        if (tile instanceof main.labyrinth.models.tiles.AngledTile) return 0;
-        if (tile instanceof main.labyrinth.models.tiles.TShapedTile) return 2;
+        if (tile instanceof labyrinth.models.tiles.AngledTile) return 0;
+        if (tile instanceof labyrinth.models.tiles.TShapedTile) return 2;
         return 1; // Par défaut, pour les tuiles droites ou autres
     }
 

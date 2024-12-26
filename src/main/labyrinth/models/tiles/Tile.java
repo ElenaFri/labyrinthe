@@ -1,8 +1,8 @@
-package main.labyrinth.models.tiles;
+package labyrinth.models.tiles;
 
-import main.labyrinth.models.data.ImageStore;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.models.geometry.Sides;
+import labyrinth.models.data.ImageStore;
+import labyrinth.models.geometry.Position;
+import labyrinth.models.geometry.Sides;
 
 
 import java.awt.image.BufferedImage;
@@ -56,8 +56,8 @@ public abstract class Tile {
      */
     public int getTileIndex(Tile tile) {
         // Détermine l'index de l'image en fonction du type de tuile
-        if (tile instanceof main.labyrinth.models.tiles.AngledTile) return 0;
-        if (tile instanceof main.labyrinth.models.tiles.TShapedTile) return 2;
+        if (tile instanceof labyrinth.models.tiles.AngledTile) return 0;
+        if (tile instanceof labyrinth.models.tiles.TShapedTile) return 2;
         return 1; // Par défaut, pour les tuiles droites ou autres
     }
     /**

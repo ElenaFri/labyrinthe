@@ -1,16 +1,16 @@
-package main.labyrinth.controllers;
+package labyrinth.controllers;
 
 
 import javax.swing.*;
 import java.awt.*;
 
-import main.labyrinth.models.data.ImageStore;
-import main.labyrinth.models.game.GameFacade;
-import main.labyrinth.models.game.Gameboard;
-import main.labyrinth.models.game.Player;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
-import main.labyrinth.views.ViewsForObservers.EndGameView;
+import labyrinth.models.data.ImageStore;
+import labyrinth.models.game.GameFacade;
+import labyrinth.models.game.Gameboard;
+import labyrinth.models.game.Player;
+import labyrinth.models.geometry.Position;
+import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
+import labyrinth.views.ViewsForObservers.EndGameView;
 
 public class GameController {
     private JFrame mainFrame;

@@ -1,6 +1,6 @@
-package main.labyrinth.models.tiles;
+package labyrinth.models.tiles;
 
-import main.labyrinth.models.data.ImageStore;
+import labyrinth.models.data.ImageStore;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

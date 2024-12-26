@@ -1,9 +1,9 @@
-package main.labyrinth.controllers;
+package labyrinth.controllers;
 
-import main.labyrinth.models.observers.GameBoardObserver;
-import main.labyrinth.models.tiles.Tile;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.models.game.Gameboard;
+import labyrinth.models.observers.GameBoardObserver;
+import labyrinth.models.tiles.Tile;
+import labyrinth.models.geometry.Position;
+import labyrinth.models.game.Gameboard;
 
 import java.util.Map;
 

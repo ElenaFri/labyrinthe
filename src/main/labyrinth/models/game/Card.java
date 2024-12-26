@@ -1,4 +1,4 @@
-package main.labyrinth.models.game;
+package labyrinth.models.game;
 
 import java.util.ArrayList;
 import java.util.List;

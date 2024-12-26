@@ -1,7 +1,7 @@
-package main.labyrinth.models.game;
+package labyrinth.models.game;
 
-import main.labyrinth.models.game.Card;
-import main.labyrinth.models.geometry.Position;
+import labyrinth.models.game.Card;
+import labyrinth.models.geometry.Position;
 
 // Implements a Labyrinth player
 public class Player {

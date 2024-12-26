@@ -1,7 +1,7 @@
-package main.labyrinth.models.game;
+package labyrinth.models.game;
 
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.models.observers.GameFacadeObserver;
+import labyrinth.models.geometry.Position;
+import labyrinth.models.observers.GameFacadeObserver;
 
 import java.util.ArrayList;
 import java.util.Arrays;

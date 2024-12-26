@@ -1,5 +1,5 @@
-package main.labyrinth.models.observers;
-import main.labyrinth.models.game.Gameboard;
+package labyrinth.models.observers;
+import labyrinth.models.game.Gameboard;
 
 // Observer for Gameboard.
 public interface GameBoardObserver {

@@ -1,7 +1,7 @@
-package main.labyrinth.models.data;
+package labyrinth.models.data;
 
-import main.labyrinth.models.game.Card;
-import main.labyrinth.views.helpers.ImageHelper;
+import labyrinth.models.game.Card;
+import labyrinth.views.helpers.ImageHelper;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

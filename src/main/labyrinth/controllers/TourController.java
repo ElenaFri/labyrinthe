@@ -1,10 +1,10 @@
-package main.labyrinth.controllers;
+package labyrinth.controllers;
 
-import main.labyrinth.models.game.GameFacade;
-import main.labyrinth.models.game.Gameboard;
-import main.labyrinth.models.game.Player;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
+import labyrinth.models.game.GameFacade;
+import labyrinth.models.game.Gameboard;
+import labyrinth.models.game.Player;
+import labyrinth.models.geometry.Position;
+import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 import java.util.List;
 

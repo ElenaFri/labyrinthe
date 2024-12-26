@@ -1,7 +1,7 @@
-package main.labyrinth.models.observers;
+package labyrinth.models.observers;
 
-import main.labyrinth.models.game.Player;
-import main.labyrinth.models.geometry.Position;
+import labyrinth.models.game.Player;
+import labyrinth.models.geometry.Position;
 
 // Observer for GameFacade.
 public interface GameFacadeObserver {

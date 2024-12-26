@@ -1,4 +1,4 @@
-package main.labyrinth;
+package labyrinth;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,16 +6,16 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-import main.labyrinth.controllers.GameController;
-import main.labyrinth.controllers.GameFacadeController;
-import main.labyrinth.controllers.TourController;
-import main.labyrinth.models.game.GameFacade;
-import main.labyrinth.models.game.Gameboard;
-import main.labyrinth.models.game.Player;
-import main.labyrinth.models.data.ImageStore;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.views.ViewsForObservers.EndGameView;
-import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
+import labyrinth.controllers.GameController;
+import labyrinth.controllers.GameFacadeController;
+import labyrinth.controllers.TourController;
+import labyrinth.models.game.GameFacade;
+import labyrinth.models.game.Gameboard;
+import labyrinth.models.game.Player;
+import labyrinth.models.data.ImageStore;
+import labyrinth.models.geometry.Position;
+import labyrinth.views.ViewsForObservers.EndGameView;
+import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 public class Labyrinth {
 	public static void main(String[] args) {

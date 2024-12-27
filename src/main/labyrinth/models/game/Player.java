@@ -3,7 +3,7 @@ package labyrinth.models.game;
 import labyrinth.models.game.Card;
 import labyrinth.models.geometry.Position;
 
-// Implements a Labyrinth player
+// Implements a Labyrinth player.
 public class Player {
     private int _id;
     private String _name;
@@ -14,7 +14,6 @@ public class Player {
 
     /**
      * Constructs a new Player with a specified ID and name.
-     *
      * @param id : unique identifier for the player
      * @param name : name of the player
      */

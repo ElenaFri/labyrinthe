@@ -5,14 +5,13 @@ import java.util.List;
 
 // Implements an objective, or "treasure" card.
 public class Card {
-
     private final Integer treasure;  // Trésor associé à la carte (null si "dos")
     private boolean isFound;         // Indique si le trésor a été trouvé
 
     /**
      * Constructs a new Card with a specified treasure value.
      * @param treasure : integer value representing the treasure associated with this card.
-     *                 It uniquely identifies the treasure, or indicates a special card state.
+     *                 It uniquely identifies the treasure, or indicates a special card state
      */
     public Card(Integer treasure) {
 
@@ -79,6 +78,4 @@ public class Card {
         System.out.println("Deck créé : " + deck);
         return deck;
     }
-
-
 }

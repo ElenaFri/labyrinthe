@@ -39,7 +39,6 @@ public class ImageStore {
         _gameBoardBackground = chargerImageFondTableau();
     }
 
-
     /**
      * Retrieves the image of a card with an optional treasure overlay.
      * @param index : index of the card (0 to 23). An index of 24 refers to the back of the card if it is not open

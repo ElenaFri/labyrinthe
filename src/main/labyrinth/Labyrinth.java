@@ -17,7 +17,17 @@ import labyrinth.models.geometry.Position;
 import labyrinth.views.ViewsForObservers.EndGameView;
 import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
+/**
+ * Implements the classical Labyrinth game.
+ * See here for details: https://www.regledujeu.fr/labyrinthe/.
+ *
+ * @author Yasmine Chettati
+ * @author Elena Frison
+ */
 public class Labyrinth {
+	/**
+	 * Plays the Labyrinth game.
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			// Démarrer la lecture de la musique dans un thread séparé
@@ -57,6 +67,11 @@ public class Labyrinth {
 		});
 	}
 
+	/**
+	 * Plays an audio file continuously in a separate thread.
+	 * This method blocks to ensure the clip remains playing until interrupted or stopped.
+	 * @param filePath : file path of the audio file to play
+	 */
 	private static void playMusic(String filePath) {
 		try {
 			File musicFile = new File(filePath);

@@ -8,16 +8,15 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Set of static functions allowing to manipulate images
+ * Set of static functions allowing to manipulate images.
  *
  * @author Adrien Krähenbühl
  */
 public class ImageHelper {
 	/**
-	 *  Generate a new image from a background image and a foreground image
-	 *
-	 * @param backgroundPath is the path of the background image
-	 * @param foregroundPaths is the list of path of the other images
+	 *  Generate a new image from a background image and a foreground image.
+	 * @param backgroundPath : the path of the background image
+	 * @param foregroundPaths : the list of path of the other images
 	 * @return an image combining the foreground image over the background image
 	 */
 	public static BufferedImage merge(String backgroundPath, String... foregroundPaths ) throws IOException {
@@ -34,6 +33,16 @@ public class ImageHelper {
 		return mergedImage;
 	}
 
+	/**
+	 * Merges a background image with one or more foreground images by centering the foreground images
+	 * over the background. The merged image includes the background image, with all foreground images
+	 * layered on top at their centered positions.
+	 *
+	 * @param backgroundPath : file path of the background image
+	 * @param foregroundPaths : a variable-length list of file paths for the foreground images to be merged
+	 * @return a new BufferedImage that combines the background image with the centered foreground images
+	 * @throws IOException if an error occurs while reading any of the image files
+	 */
 	public static BufferedImage merge_central(String backgroundPath, String... foregroundPaths) throws IOException {
 		BufferedImage image1 = ImageIO.read(new File(backgroundPath));
 		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -77,8 +86,7 @@ public class ImageHelper {
 	}
 
 	/**
-	 *  Rotate an original image from the center by 90 degrees in clockwise
-	 *
+	 *  Rotate an original image from the center by 90 degrees in clockwise.
 	 * @param original is the input image to rotate
 	 * @return a new image representing the original image rotated by 90 degrees from its center.
 	 */
@@ -87,8 +95,7 @@ public class ImageHelper {
 	}
 
 	/**
-	 *  Rotate an original image from the center by 90 degrees in counterclockwise
-	 *
+	 *  Rotate an original image from the center by 90 degrees in counterclockwise.
 	 * @param original is the input image to rotate
 	 * @return a new image representing the original image rotated by 90 degrees from its center.
 	 */

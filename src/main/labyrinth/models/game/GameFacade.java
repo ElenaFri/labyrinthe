@@ -191,12 +191,19 @@ public class GameFacade {
      * Retrieves the array of players currently participating in the game.
      * @return an array of Player objects that represents the players in the game.
      *         Each player in the array is an instance of the Player class,
-     *         participating in the current game session.
+     *         participating in the current game session
      */
     public Player[] get_players() {
         return _players;
     }
-    // Méthode pour vérifier si la partie est terminée
+
+    /**
+     * Determines whether the game is over based on specific conditions.
+     * The game is considered over if any player has completed all their objectives
+     * and returned to their initial starting position on the game board.
+     * @return true if the game is over and at least one player meets the criteria;
+     *         otherwise, returns false if the game is still ongoing
+     */
     public boolean isGameOver() {
         for (int i = 0; i < _players.length; i++) {
             Player player = _players[i];

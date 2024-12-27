@@ -8,6 +8,7 @@ import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 import java.util.List;
 
+// Manages the turns.
 public class TourController {
     private GameFacadeController gameFacadeController;
     private GameBoardFacadeView gameBoardFacadeView;
@@ -23,8 +24,6 @@ public class TourController {
         this.gameFacadeController = gameFacadeController;
         this.gameBoardFacadeView = gameBoardFacadeView;
         this.gameFacade=gameFacade;
-
-
     }
 
     /**

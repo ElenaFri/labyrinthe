@@ -12,6 +12,7 @@ import labyrinth.models.geometry.Position;
 import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 import labyrinth.views.ViewsForObservers.EndGameView;
 
+// Manages the game process.
 public class GameController {
     private JFrame mainFrame;
     private Gameboard gameboard;
@@ -22,8 +23,9 @@ public class GameController {
     private GameBoardFacadeView gameView;
 
     /**
-     * Constructeur de GameController.
-     * @param mainFrame La fenêtre principale du jeu.
+     * Initializes a new instance of the GameController class, sets up the mainFrame,
+     * and initializes the game components.
+     * @param mainFrame : the main JFrame that serves as the primary window for the game
      */
     public GameController(JFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -31,7 +33,16 @@ public class GameController {
     }
 
     /**
-     * Initialise tous les composants du jeu.
+     * Initializes the game by resetting the main game window, setting up necessary models,
+     * controllers, and views, and registering observers for game updates. This method ensures
+     * that the game starts in a fresh state with all components properly initialized and displayed.
+     * The method performs the following tasks:
+     * - Removes all components from the main window and repaints it to clear the display.
+     * - Instantiates core models including Gameboard, ImageStore, and GameFacade,
+     *   along with their associated controllers.
+     * - Creates and configures the main game view and sets it up as an observer of the game state.
+     * - Initializes a controller to oversee game turns and interactions.
+     * - Refreshes the main game display to reflect the initialized state.
      */
     public void initializeGame() {
         // Supprimer tous les composants existants pour réinitialiser
@@ -64,11 +75,13 @@ public class GameController {
     }
 
     /**
-     * Réinitialise le jeu en appelant initializeGame().
+     * Resets the game to its initial state by invoking the initializeGame method.
+     * This method ensures that all game components are reinitialized and the game
+     * setup is restored to its default starting configuration. It is typically used
+     * to restart the game after a session ends or when a full reset is necessary.
      */
     public void resetGame() {
         System.out.println("Réinitialisation du jeu..."); // Pour vérifier que la méthode est appelée
         initializeGame();
     }
 }
-

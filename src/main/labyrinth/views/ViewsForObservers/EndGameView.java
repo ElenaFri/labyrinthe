@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+// Displays the game over window.
 public class EndGameView extends JPanel {
     private Image backgroundImage;
     private Image winnerImage;

@@ -39,7 +39,7 @@ La documentation est disponible dans le répertoire `doc/`.
 Pour modifier / re-générer la Java Doc en ligne de commande, lancez depuis la racine du projet :
 
 ```aiignore
- javadoc -d ./doc -sourcepath ./src/main -subpackages labyrinth
+javadoc -d ./doc -sourcepath ./src/main -subpackages labyrinth
 ```
 
 Ceci dit, rien n'empêche d'utiliser les fonctionnalités de votre IDE pour ce faire.

@@ -9,12 +9,11 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-
+// An abstraction for tiles.
 public abstract class Tile {
     protected String _type;
-
     public Boolean _hasTreasure;
-    protected int _treasure; // equals -1 if none, between 0 and 23 (included) if any
+    protected int _treasure;
     protected Boolean _canMove;
     protected Sides _openSides;
     protected Position _position;
@@ -81,7 +80,7 @@ public abstract class Tile {
 
     /**
      * Sides getter.
-     * @return passage ways as an array of booleans, starting with the top.
+     * @return passage ways as an array of booleans, starting with the top
      */
     public Sides getOpenSides() { return this._openSides; }
 
@@ -93,13 +92,13 @@ public abstract class Tile {
 
     /**
      * Getter, checks if the tile is movable or part of the gameboard.
-     * @return true if movable, false otherwise.
+     * @return true if movable, false otherwise
      */
     public Boolean checkIfMoves() { return this._canMove; }
 
     /**
      * Treasure getter.
-     * @return integer indexing the treasure imprinted on the tile, in any. If there are none, returns -1.
+     * @return integer indexing the treasure imprinted on the tile, in any. If there are none, returns -1
      */
     public int getTreasure() { return this._treasure; }
 

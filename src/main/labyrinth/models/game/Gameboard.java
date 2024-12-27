@@ -15,7 +15,6 @@ public class Gameboard {
     private Tile[][] _tiles;
     private TileFactory tileFactory;
     private Tile freeTile;
-
     private Random random;
 
 
@@ -185,7 +184,6 @@ public class Gameboard {
         placeFixedTiles(); // Placer les tuiles fixes
         placeMovableTiles(); // Placer les tuiles déplaçables
         placeObjectives();
-
     }
 
     /**
@@ -378,7 +376,6 @@ public class Gameboard {
 
     /**
      * Retrieves the tile located at the specified position on the gameboard.
-     *
      * @param position : Position object containing the x and y coordinates for the tile location
      * @return Tile object found at the given position on the gameboard
      */
@@ -747,15 +744,3 @@ public class Gameboard {
         return valid;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

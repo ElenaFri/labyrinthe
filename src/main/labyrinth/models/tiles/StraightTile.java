@@ -74,5 +74,4 @@ public class StraightTile extends Tile {
                 break;
         }
     }
-
 }

@@ -10,9 +10,9 @@ import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 import java.util.List;
 
+// Assures the connection between different game components.
 public class UIController {
     private final GameboardController gameboardController;
-    //private final Gameboard gameboard;
     private final GameFacadeController gameFacadeController;
     private final TourController tourController;
 
@@ -97,6 +97,4 @@ public class UIController {
         gameFacadeController.changePlayerPosition(position, gameBoardFacadeView); // Changer la position actuelle
         gameFacadeController.changePlayerObjective(this.gameboardController.getGameboard(), gameBoardFacadeView);
     }
-
-
 }

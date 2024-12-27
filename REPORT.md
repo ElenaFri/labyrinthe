@@ -22,3 +22,4 @@
 ### Améliorations réalisées
 
 - Simplification : package `main.labyrinth` renommé en `labyrinth`.
+- La Javadoc a été relue et complétée.

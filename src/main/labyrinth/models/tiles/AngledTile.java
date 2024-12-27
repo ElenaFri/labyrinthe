@@ -79,5 +79,4 @@ public class AngledTile extends Tile {
                 break;
         }
     }
-
 }

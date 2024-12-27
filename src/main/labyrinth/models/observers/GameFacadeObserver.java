@@ -19,7 +19,15 @@ public interface GameFacadeObserver {
      *        coordinates of the player on the game board
      */
     void UpdatePlayerPositionChanged(Position newPosition);
-   void  UpdatePlayerPositionChanged(Position[] positions);
+
+    /**
+     * Notifies observers that the positions of one or more players have changed.
+     * This method serves as a callback to update observers with an array of
+     * updated player positions on the game board.
+     * @param positions an array of Position objects representing the updated
+     *                  coordinates of one or more players on the game board
+     */
+    void  UpdatePlayerPositionChanged(Position[] positions);
 
     /**
      * Notifies observers that the player's current objective has changed.

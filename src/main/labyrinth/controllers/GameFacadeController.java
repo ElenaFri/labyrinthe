@@ -73,8 +73,6 @@ public class GameFacadeController {
 
         // Met à jour les positions sur le plateau
         gameBoardFacadeView.setPlayerPositions(updatedPositions); // Met à jour le plateau avec les nouvelles positions
-
-
     }
 
     /**

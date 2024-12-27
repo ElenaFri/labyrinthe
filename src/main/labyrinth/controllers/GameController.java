@@ -25,6 +25,7 @@ public class GameController {
     /**
      * Initializes a new instance of the GameController class, sets up the mainFrame,
      * and initializes the game components.
+     *
      * @param mainFrame : the main JFrame that serves as the primary window for the game
      */
     public GameController(JFrame mainFrame) {
@@ -39,7 +40,7 @@ public class GameController {
      * The method performs the following tasks:
      * - Removes all components from the main window and repaints it to clear the display.
      * - Instantiates core models including Gameboard, ImageStore, and GameFacade,
-     *   along with their associated controllers.
+     * along with their associated controllers.
      * - Creates and configures the main game view and sets it up as an observer of the game state.
      * - Initializes a controller to oversee game turns and interactions.
      * - Refreshes the main game display to reflect the initialized state.
@@ -67,7 +68,7 @@ public class GameController {
         tourController = new TourController(gameFacadeController, gameView, gameFacade);
 
         // Ajouter un bouton pour simuler une victoire (pour tester)
-       // addSimulationButton();
+        // addSimulationButton();
 
         // Actualiser la fenêtre
         mainFrame.revalidate();

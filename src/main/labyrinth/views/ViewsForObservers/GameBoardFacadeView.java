@@ -29,86 +29,49 @@ import java.util.TimerTask;
 
 // Displays the main game window and all of its components.
 public class GameBoardFacadeView extends JPanel implements GameBoardObserver, GameFacadeObserver {
-    private Runnable onNewGame; // Champ pour le callback
     private static final int PLAYER_SPACING = 40; // Espace supplémentaire entre les joueurs
     private static final int CARD_SPACING = 5; // Distance entre l'image du joueur et la première carte.
+    private static final int TILE_SIZE = 128;
+    private static final int BOARD_SIZE = 896;
+    private static final int PADDING = 50;
+    private static final int PLAYER_SIZE = 90;
     private final TourController tourController;
-    private JPanel tourPanel;
-    private JLabel tourLabel;
-    private JLabel playerIconLabel;
-
     private final GameFacade gameFacade;
     private final ImageStore imageStore;
     private final GameboardController gameboardController;
     private final GameFacadeController gameFacadeController;
     private final UIController uiController;
-
-    private static final int TILE_SIZE = 128;
-    private static final int BOARD_SIZE = 896;
-    private static final int PADDING = 50;
-    private static final int PLAYER_SIZE = 90;
-    // Variable pour suivre le bouton sélectionné
-    private JButton selectedButton;
-
-    // Positions de certains éléments
-    private Position[] playerPositions;
-    private Position freeTilePosition;
-
+    private final Gameboard gameboard;
     // Couleurs utilisées
     Color beige = new Color(222, 198, 150);
     Color navy = new Color(0, 0, 90);
     Color orange = new Color(255, 165, 0);
     Color menthol_green = new Color(46, 204, 113);
-    Color shadow = new Color(0,0,0,100);
-
+    Color shadow = new Color(0, 0, 0, 100);
+    private Runnable onNewGame; // Champ pour le callback
+    private JPanel tourPanel;
+    private JLabel tourLabel;
+    private JLabel playerIconLabel;
+    // Variable pour suivre le bouton sélectionné
+    private JButton selectedButton;
+    // Positions de certains éléments
+    private Position[] playerPositions;
+    private Position freeTilePosition;
     private List<Position> clickedTiles = new ArrayList<>();
     private List<JButton> arrowButtons = new ArrayList<>(); // les boutons flèches
-
     private JButton rotateTileButton;
-    private final Gameboard gameboard;
     private String lastArrowDirection = null; // Direction de la dernière flèche cliquée
     private int lastArrowIndex = -1;          // Indice de la dernière flèche cliquée
 
     private Map<Position, JButton> tileButtons = new HashMap<>();
 
     /**
-     * Retrieves the direction of the last arrow clicked on the game board.
-     * @return a string representing the direction of the last arrow clicked.
-     *         Possible values could include directions such as "left", "right", "up", or "down".
-     */
-    public String getLastArrowDirection() {
-        return lastArrowDirection;
-    }
-
-    /**
-     * Retrieves the index of the last arrow clicked on the game board.
-     * @return An integer representing the index of the last arrow clicked.
-     */
-    public int getLastArrowIndex() {
-        return lastArrowIndex;
-    }
-
-    /**
-     * Sets the positions of the players in the game.
-     * This method validates the number of player positions and assigns them to the internal state.
-     * @param playerPositions : an array containing the positions of the players.
-     *                         The array must contain exactly 4 positions, one for each player.
-     *                         If the array length is not 4, an IllegalArgumentException is thrown.
-     */
-    public void setPlayerPositions(Position[] playerPositions) {
-        // Vérifie si les positions sont valides (optionnel)
-        if (playerPositions.length != 4) {
-            throw new IllegalArgumentException("Il doit y avoir 4 joueurs.");
-        }
-        this.playerPositions = playerPositions;
-    }
-
-    /**
      * Constructs an instance of the GameBoardFacadeView.
-     * @param gameboard : the game board representation that manages the layout and tiles of the game
+     *
+     * @param gameboard  : the game board representation that manages the layout and tiles of the game
      * @param gameFacade : the facade used to manage player actions and game logic
      * @param imageStore : storage reference for the images used in the game UI
-     * @param onNewGame : a callback to be invoked when a new game is initialized
+     * @param onNewGame  : a callback to be invoked when a new game is initialized
      */
     public GameBoardFacadeView(Gameboard gameboard, GameFacade gameFacade, ImageStore imageStore, Runnable onNewGame) {
         // Initialisation du tableau playerPositions
@@ -172,11 +135,47 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     }
 
     /**
+     * Retrieves the direction of the last arrow clicked on the game board.
+     *
+     * @return a string representing the direction of the last arrow clicked.
+     * Possible values could include directions such as "left", "right", "up", or "down".
+     */
+    public String getLastArrowDirection() {
+        return lastArrowDirection;
+    }
+
+    /**
+     * Retrieves the index of the last arrow clicked on the game board.
+     *
+     * @return An integer representing the index of the last arrow clicked.
+     */
+    public int getLastArrowIndex() {
+        return lastArrowIndex;
+    }
+
+    /**
+     * Sets the positions of the players in the game.
+     * This method validates the number of player positions and assigns them to the internal state.
+     *
+     * @param playerPositions : an array containing the positions of the players.
+     *                        The array must contain exactly 4 positions, one for each player.
+     *                        If the array length is not 4, an IllegalArgumentException is thrown.
+     */
+    public void setPlayerPositions(Position[] playerPositions) {
+        // Vérifie si les positions sont valides (optionnel)
+        if (playerPositions.length != 4) {
+            throw new IllegalArgumentException("Il doit y avoir 4 joueurs.");
+        }
+        this.playerPositions = playerPositions;
+    }
+
+    /**
      * Makes a specific tile at the given position clickable and interactive.
      * The method creates a button corresponding to the tile, configures its style,
      * adds visual effects on hover, and specifies the actions to be performed when
      * the tile is clicked, such as moving a player or displaying adjacent accessible tiles.
      * The button is added to the game view and stored for further reference.
+     *
      * @param position : the position of the tile to make clickable.
      *                 It determines where the button is placed on the game board and the related actions when the tile is interacted with.
      */
@@ -199,6 +198,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 tileButton.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 tileButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             }
@@ -217,8 +217,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Initializes the Tour Panel, which displays the current player's turn along with their associated icon and a message.
+     *
      * @param currentPlayer : the player whose turn is being displayed. The player's name is included in the display message
-     * @param imageStore : the image storage component used to retrieve and manage the player's icon
+     * @param imageStore    : the image storage component used to retrieve and manage the player's icon
      */
     public void initTourPanel(Player currentPlayer, ImageStore imageStore) {
         // Créer le panneau
@@ -261,6 +262,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * corresponding to the tiles that are reachable from the specified position, while
      * disabling and hiding other tiles. Additionally, if the player remains in the same position,
      * it ends the current turn.
+     *
      * @param currentPosition : current position of the player for which adjacent accessible tiles
      *                        will be determined and displayed. If the player remains in the
      *                        same position as their last position, the turn is advanced.
@@ -306,6 +308,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Displays the end-game view by showing the winner details and setting up the UI for game reset.
+     *
      * @param winner : the player who has won the game. This player's information will be used
      *               to display relevant details and their icon in the end-game view
      */
@@ -330,6 +333,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * Overrides the paintComponent method to render custom graphics on the component.
      * This method draws the background, gameboard, shadows, borders, players, and player cards.
      * It also updates the position of the rotate button and handles game-related visual elements.
+     *
      * @param g : Graphics object used for drawing shapes, images, and text on the component
      */
     @Override
@@ -343,7 +347,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
         Graphics2D g2d = (Graphics2D) g;  // Convertir Graphics en Graphics2D
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(new Color(0, 0, 0, 100)); // Ombre noire avec transparence
-        RoundRectangle2D shadowRect = new RoundRectangle2D.Double(xOffset +18, yOffset + 20, BOARD_SIZE, BOARD_SIZE, 15, 15); // Arrondie de 3px
+        RoundRectangle2D shadowRect = new RoundRectangle2D.Double(xOffset + 18, yOffset + 20, BOARD_SIZE, BOARD_SIZE, 15, 15); // Arrondie de 3px
         g2d.fill(shadowRect);
 
         // Dessiner la bordure du plateau
@@ -372,10 +376,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * Updates the position and size of the rotate button based on the free tile's position
      * and the specified offsets. This method calculates the coordinates for the button
      * and sets its bounds accordingly.
+     *
      * @param freeTilePosition : position of the free tile on the game board. Used
      *                         to determine the base position of the rotate button
-     * @param xOffset : horizontal offset to apply to the calculated button position
-     * @param yOffset : vertical offset to apply to the calculated button position
+     * @param xOffset          : horizontal offset to apply to the calculated button position
+     * @param yOffset          : vertical offset to apply to the calculated button position
      */
     private void updateRotateButtonPosition(Position freeTilePosition, int xOffset, int yOffset) {
         if (freeTilePosition != null) {
@@ -417,8 +422,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * with specific client properties to identify its direction and index, and an action listener
      * is added to handle actions when the button is clicked, including game logic related to
      * row or column shifts and updating player positions.
+     *
      * @param imagePath : file path of the image to be used on the arrow button
-     * @param index : index of the row or column the button corresponds to
+     * @param index     : index of the row or column the button corresponds to
      * @param direction : direction of the arrow (e.g., "droite", "gauche", "haut", "bas")
      * @return a JButton instance representing the configured arrow button
      */
@@ -480,7 +486,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * This method adjusts player positions based on the specified row and direction of the shift.
      * Players at the affected row are moved horizontally, with wrapping logic applied if they move
      * beyond the board's boundary.
-     * @param rowIndex : index of the row being shifted. Players in this row will have their positions updated
+     *
+     * @param rowIndex  : index of the row being shifted. Players in this row will have their positions updated
      * @param direction : direction of the row shift. A value of 1 shifts the row to the right,
      *                  while a value of 3 shifts the row to the left
      */
@@ -515,8 +522,9 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * Updates the positions of players whose current tile is affected by a column shift.
      * Players will be repositioned to the opposite end of the column if they move out of bounds.
      * Observers are notified of player position changes after the shift.
+     *
      * @param columnIndex : index of the column being shifted
-     * @param direction : direction of the shift, where 0 represents upward shift and 2 represents downward shift
+     * @param direction   : direction of the shift, where 0 represents upward shift and 2 represents downward shift
      */
     private void updatePlayersAfterColumnShift(int columnIndex, int direction) {
         Player[] players = gameFacade.get_players();
@@ -549,6 +557,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * Updates the positions of all players on the game board.
      * This method processes an array of new positions for the players,
      * updates the internal state, and redraws the interface to reflect the changes.
+     *
      * @param newPositions an array containing the updated positions of players.
      *                     The number of positions should align with the number of players in the game.
      */
@@ -570,10 +579,11 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Determines the opposite direction of the given direction input.
+     *
      * @param direction : current direction as a string (e.g., "droite", "gauche", "haut", "bas")
      * @return the opposite direction as a string ("gauche" for "droite", "droite" for "gauche",
-     *         "bas" for "haut", "haut" for "bas"), or null if the input does not match
-     *         any recognized direction
+     * "bas" for "haut", "haut" for "bas"), or null if the input does not match
+     * any recognized direction
      */
     private String getOppositeDirection(String direction) {
         switch (direction.toLowerCase()) {
@@ -735,7 +745,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * Draws the gameboard on the given graphics context, including the background, tiles,
      * and free tile. The board is drawn starting from the specified X and Y offsets.
      *
-     * @param g : Graphics object used for drawing the gameboard
+     * @param g       : Graphics object used for drawing the gameboard
      * @param xOffset : the starting x-coordinate for drawing the gameboard
      * @param yOffset : the starting y-coordinate for drawing the gameboard
      */
@@ -789,7 +799,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * Draws the free tile on the game board at the specified offset. Includes the rendering of a shadow,
      * the tile image, and a rounded border for the free tile. Ensures proper alignment and presentation
      * of the free tile on the interface.
-     * @param g : Graphics object used to render the tile and its components
+     *
+     * @param g       : Graphics object used to render the tile and its components
      * @param xOffset : horizontal offset to position the free tile correctly on the board
      */
     private void drawFreeTile(Graphics g, int xOffset) {
@@ -832,6 +843,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Determines the index of the tile image based on the type of tile provided.
+     *
      * @param tile : tile object for which the image index needs to be determined
      * @return index representing the image type (e.g., 0 for AngledTile, 2 for TShapedTile, 1 for others)
      */
@@ -844,7 +856,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Draws the players and their pieces on the screen with the given offsets.
-     * @param g : Graphics object used for drawing
+     *
+     * @param g       : Graphics object used for drawing
      * @param xOffset : horizontal offset for drawing
      * @param yOffset : vertical offset for drawing
      */
@@ -856,7 +869,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Draws the player icons and their corresponding labels at specified positions on the game board.
-     * @param g : Graphics object used for rendering
+     *
+     * @param g       : Graphics object used for rendering
      * @param xOffset : horizontal offset to adjust the players' positions
      * @param yOffset : vertical offset to adjust the players' positions
      */
@@ -937,6 +951,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      * Displays a congratulatory message in a pop-up window for the specified player.
      * The window is styled with custom fonts and colors and automatically closes
      * after 5 seconds.
+     *
      * @param currentPlayer : the Player object representing the player to whom the congratulatory message is addressed.
      *                      The player's name will be displayed in the message.
      */
@@ -986,6 +1001,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     /**
      * Updates the user interface to display information about the next player's turn.
      * This includes updating a label with the player's name and refreshing the player's icon.
+     *
      * @param nextPlayer : player whose turn is next. The player's name and associated icon will be displayed in the user interface
      */
     public void afficherTourSuivant(Player nextPlayer) {
@@ -1007,7 +1023,8 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
     /**
      * Draws the player's pieces on the game board, handling their positions, shadows, and zoom effects
      * for the current player's piece.
-     * @param g : Graphics object used to draw on the game board
+     *
+     * @param g       : Graphics object used to draw on the game board
      * @param xOffset : horizontal offset to position the pieces correctly on the board
      * @param yOffset : vertical offset to position the pieces correctly on the board
      */
@@ -1055,12 +1072,13 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Draws the player's cards on the screen at a specified position and with specified card properties (size, overlap).
-     * @param g the graphics context used for rendering the cards
-     * @param player : player whose cards will be drawn
-     * @param xOffset : x-coordinate offset for the cards' starting position
-     * @param yOffset : y-coordinate offset for the cards' starting position
-     * @param cardWidth : width of each card to be drawn
-     * @param cardHeight : height of each card to be drawn
+     *
+     * @param g           the graphics context used for rendering the cards
+     * @param player      : player whose cards will be drawn
+     * @param xOffset     : x-coordinate offset for the cards' starting position
+     * @param yOffset     : y-coordinate offset for the cards' starting position
+     * @param cardWidth   : width of each card to be drawn
+     * @param cardHeight  : height of each card to be drawn
      * @param cardOverlap : vertical overlap value determining how much of one card overlaps on the other
      * @param playerIndex : index of the player used to determine the orientation and position of the card display
      */
@@ -1110,6 +1128,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Updates the state of the given gameboard and triggers a repaint of the component.
+     *
      * @param gameboard : the Gameboard object to be updated
      */
     @Override
@@ -1121,6 +1140,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Updates the player's objective and triggers a redraw action.
+     *
      * @param objective : the new objective for the player
      */
     @Override
@@ -1131,6 +1151,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Updates the player's position when it has changed.
+     *
      * @param newPosition : the new position of the player
      */
     @Override
@@ -1141,6 +1162,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
 
     /**
      * Updates the current player and performs actions related to the player's turn change.
+     *
      * @param currentPlayer : current player whose turn it is now
      */
     @Override

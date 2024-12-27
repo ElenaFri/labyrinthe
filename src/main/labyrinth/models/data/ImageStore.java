@@ -2,6 +2,7 @@ package labyrinth.models.data;
 
 import labyrinth.models.game.Card;
 import labyrinth.views.helpers.ImageHelper;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,8 @@ public class ImageStore {
 
     /**
      * Retrieves the image of a card with an optional treasure overlay.
-     * @param index : index of the card (0 to 23). An index of 24 refers to the back of the card if it is not open
+     *
+     * @param index  : index of the card (0 to 23). An index of 24 refers to the back of the card if it is not open
      * @param isOpen : boolean indicating whether the card is open (true) or closed (false)
      * @return A BufferedImage of the card with the treasure if open; otherwise, the back of the card
      * @throws IllegalArgumentException if the index is invalid (not between 0 and 23)
@@ -74,14 +76,15 @@ public class ImageStore {
     /**
      * Retrieves a tile image based on specified parameters including index,
      * orientation, and whether a treasure is to be included.
-     * @param index : index of the tile, must be within the range of available tiles
-     * @param orientation : orientation of the tile, where 0 is no rotation, 1 is 90 degrees clockwise,
-     *                    2 is 180 degrees, and 3 is 270 degrees counter-clockwise
-     * @param withTreasure : boolean flag indicating whether to overlay a treasure image on the tile
+     *
+     * @param index         : index of the tile, must be within the range of available tiles
+     * @param orientation   : orientation of the tile, where 0 is no rotation, 1 is 90 degrees clockwise,
+     *                      2 is 180 degrees, and 3 is 270 degrees counter-clockwise
+     * @param withTreasure  : boolean flag indicating whether to overlay a treasure image on the tile
      * @param treasureIndex : index of the treasure image to overlay if withTreasure is true
      * @return a BufferedImage representing the requested tile, optionally with a treasure
-     *         and applied orientation
-     * @throws IOException if there is an error in loading the images
+     * and applied orientation
+     * @throws IOException              if there is an error in loading the images
      * @throws IllegalArgumentException if the tile index is invalid
      */
     public BufferedImage getTileImage(int index, int orientation, boolean withTreasure, int treasureIndex) throws IOException {
@@ -123,6 +126,7 @@ public class ImageStore {
 
     /**
      * Retrieves the image of a playing piece based on the specified index.
+     *
      * @param index : index of the playing piece image to retrieve, where each
      *              piece corresponds to a predefined index within the range
      *              of available piece images
@@ -135,20 +139,21 @@ public class ImageStore {
 
     /**
      * Retrieves the background image for the player's hand area.
+     *
      * @return a BufferedImage representing the background of the player's hand area.
      */
-    public BufferedImage get_handBackground()
-    {
+    public BufferedImage get_handBackground() {
         return this._handBackground;
     }
 
     /**
      * Retrieves the image icon for a player based on the specified index.
+     *
      * @param index : index of the player icon to retrieve, where each player
      *              corresponds to a predefined index within the range of available
      *              player icons
      * @return a BufferedImage representing the player icon at the specified index,
-     *         or null if the index is out of bounds
+     * or null if the index is out of bounds
      */
     public BufferedImage getPlayerIcons(int index) {
         if (index >= 0 && index < _playerIcons.length) {
@@ -161,9 +166,10 @@ public class ImageStore {
      * Loads an array of tile images from predefined file paths. This method
      * attempts to load three distinct tile images from the specified directory
      * and returns them as an array of BufferedImages.
+     *
      * @return a BufferedImage array containing three tile images loaded from
-     *         predefined paths. Each index in the array corresponds to a specific
-     *         tile image, in the order they were loaded.
+     * predefined paths. Each index in the array corresponds to a specific
+     * tile image, in the order they were loaded.
      */
     private BufferedImage[] chargerImagesPourTuiles() {
         BufferedImage[] tileImages = new BufferedImage[3]; // 3 typestuiles
@@ -178,8 +184,9 @@ public class ImageStore {
      * This method initializes an array of BufferedImages and sequentially loads each image
      * from the specified file paths. It loads a default front image for all 24 card positions
      * and loads a specific image for the card back.
+     *
      * @return a BufferedImage array containing 24 images for card fronts and 1 image
-     *         for the card back
+     * for the card back
      */
     private BufferedImage[] chargerImagesPourCartes() {
         BufferedImage[] cardImages = new BufferedImage[25]; // 24 cartes + 1 verso
@@ -194,8 +201,9 @@ public class ImageStore {
      * Loads and returns an array of images representing treasures used in the game.
      * This method iterates over a predefined set of file paths to retrieve images
      * associated with each treasure type.
+     *
      * @return a BufferedImage array containing 14 treasure images, each loaded
-     *         from the specified file paths
+     * from the specified file paths
      */
     private BufferedImage[] chargerImagesPourTresors() {
         BufferedImage[] treasureImages = new BufferedImage[14];
@@ -210,8 +218,9 @@ public class ImageStore {
      * This method initializes an array of BufferedImages for four distinct player
      * colors: blue, green, red, and yellow. Each image is loaded from a specified
      * file path corresponding to the player's color.
+     *
      * @return a BufferedImage array containing images for four players, each player
-     *         represented by a different color
+     * represented by a different color
      */
     private BufferedImage[] chargerImagesPourJoueurs() {
         BufferedImage[] playersImages = new BufferedImage[4];
@@ -228,8 +237,9 @@ public class ImageStore {
      * Loads images for playing pieces, representing different colors used in the game.
      * This method initializes an array of BufferedImages, each image being loaded
      * from a predefined file path corresponding to each playing piece color.
+     *
      * @return a BufferedImage array containing images for four playing pieces, each
-     *         represented by a different color
+     * represented by a different color
      */
     private BufferedImage[] chargerImagesPourPions() {
         BufferedImage[] pieceImages = new BufferedImage[4]; // 4 pions de couleurs différentes
@@ -243,6 +253,7 @@ public class ImageStore {
      * Loads the background image for the labyrinth game from a predefined file path.
      * This method utilizes the loadImage utility to retrieve the image file and
      * return it as a BufferedImage.
+     *
      * @return a BufferedImage representing the background of the labyrinth, or null if the image cannot be loaded
      */
     private BufferedImage chargerImageDeFond() {
@@ -255,15 +266,19 @@ public class ImageStore {
 
     /**
      * Retrieves the background image of the game board.
+     *
      * @return a BufferedImage representing the background of the game board.
      */
-    public BufferedImage getGameBoardBackground() { return _gameBoardBackground; }
+    public BufferedImage getGameBoardBackground() {
+        return _gameBoardBackground;
+    }
 
     /**
      * Loads an image from the specified file path.
+     *
      * @param path : file path of the image to be loaded
      * @return a BufferedImage object if the image is successfully loaded,
-     *         or null if the file does not exist or an IOException occurs
+     * or null if the file does not exist or an IOException occurs
      */
     private BufferedImage loadImage(String path) {
         try {
@@ -285,6 +300,7 @@ public class ImageStore {
      * Attempts to load an image from a specific file path representing the back of a card
      * used in the game. Returns the card back image if successfully loaded; otherwise,
      * returns null if an IOException occurs.
+     *
      * @return a BufferedImage representing the card back image, or null if an error occurs during loading
      */
     public BufferedImage getCardBackImage() {
@@ -298,6 +314,7 @@ public class ImageStore {
 
     /**
      * Retrieves the image of the specified card.
+     *
      * @param card :  Card object for which the image is to be retrieved
      * @return a BufferedImage representing the card's image, or null if the image cannot be loaded
      */
@@ -315,6 +332,7 @@ public class ImageStore {
      * Generates and returns the file path for a card's image based on its name.
      * The image path is composed by appending the card's name followed by ".png"
      * to the predefined directory path for card images.
+     *
      * @param card : Card object whose image path is to be retrieved
      * @return a String representing the full file path of the card's image
      */

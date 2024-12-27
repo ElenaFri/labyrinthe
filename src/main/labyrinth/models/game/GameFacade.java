@@ -37,6 +37,7 @@ public class GameFacade {
      * Adds a GameFacadeObserver to the list of observers.
      * This observer will be notified of various game events,
      * such as changes in the current player or player positions.
+     *
      * @param observer : the GameFacadeObserver to be added. It must implement
      *                 the required methods to respond to game state changes.
      */
@@ -67,6 +68,7 @@ public class GameFacade {
      * This method iterates through the list of players and collects their current
      * positions as an array of Position objects. Each position corresponds
      * to the tile on which a player is currently located.
+     *
      * @return an array of Position objects representing the current positions of all players in the game
      */
     public Position[] getPlayersPositions() {
@@ -80,9 +82,10 @@ public class GameFacade {
     /**
      * Retrieves the index of the current player in the game.
      * The current player index represents the position of the active player in the array of players.
+     *
      * @return an integer value representing the index of the current player. The index is zero-based and corresponds to the position of the current player in the players' list.
      */
-    public int getCurrentPlayerIndex(){
+    public int getCurrentPlayerIndex() {
         return this.currentPlayerIndex;
     }
 
@@ -90,11 +93,12 @@ public class GameFacade {
      * Moves the current player to a new position on the game board.
      * This method updates the player's current position to the specified new position
      * and notifies all observers of this change.
+     *
      * @param newPosition : new Position object representing the coordinates
      *                    on the game board where the current player will be moved
      */
     public void movePlayer(Position newPosition, Player player) {
-      //  Player currentPlayer = _players[currentPlayerIndex];
+        //  Player currentPlayer = _players[currentPlayerIndex];
         player.setCurrentTile(newPosition);  // Met à jour la position du joueur actuel
 
         // Notifie les observateurs de la nouvelle position du joueur
@@ -105,6 +109,7 @@ public class GameFacade {
      * Notifies all registered observers about the change in the player's position.
      * This method iterates through the list of GameFacadeObserver instances,
      * calling their UpdatePlayerPositionChanged method with the new position.
+     *
      * @param newPosition : new Position object that represents the updated
      *                    coordinates of the player on the game board
      */
@@ -118,6 +123,7 @@ public class GameFacade {
      * Notifies all registered observers about changes in the positions of players.
      * This method iterates through the list of `GameFacadeObserver` instances and
      * calls their `UpdatePlayerPositionChanged` method, passing the updated positions.
+     *
      * @param positions : an array of `Position` objects representing the updated coordinates of all players on the game board.
      */
     public void notifyPlayerPositionChange(Position[] positions) {
@@ -131,6 +137,7 @@ public class GameFacade {
      * Notifies all registered observers about a change in the player's objective.
      * This method iterates through the list of GameFacadeObserver instances and calls
      * their UpdatePlayerObjectiveChanged method, passing the updated objective.
+     *
      * @param objective : new objective index for the player, indicating which objective
      *                  has been changed or advanced to. This integer represents the current
      *                  state or progress of the player's objectives within the game.
@@ -155,7 +162,7 @@ public class GameFacade {
         // Si on dépasse l'index du dernier joueur, on revient au premier
         if (this.currentPlayerIndex >= 4) {
             ////////////////////////////////////////////////////////////////
-           // getCurrentPlayer().setLastPosition(null);
+            // getCurrentPlayer().setLastPosition(null);
             this.currentPlayerIndex = 0;
         }
 
@@ -180,8 +187,9 @@ public class GameFacade {
 
     /**
      * Retrieves the current player in the sequence of players.
+     *
      * @return the Player object that represents the current player in the game.
-     *         The current player is determined by the currentPlayerIndex.
+     * The current player is determined by the currentPlayerIndex.
      */
     public Player getCurrentPlayer() {
         return _players[currentPlayerIndex];
@@ -189,9 +197,10 @@ public class GameFacade {
 
     /**
      * Retrieves the array of players currently participating in the game.
+     *
      * @return an array of Player objects that represents the players in the game.
-     *         Each player in the array is an instance of the Player class,
-     *         participating in the current game session
+     * Each player in the array is an instance of the Player class,
+     * participating in the current game session
      */
     public Player[] get_players() {
         return _players;
@@ -201,8 +210,9 @@ public class GameFacade {
      * Determines whether the game is over based on specific conditions.
      * The game is considered over if any player has completed all their objectives
      * and returned to their initial starting position on the game board.
+     *
      * @return true if the game is over and at least one player meets the criteria;
-     *         otherwise, returns false if the game is still ongoing
+     * otherwise, returns false if the game is still ongoing
      */
     public boolean isGameOver() {
         for (int i = 0; i < _players.length; i++) {
@@ -220,12 +230,13 @@ public class GameFacade {
      * Determines the winner of the game by checking if any player has completed all objectives
      * and returned to their initial position on the gameboard.
      * This method iterates through the players in the game, checking the following conditions:
-     *  - The player must have completed all their objectives (as determined by the `hasCompletedAllObjectives` method).
-     *  - The player must currently be located at their initial starting position.
+     * - The player must have completed all their objectives (as determined by the `hasCompletedAllObjectives` method).
+     * - The player must currently be located at their initial starting position.
      * If multiple players meet the criteria (which is unlikely in a properly implemented game),
      * only the first one found in the iteration order is returned as the winner.
+     *
      * @return Player object representing the winner if a player meets the criteria; otherwise, returns null if no player has completed all objectives
-     *          and returned to their starting position.
+     * and returned to their starting position.
      */
     public Player getWinner() {
         for (int i = 0; i < _players.length; i++) {
@@ -244,21 +255,25 @@ public class GameFacade {
      * This method assigns a unique starting position on the game board
      * to each player, as identified by their index (0 to 3). Throws an exception
      * if the index is outside the expected range.
+     *
      * @param index the player index, ranging from 0 to 3, to determine the initial position.
      *              - Index 0: top-left position (0, 0).
      *              - Index 1: top-right position (0, 6).
      *              - Index 2: bottom-left position (6, 0).
      *              - Index 3: bottom-right position (6, 6).
-     *
      * @return Position object representing the player's initial position on the board.
      * @throws IllegalArgumentException if the provided index is not within the range of 0 to 3.
      */
     private Position getInitialPositionForIndex(int index) {
         switch (index) {
-            case 0: return new Position(0, 0);
-            case 1: return new Position(0, 6);
-            case 2: return new Position(6, 0);
-            case 3: return new Position(6, 6);
+            case 0:
+                return new Position(0, 0);
+            case 1:
+                return new Position(0, 6);
+            case 2:
+                return new Position(6, 0);
+            case 3:
+                return new Position(6, 6);
             default:
                 throw new IllegalArgumentException("Index de joueur inconnu : " + index);
         }
@@ -308,6 +323,7 @@ public class GameFacade {
 
     /**
      * Retrieves the player at the specified index from the list of players.
+     *
      * @param n : index of the player to retrieve; must be a non-negative integer
      *          and less than the total number of players
      * @return Player object at the specified index
@@ -323,6 +339,7 @@ public class GameFacade {
     /**
      * Sets the array of players for the game.
      * This method initializes the players participating in the game.
+     *
      * @param players : an array of Player objects representing the players in the game. Each element in the array is an instance of the Player class.
      */
     public void setPlayers(Player[] players) {

@@ -14,7 +14,8 @@ public class Player {
 
     /**
      * Constructs a new Player with a specified ID and name.
-     * @param id : unique identifier for the player
+     *
+     * @param id   : unique identifier for the player
      * @param name : name of the player
      */
     public Player(int id, String name) {
@@ -22,16 +23,25 @@ public class Player {
         _name = name;
         _cards = new Card[6];
         _currentObjectiveIndex = 0; // Le joueur commence avec l'objectif 0
-        if(id==0){this._currentTile=new Position(0,0);}
-            if(id==1){this._currentTile=new Position(0,6);}
-                if(id==2){this._currentTile=new Position(6,0);}
-                    if(id==3){this._currentTile=new Position(6,6);}
-                    this._lastPosition=null;
+        if (id == 0) {
+            this._currentTile = new Position(0, 0);
+        }
+        if (id == 1) {
+            this._currentTile = new Position(0, 6);
+        }
+        if (id == 2) {
+            this._currentTile = new Position(6, 0);
+        }
+        if (id == 3) {
+            this._currentTile = new Position(6, 6);
+        }
+        this._lastPosition = null;
 
     }
 
     /**
      * Retrieves the name of the player.
+     *
      * @return name of the player
      */
     public String getName() {
@@ -40,6 +50,7 @@ public class Player {
 
     /**
      * Retrieves the unique identifier of the player.
+     *
      * @return the player's ID as an integer
      */
     public int get_id() {
@@ -48,6 +59,7 @@ public class Player {
 
     /**
      * Retrieves the index of the player's current objective.
+     *
      * @return current objective index of the player, ranging from 0 to 5
      */
     public int get_currentObjectiveIndex() {
@@ -56,39 +68,16 @@ public class Player {
 
     /**
      * Retrieves the current tile position of the player within the labyrinth.
+     *
      * @return : current Position object representing the player's tile coordinates on the gameboard
      */
     public Position getCurrentTile() {
         return _currentTile;
     }
-    
-    /**
-     * Retrieves the last position of the player.
-     * @return a Position
-     */
-    public Position get_lastPosition() {
-        return _lastPosition;
-    }
-    
-    /**
-     * Attributes a last position value.
-     * @param position : a Position instance
-     */
-    public void setLastPosition(Position position)
-    {
-        this._lastPosition=position;
-    }
-
-    /**
-     * Retrieves the player's current set of objective cards.
-     * @return an array of Card objects representing the player's objectives
-     */
-    public Card[] getCards() {
-        return _cards;
-    }
 
     /**
      * Sets the current tile position of the player within the labyrinth.
+     *
      * @param position :  Position object representing the new tile coordinates on the gameboard
      */
     public void setCurrentTile(Position position) {
@@ -96,7 +85,35 @@ public class Player {
     }
 
     /**
+     * Retrieves the last position of the player.
+     *
+     * @return a Position
+     */
+    public Position get_lastPosition() {
+        return _lastPosition;
+    }
+
+    /**
+     * Attributes a last position value.
+     *
+     * @param position : a Position instance
+     */
+    public void setLastPosition(Position position) {
+        this._lastPosition = position;
+    }
+
+    /**
+     * Retrieves the player's current set of objective cards.
+     *
+     * @return an array of Card objects representing the player's objectives
+     */
+    public Card[] getCards() {
+        return _cards;
+    }
+
+    /**
      * Sets the player's current set of objective cards.
+     *
      * @param cards : an array of Card objects representing the new set of objective cards for the player
      */
     public void setCards(Card[] cards) {
@@ -105,6 +122,7 @@ public class Player {
 
     /**
      * Retrieves the player's current objective card.
+     *
      * @return : current Card object representing the player's current objective
      */
     public Card getCurrentObjective() {
@@ -127,6 +145,7 @@ public class Player {
      * Checks whether the player has completed all their objectives.
      * It iterates through the player's objective cards and verifies
      * if each card's treasure has been found.
+     *
      * @return true if all objective cards are marked as found; false otherwise
      */
     public boolean hasCompletedAllObjectives() {
@@ -141,6 +160,7 @@ public class Player {
     /**
      * Returns the string representation of the Player object, including the player's name
      * and their current objective number (1-indexed).
+     *
      * @return a string containing the player's name and the current objective number.
      */
     @Override

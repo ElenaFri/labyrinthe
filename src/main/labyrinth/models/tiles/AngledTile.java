@@ -33,6 +33,7 @@ public class AngledTile extends Tile {
 
     /**
      * Orientation setter.
+     *
      * @param orientation : orientation code
      */
     @Override

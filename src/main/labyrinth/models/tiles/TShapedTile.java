@@ -33,6 +33,7 @@ public class TShapedTile extends Tile {
 
     /**
      * Orientation setter.
+     *
      * @param orientation : orientation code
      */
     @Override
@@ -55,7 +56,6 @@ public class TShapedTile extends Tile {
                 this._openSides.setSide(0, true);
                 this._openSides.setSide(1, true);
                 this._openSides.setSide(3, true);
-
 
 
                 break;

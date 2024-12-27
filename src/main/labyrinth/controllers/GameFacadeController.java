@@ -16,6 +16,7 @@ public class GameFacadeController {
 
     /**
      * Constructs a GameFacadeController with the specified GameFacade.
+     *
      * @param gameFacade : GameFacade instance to be used by the controller
      */
     public GameFacadeController(GameFacade gameFacade) {
@@ -26,6 +27,7 @@ public class GameFacadeController {
      * Retrieves the current position of the player in the labyrinth.
      * This method delegates the call to the game facade to get the current player
      * and then returns the player's current tile position.
+     *
      * @return current Position object representing the player's coordinates on the gameboard
      */
     public Position getCurrentPlayerPosition() {
@@ -35,6 +37,7 @@ public class GameFacadeController {
 
     /**
      * Retrieves the current objective of the current player in the game.
+     *
      * @return a String representing the description of the current player's objective
      */
     public String getCurrentPlayerObjective() {
@@ -44,6 +47,7 @@ public class GameFacadeController {
 
     /**
      * Notifies the game facade about a change in the player's position.
+     *
      * @param newPosition : new Position object representing the player's updated coordinates on the game board
      */
     public void notifyPlayerPosition(Position newPosition) {
@@ -52,6 +56,7 @@ public class GameFacadeController {
 
     /**
      * Notifies the game facade about a change in the player's objective.
+     *
      * @param objective : the new objective index for the player
      */
     public void notifyPlayerObjective(int objective) {
@@ -60,6 +65,7 @@ public class GameFacadeController {
 
     /**
      * Updates the player's position on the game board.
+     *
      * @param newPosition : the new position of the player
      */
     public void changePlayerPosition(Position newPosition, GameBoardFacadeView gameBoardFacadeView) {
@@ -69,7 +75,7 @@ public class GameFacadeController {
 
         // Récupérer les nouvelles positions des joueurs sous forme de tableau de Position
         Position[] updatedPositions = gameFacade.getPlayersPositions(); // getplayerspos()  retourner un tableau de Position[]
-        System.out.println("les nouvelles positions du joueurs sontnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn   "+  updatedPositions);
+        System.out.println("les nouvelles positions du joueurs sontnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn   " + updatedPositions);
 
         // Met à jour les positions sur le plateau
         gameBoardFacadeView.setPlayerPositions(updatedPositions); // Met à jour le plateau avec les nouvelles positions
@@ -80,10 +86,11 @@ public class GameFacadeController {
      * This method checks if the player has reached their current objective and,
      * if so, progresses the player to the next objective.
      * Additionally, it validates if the player has completed all objectives.
-     * @param gameboard : current gameboard containing the layout and objectives
+     *
+     * @param gameboard           : current gameboard containing the layout and objectives
      * @param gameBoardFacadeView : interface view to facilitate player notifications and updates in the game
      */
-    public void changePlayerObjective(Gameboard gameboard,GameBoardFacadeView gameBoardFacadeView) {
+    public void changePlayerObjective(Gameboard gameboard, GameBoardFacadeView gameBoardFacadeView) {
         if (aAtteintObjectif(gameboard)) {
 
             // Marquer l'objectif actuel comme trouvé
@@ -92,7 +99,7 @@ public class GameFacadeController {
             gameFacade.getCurrentPlayer().getCurrentObjective().setFound(true);
 
 
-        System.out.println("poooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"+ currentObjective.isFound());
+            System.out.println("poooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo" + currentObjective.isFound());
             gameBoardFacadeView.afficherFelicitation(gameFacade.getCurrentPlayer());
             System.out.println("poooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
             // Passer à l'objectif suivant
@@ -108,6 +115,7 @@ public class GameFacadeController {
 
     /**
      * Determines whether the current player has reached their objective on the gameboard.
+     *
      * @param gameboard : current gameboard containing the layout and objectives
      * @return true if the current player's position matches the objective's position, false otherwise
      */
@@ -125,13 +133,13 @@ public class GameFacadeController {
     /**
      * Advances the game to the next player.
      */
-    public void changePlayerLastPosition(Position position)
-    {
+    public void changePlayerLastPosition(Position position) {
         this.getCurrentPlayer().setLastPosition(position);
     }
 
     /**
      * Retrieves the current player in the game.
+     *
      * @return Player object representing the current player
      */
     public Player getCurrentPlayer() {

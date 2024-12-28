@@ -7,19 +7,10 @@ import java.io.File;
 import java.io.IOException;
 
 import labyrinth.controllers.GameController;
-import labyrinth.controllers.GameFacadeController;
-import labyrinth.controllers.TourController;
-import labyrinth.models.game.GameFacade;
-import labyrinth.models.game.Gameboard;
-import labyrinth.models.game.Player;
-import labyrinth.models.data.ImageStore;
-import labyrinth.models.geometry.Position;
-import labyrinth.views.ViewsForObservers.EndGameView;
-import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 /**
  * Implements the classical Labyrinth game.
- * See here for details: https://www.regledujeu.fr/labyrinthe/.
+ * See here for details: <a href="https://www.regledujeu.fr/labyrinthe/">...</a>.
  *
  * @author Yasmine Chettati
  * @author Elena Frison
@@ -31,9 +22,7 @@ public class Labyrinth {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             // Démarrer la lecture de la musique dans un thread séparé
-            new Thread(() -> {
-                playMusic("res/snd/la_moldau.wav");
-            }).start();
+            new Thread(() -> playMusic("res/snd/la_moldau.wav")).start();
 
             // Jeu
             JFrame mainFrame = new JFrame("Mon Jeu Labyrinthe");

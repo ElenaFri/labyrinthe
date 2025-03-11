@@ -1,13 +1,14 @@
-package main.labyrinth.controllers;
+package labyrinth.controllers;
 
-import main.labyrinth.models.game.GameFacade;
-import main.labyrinth.models.game.Gameboard;
-import main.labyrinth.models.game.Player;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.views.ViewsForObservers.GameBoardFacadeView;
+import labyrinth.models.game.GameFacade;
+import labyrinth.models.game.Gameboard;
+import labyrinth.models.game.Player;
+import labyrinth.models.geometry.Position;
+import labyrinth.views.ViewsForObservers.GameBoardFacadeView;
 
 import java.util.List;
 
+// Manages the turns.
 public class TourController {
     private GameFacadeController gameFacadeController;
     private GameBoardFacadeView gameBoardFacadeView;
@@ -15,16 +16,15 @@ public class TourController {
 
     /**
      * Constructs a TourController object used to manage the game tour logic.
+     *
      * @param gameFacadeController : controller that manages the interaction between the game state and the user interface
-     * @param gameBoardFacadeView : view responsible for displaying game information and updating game UI components
-     * @param gameFacade : core model representing the game state and logic
+     * @param gameBoardFacadeView  : view responsible for displaying game information and updating game UI components
+     * @param gameFacade           : core model representing the game state and logic
      */
-    public TourController( GameFacadeController gameFacadeController, GameBoardFacadeView gameBoardFacadeView,GameFacade gameFacade) {
+    public TourController(GameFacadeController gameFacadeController, GameBoardFacadeView gameBoardFacadeView, GameFacade gameFacade) {
         this.gameFacadeController = gameFacadeController;
         this.gameBoardFacadeView = gameBoardFacadeView;
-        this.gameFacade=gameFacade;
-
-
+        this.gameFacade = gameFacade;
     }
 
     /**
@@ -37,8 +37,8 @@ public class TourController {
      * - Activates the arrow buttons on the game interface using the ActiverFleche method.
      * - Updates the interface to indicate whose turn it is through afficherTourSuivant.
      * - Verifies if the game is finished using the isGameOver method in gameFacade. If the game
-     *   is over, it retrieves the winner and invokes the showEndGameView method to show the
-     *   final game results.
+     * is over, it retrieves the winner and invokes the showEndGameView method to show the
+     * final game results.
      * Precondition:
      * The gameFacade, gameBoardFacadeView, and other required objects should be properly initialized
      * before calling this method to ensure accurate state management and UI updates.
@@ -65,6 +65,7 @@ public class TourController {
      * Displays the end-game view to indicate the winner of the game.
      * This method invokes the game board view to present the end-game interface,
      * including the victorious player's details.
+     *
      * @param winner : Player object representing the winner of the game. This player's information will be displayed in the end-game view.
      */
     public void showEndGameView(Player winner) {

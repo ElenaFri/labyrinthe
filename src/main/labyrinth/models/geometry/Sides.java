@@ -1,4 +1,4 @@
-package main.labyrinth.models.geometry;
+package labyrinth.models.geometry;
 
 import java.util.ArrayList;
 
@@ -22,10 +22,11 @@ public class Sides {
      * Provides a textual representation of the sides of a tile that are open.
      * Each open side (top, right, bottom, left) is appended to the string in
      * a human-readable format.
+     *
      * @return a string describing the open sides of the tile. The format is
-     *         "Côtés ouverts : " followed by the names of the open sides
-     *         (e.g., "Haut", "Droite", "Bas", "Gauche"), separated by spaces.
-     *         If no sides are open, "Côtés ouverts :" is returned.
+     * "Côtés ouverts : " followed by the names of the open sides
+     * (e.g., "Haut", "Droite", "Bas", "Gauche"), separated by spaces.
+     * If no sides are open, "Côtés ouverts :" is returned.
      */
     @Override
     public String toString() {
@@ -39,13 +40,17 @@ public class Sides {
 
     /**
      * Sides getter.
+     *
      * @return an array of booleans
      */
-    public ArrayList<Boolean> getSides() { return this._openSides; }
+    public ArrayList<Boolean> getSides() {
+        return this._openSides;
+    }
 
     /**
      * Retrieves the state of a specific side of the tile.
      * A side is considered open if its value is true.
+     *
      * @param i : index of the side (0 for top, 1 for right, 2 for bottom, 3 for left)
      * @return true if the specified side is open, false otherwise
      * @throws IllegalArgumentException if the index is not between 0 and 3
@@ -60,7 +65,8 @@ public class Sides {
     /**
      * Sides setter.
      * To repeat for each side that changes.
-     * @param i : index of the side (0 stands for top, then clockwise)
+     *
+     * @param i      : index of the side (0 stands for top, then clockwise)
      * @param isOpen : true if the passage opens, false if it closes
      */
     public void setSide(int i, Boolean isOpen) {
@@ -81,6 +87,7 @@ public class Sides {
     /**
      * New method to check if a specific side of the tile is open.
      * A side is considered open if its value is true.
+     *
      * @param side : index of the side to check (0 for top, 1 for right, 2 for bottom, 3 for left)
      * @return true if the specified side is open, false otherwise
      * @throws IllegalArgumentException if the index is not between 0 and 3

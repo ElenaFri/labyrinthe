@@ -1,9 +1,9 @@
-package main.labyrinth.controllers;
+package labyrinth.controllers;
 
-import main.labyrinth.models.observers.GameBoardObserver;
-import main.labyrinth.models.tiles.Tile;
-import main.labyrinth.models.geometry.Position;
-import main.labyrinth.models.game.Gameboard;
+import labyrinth.models.observers.GameBoardObserver;
+import labyrinth.models.tiles.Tile;
+import labyrinth.models.geometry.Position;
+import labyrinth.models.game.Gameboard;
 
 import java.util.Map;
 
@@ -13,19 +13,20 @@ public class GameboardController {
 
     /**
      * Constructs a GameboardController with a specified Gameboard.
+     *
      * @param gameboard : Gameboard instance to be controlled by this controller
      */
     public GameboardController(Gameboard gameboard) {
 
         this.gameboard = gameboard;
     }
-    
+
     /**
      * Returns the (current) gameboard.
+     *
      * @return a Gameboard instance
      */
-    public Gameboard getGameboard()
-    {
+    public Gameboard getGameboard() {
         return this.gameboard;
     }
 
@@ -35,7 +36,8 @@ public class GameboardController {
      * If the direction is left, the row will be shifted to the left. If the direction
      * is right, the row will be shifted to the right. Only valid indices and directions
      * are accepted.
-     * @param index : index of the row to be shifted. Must be between 0 and 6 inclusive
+     *
+     * @param index     : index of the row to be shifted. Must be between 0 and 6 inclusive
      * @param direction : direction to shift the row. Use 1 for left and 3 for right
      * @throws IllegalArgumentException if the index is out of bounds or if the direction is invalid
      */
@@ -60,7 +62,8 @@ public class GameboardController {
      * Shifts a column on the gameboard at a specified index in the given direction.
      * The column can be shifted upwards or downwards. Only valid indices and
      * directions are accepted.
-     * @param index : index of the column to be shifted. Must be between 0 and 6 inclusive
+     *
+     * @param index     : index of the column to be shifted. Must be between 0 and 6 inclusive
      * @param direction : direction to shift the column. 0 for up and 2 for down
      * @throws IllegalArgumentException if the index is out of bounds or if the direction is invalid
      */
@@ -82,11 +85,12 @@ public class GameboardController {
 
     /**
      * Rotates the specified tile to a given orientation.
-     * @param tile : tile to be rotated. Must not be null
+     *
+     * @param tile        : tile to be rotated. Must not be null
      * @param orientation : the desired orientation of the tile. Must be an integer between 0 and 3 inclusive,
-     * where each number represents a specific orientation state.
+     *                    where each number represents a specific orientation state.
      * @throws IllegalArgumentException if the provided tile is null or
-     * if the orientation is outside the valid range
+     *                                  if the orientation is outside the valid range
      */
     public void rotateTile(Tile tile, int orientation) {
         if (tile == null) {

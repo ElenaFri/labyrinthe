@@ -1,11 +1,12 @@
-package main.labyrinth.views.ViewsForObservers;
+package labyrinth.views.ViewsForObservers;
 
-import main.labyrinth.models.game.Player;
+import labyrinth.models.game.Player;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+// Displays the game over window.
 public class EndGameView extends JPanel {
     private Image backgroundImage;
     private Image winnerImage;
@@ -14,10 +15,11 @@ public class EndGameView extends JPanel {
     /**
      * Creates an EndGameView that displays the winner, winner image, and options to start a new game
      * or quit the application.
-     * @param winner : player who won the game. Must not be null.
+     *
+     * @param winner          : player who won the game. Must not be null.
      * @param backgroundImage : background image to be displayed in the view.
-     * @param winnerImage : image to represent the winner. Can be null.
-     * @param onNewGame : a callback to handle starting a new game. Can be null.
+     * @param winnerImage     : image to represent the winner. Can be null.
+     * @param onNewGame       : a callback to handle starting a new game. Can be null.
      * @throws IllegalArgumentException if the winner is null.
      */
     public EndGameView(Player winner, Image backgroundImage, Image winnerImage, Runnable onNewGame) {
@@ -74,6 +76,7 @@ public class EndGameView extends JPanel {
     /**
      * Overrides the paintComponent method to render the background image of the EndGameView panel.
      * The background image is resized to fit the entire panel.
+     *
      * @param g : Graphics object used to perform the drawing operations. Must be not null.
      */
     @Override

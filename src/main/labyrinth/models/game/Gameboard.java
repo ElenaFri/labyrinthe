@@ -1,8 +1,8 @@
-package main.labyrinth.models.game;
+package labyrinth.models.game;
 
-import main.labyrinth.models.geometry.*;
-import main.labyrinth.models.observers.GameBoardObserver;
-import main.labyrinth.models.tiles.*;
+import labyrinth.models.geometry.*;
+import labyrinth.models.observers.GameBoardObserver;
+import labyrinth.models.tiles.*;
 
 import java.awt.*;
 import java.util.*;
@@ -15,7 +15,6 @@ public class Gameboard {
     private Tile[][] _tiles;
     private TileFactory tileFactory;
     private Tile freeTile;
-
     private Random random;
 
 
@@ -41,6 +40,7 @@ public class Gameboard {
      * The method explores the board to find all reachable positions, considering
      * the paths and connections between tiles starting from the specified position.
      * The visited tiles are reset before each call to ensure accurate exploration.
+     *
      * @param start : starting position used to determine accessible tiles
      * @return list of positions representing all accessible tiles from the start position
      */
@@ -55,7 +55,8 @@ public class Gameboard {
      * Recursively explores and identifies accessible tiles starting from the given position.
      * Checks each direction from the current position and proceeds recursively
      * to explore connected tiles that have open sides and are valid positions.
-     * @param current : current position being explored
+     *
+     * @param current         : current position being explored
      * @param accessibleTiles : list of tiles that have been identified as accessible
      */
     private void explore(Position current, List<Position> accessibleTiles) {
@@ -105,6 +106,7 @@ public class Gameboard {
      * Retrieves a list of neighboring positions adjacent to the given position
      * on the game board. Positions are determined based on their immediate
      * cardinal directions: up, down, left, and right.
+     *
      * @param current : current position for which neighbors need to be retrieved
      * @return a list of positions adjacent to the current position
      */
@@ -185,7 +187,6 @@ public class Gameboard {
         placeFixedTiles(); // Placer les tuiles fixes
         placeMovableTiles(); // Placer les tuiles déplaçables
         placeObjectives();
-
     }
 
     /**
@@ -437,6 +438,7 @@ public class Gameboard {
 
     /**
      * Retrieves a list of positions where objectives (treasures) are located on the tiles.
+     *
      * @return : list of 'Position' objects representing the coordinates of all tiles containing objectives.
      */
     public List<Position> getObjectivePositions() {
@@ -446,7 +448,7 @@ public class Gameboard {
         for (int i = 0; i < _tiles.length; i++) {
             for (int j = 0; j < _tiles[i].length; j++) {
                 // Vérifier si la tuile a un objectif (trésor)
-                if (_tiles[i][j] != null &&_tiles[i][j]._hasTreasure) {
+                if (_tiles[i][j] != null && _tiles[i][j]._hasTreasure) {
                     objectivePositions.add(new Position(i, j));
                 }
             }
@@ -459,9 +461,10 @@ public class Gameboard {
 
     /**
      * Retrieves the position of a specific objective on the game board.
+     *
      * @param objectiveId : the unique identifier of the objective to locate.
      * @return position of the objective as a {@code Position} object if found,
-     *         or {@code null} if the objective is not on the board.
+     * or {@code null} if the objective is not on the board.
      */
     public Position getObjectivePosition(int objectiveId) {
         for (int i = 0; i < _tiles.length; i++) {
@@ -471,7 +474,7 @@ public class Gameboard {
                 }
             }
         }
-       // throw new IllegalArgumentException("L'objectif " + objectiveId + " n'est pas placé sur le plateau.");
+        // throw new IllegalArgumentException("L'objectif " + objectiveId + " n'est pas placé sur le plateau.");
         return null;
     }
 
@@ -479,8 +482,9 @@ public class Gameboard {
      * Shifts all tiles in the specified row one position to the left. The leftmost
      * tile will be replaced by the current "free tile", and the rightmost tile
      * in the row will become the new "free tile".
+     *
      * @param rowIndex : index of the row to shift to the left. Must be within the
-     *        bounds of the gameboard's rows.
+     *                 bounds of the gameboard's rows.
      * @return true if the row was successfully shifted to the left.
      * @throws IllegalArgumentException if the specified row index is invalid.
      */
@@ -517,6 +521,7 @@ public class Gameboard {
     /**
      * Shifts all the tiles in the specified row one position to the right. The last tile in the row
      * is moved to a free tile storage, and the first tile in the row is replaced with the free tile.
+     *
      * @param rowIndex : index of the row to shift. Must be a valid row index within the bounds of the game board.
      * @return true if the row was successfully shifted; otherwise, false.
      * @throws IllegalArgumentException if the specified row index is out of range.
@@ -554,6 +559,7 @@ public class Gameboard {
      * Shifts all the tiles in the specified column up by one position. The first tile in the column
      * moves to the free tile, and the free tile replaces the last tile in the column.
      * Notifies the gameboard of the change after the operation is completed.
+     *
      * @param colIndex : index of the column to be shifted up
      * @return true if the operation was performed successfully, false otherwise
      * @throws IllegalArgumentException if the column index is invalid
@@ -593,6 +599,7 @@ public class Gameboard {
      * The last tile in the column is moved to a separate "free tile" placeholder,
      * while the column's first position is filled by the current free tile.
      * Notifies the game board of changes if an update occurs.
+     *
      * @param colIndex : index of the column to shift down. Must be a valid column index.
      * @return boolean indicating whether the column was successfully shifted down.
      * @throws IllegalArgumentException If the provided column index is out of bounds.
@@ -630,6 +637,7 @@ public class Gameboard {
     /**
      * Determines the list of accessible tiles from a given position based on the open sides of
      * the current tile and the validity of adjacent tiles.
+     *
      * @param position : current position to evaluate for accessible tiles.
      * @return list of positions representing the tiles that are accessible from the given position.
      */
@@ -642,9 +650,9 @@ public class Gameboard {
         System.out.println("Position actuelle : " + position + " -> Tuile : " + currentTile);
         // Récupérer et afficher les côtés ouverts de la tuile
         // actuelle
-        Sides openSides =currentTile.getOpenSides();
-     //   System.out.println("orientation d ela tuile ctuelle  : " + currentTile.get_orientation());
-       // System.out.println("Côtés ouverts de la tuile actuelle : " + openSides);
+        Sides openSides = currentTile.getOpenSides();
+        //   System.out.println("orientation d ela tuile ctuelle  : " + currentTile.get_orientation());
+        // System.out.println("Côtés ouverts de la tuile actuelle : " + openSides);
 
         // Vérifier les côtés ouverts de la tuile actuelle
         // Vérification pour ne pas dépasser les limites du plateau
@@ -654,10 +662,10 @@ public class Gameboard {
             if (isPositionValid(upPosition)) {
                 //  System.out.println("Position haut valide : " + upPosition);
                 if (isOppositeSideOpen(upPosition, 2)) { // Vérifier côté bas de la tuile voisine
-               //     System.out.println("Côté bas de la tuile voisine ouvert pour : " + upPosition);
+                    //     System.out.println("Côté bas de la tuile voisine ouvert pour : " + upPosition);
                     accessibleTiles.add(upPosition);
                 } else {
-                   // System.out.println("Côté bas de la tuile voisine fermé pour : " + upPosition);
+                    // System.out.println("Côté bas de la tuile voisine fermé pour : " + upPosition);
                 }
             } else {
                 System.out.println("Position haut invalide : " + upPosition);
@@ -670,7 +678,7 @@ public class Gameboard {
             if (isPositionValid(rightPosition)) {
                 //    System.out.println("Position droite valide : " + rightPosition);
                 if (isOppositeSideOpen(rightPosition, 3)) { // Vérifier côté gauche de la tuile voisine
-                   // System.out.println("Côté gauche de la tuile voisine ouvert pour : " + rightPosition);
+                    // System.out.println("Côté gauche de la tuile voisine ouvert pour : " + rightPosition);
                     accessibleTiles.add(rightPosition);
                 } else {
                     //System.out.println("Côté gauche de la tuile voisine fermé pour : " + rightPosition);
@@ -686,7 +694,7 @@ public class Gameboard {
             if (isPositionValid(downPosition)) {
                 //System.out.println("Position bas valide : " + downPosition);
                 if (isOppositeSideOpen(downPosition, 0)) { // Vérifier côté haut de la tuile voisine
-                   // System.out.println("Côté haut de la tuile voisine ouvert pour : " + downPosition);
+                    // System.out.println("Côté haut de la tuile voisine ouvert pour : " + downPosition);
                     accessibleTiles.add(downPosition);
                 } else {
                     //System.out.println("Côté haut de la tuile voisine fermé pour : " + downPosition);
@@ -702,7 +710,7 @@ public class Gameboard {
             if (isPositionValid(leftPosition)) {
                 //  System.out.println("Position gauche valide : " + leftPosition);
                 if (isOppositeSideOpen(leftPosition, 1)) { // Vérifier côté droite de la tuile voisine
-                 //   System.out.println("Côté droite de la tuile voisine ouvert pour : " + leftPosition);
+                    //   System.out.println("Côté droite de la tuile voisine ouvert pour : " + leftPosition);
                     accessibleTiles.add(leftPosition);
                 } else {
                     //System.out.println("Côté droite de la tuile voisine fermé pour : " + leftPosition);
@@ -718,7 +726,8 @@ public class Gameboard {
 
     /**
      * Checks if the opposite side of the neighboring tile at the specified position is open.
-     * @param position : position of the neighboring tile to be checked
+     *
+     * @param position     : position of the neighboring tile to be checked
      * @param oppositeSide : side of the neighboring tile to verify if it is open
      * @return true if the opposite side of the neighboring tile is open; false otherwise
      */
@@ -738,6 +747,7 @@ public class Gameboard {
 
     /**
      * Checks if the given position is valid within the boundaries of a 7x7 grid.
+     *
      * @param position : position to validate, containing X and Y coordinates
      * @return true if the position is within the bounds of the grid, false otherwise
      */
@@ -747,15 +757,3 @@ public class Gameboard {
         return valid;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

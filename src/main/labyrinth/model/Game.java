@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * The rules of the game, and its state: the board, the four players and whose turn it is.
@@ -15,6 +17,8 @@ import java.util.Set;
  * the pawn}, one tile at a time, and {@linkplain #endTurn() ends the turn}.
  * <p>
  * The first player who has found all of his treasures and comes back to his starting corner wins.
+ * <p>
+ * A game is not thread safe: use it from a single thread (the Swing thread, in the application).
  */
 public final class Game {
     /**
@@ -51,8 +55,8 @@ public final class Game {
     private static final int OBJECTIVES_PER_PLAYER = Board.TREASURE_COUNT / PLAYER_NAMES.length;
 
     private final Board board;
-    private final List<Player> players = new ArrayList<>();
-    private final List<GameListener> listeners = new ArrayList<>();
+    private final List<Player> players;
+    private final List<GameListener> listeners = new CopyOnWriteArrayList<>();
     private int currentIndex;
     private Phase phase = Phase.PUSH;
     private Player winner;
@@ -81,14 +85,18 @@ public final class Game {
         Collections.shuffle(treasures, random);
 
         int last = Board.SIZE - 1;
+        List<Player> newPlayers = new ArrayList<>();
         Position[] corners = {new Position(0, 0), new Position(0, last), new Position(last, 0), new Position(last, last)};
         for (int i = 0; i < PLAYER_NAMES.length; i++) {
             List<Integer> hand = treasures.subList(i * OBJECTIVES_PER_PLAYER, (i + 1) * OBJECTIVES_PER_PLAYER);
-            players.add(new Player(i, PLAYER_NAMES[i], corners[i], hand));
+            newPlayers.add(new Player(i, PLAYER_NAMES[i], corners[i], hand));
         }
+        players = List.copyOf(newPlayers);
     }
 
     /**
+     * Registers an observer, which is told about any change of the game.
+     *
      * @param listener : will be told about any change
      */
     public void addListener(GameListener listener) {
@@ -96,6 +104,8 @@ public final class Game {
     }
 
     /**
+     * Gives the board.
+     *
      * @return the board
      */
     public Board board() {
@@ -103,13 +113,17 @@ public final class Game {
     }
 
     /**
+     * Gives the players, in the order of play.
+     *
      * @return the players, in the order of play
      */
     public List<Player> players() {
-        return Collections.unmodifiableList(players);
+        return players;
     }
 
     /**
+     * Gives the player whose turn it is.
+     *
      * @return the player whose turn it is
      */
     public Player currentPlayer() {
@@ -117,6 +131,8 @@ public final class Game {
     }
 
     /**
+     * Gives the current phase of the turn.
+     *
      * @return the current phase
      */
     public Phase phase() {
@@ -124,13 +140,17 @@ public final class Game {
     }
 
     /**
-     * @return the winner, or null while the game is not {@linkplain Phase#OVER over}
+     * Gives the winner, once the game is over.
+     *
+     * @return the winner, or nothing while the game is not {@linkplain Phase#OVER over}
      */
-    public Player winner() {
-        return winner;
+    public Optional<Player> winner() {
+        return Optional.ofNullable(winner);
     }
 
     /**
+     * Lists the tiles to which the current player can move the pawn.
+     *
      * @return the tiles on which the current player may click: the neighbouring tiles to which the pawn can go,
      * and the tile of the pawn itself to end the turn. It is empty unless the phase is {@link Phase#MOVE}.
      */
@@ -142,7 +162,7 @@ public final class Game {
         Set<Position> targets = new HashSet<>(board.connectedNeighbours(position));
         targets.remove(previousPosition);
         targets.add(position);
-        return targets;
+        return Collections.unmodifiableSet(targets);
     }
 
     /**
@@ -157,6 +177,8 @@ public final class Game {
     }
 
     /**
+     * Tells whether the current player can push the spare tile somewhere right now.
+     *
      * @param direction : the direction in which the tiles would move
      * @param index     : the index of the row or of the column
      * @return true if the current player can push the spare tile there right now: it must be the right phase,
@@ -237,7 +259,7 @@ public final class Game {
 
     private void collectTreasureAndCheckVictory() {
         Player player = currentPlayer();
-        if (!player.hasFoundAll() && player.position().equals(board.positionOfTreasure(player.currentObjective()))) {
+        if (!player.hasFoundAll() && board.positionOfTreasure(player.currentObjective()).equals(Optional.of(player.position()))) {
             player.markObjectiveFound();
             for (GameListener listener : listeners) {
                 listener.objectiveFound(player);

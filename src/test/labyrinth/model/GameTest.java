@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -191,7 +191,7 @@ class GameTest {
             Game game = new Game(new Random(seed));
             game.push(Direction.RIGHT, 1);
             Player alice = game.currentPlayer();
-            Position treasure = game.board().positionOfTreasure(alice.currentObjective());
+            Position treasure = game.board().positionOfTreasure(alice.currentObjective()).orElse(null);
             if (treasure == null) {
                 continue;
             }
@@ -230,14 +230,14 @@ class GameTest {
             game.push(Direction.RIGHT, 1);
             Player alice = game.currentPlayer();
             int other = alice.objectives().get(3);
-            Position treasure = game.board().positionOfTreasure(other);
+            Position treasure = game.board().positionOfTreasure(other).orElse(null);
             if (treasure == null || treasure.col() == 0) {
                 continue;
             }
             Position from = treasure.step(Direction.LEFT);
             alice.moveTo(from);
             connect(game.board(), from, Direction.RIGHT);
-            if (treasure.equals(game.board().positionOfTreasure(alice.currentObjective()))) {
+            if (game.board().positionOfTreasure(alice.currentObjective()).equals(Optional.of(treasure))) {
                 continue;
             }
             game.moveTo(treasure);
@@ -258,11 +258,11 @@ class GameTest {
         alice.moveTo(new Position(0, 1));
         connect(game.board(), new Position(0, 1), Direction.LEFT);
 
-        assertNull(game.winner());
+        assertTrue(game.winner().isEmpty());
         assertTrue(game.moveTo(new Position(0, 0)));
 
         assertEquals(Game.Phase.OVER, game.phase());
-        assertSame(alice, game.winner());
+        assertSame(alice, game.winner().orElseThrow());
         assertTrue(game.moveTargets().isEmpty());
         assertFalse(game.push(Direction.RIGHT, 1));
     }
@@ -276,7 +276,7 @@ class GameTest {
         connect(game.board(), new Position(0, 1), Direction.LEFT);
         game.moveTo(new Position(0, 0));
         assertEquals(Game.Phase.MOVE, game.phase());
-        assertNull(game.winner());
+        assertTrue(game.winner().isEmpty());
     }
 
     @Test
@@ -324,7 +324,7 @@ class GameTest {
                     assertNotNull(game.board().tileAt(player.position()));
                 }
             }
-            Player winner = game.winner();
+            Player winner = game.winner().orElseThrow();
             assertTrue(winner.hasFoundAll());
             assertEquals(winner.home(), winner.position());
         }
@@ -342,7 +342,7 @@ class GameTest {
 
     private static void stepTowardsGoalOrEndTurn(Game game) {
         Player player = game.currentPlayer();
-        Position goal = player.hasFoundAll() ? player.home() : game.board().positionOfTreasure(player.currentObjective());
+        Position goal = player.hasFoundAll() ? player.home() : game.board().positionOfTreasure(player.currentObjective()).orElse(null);
         Position step = goal == null ? null : firstStepTowards(game, player.position(), goal);
         if (step != null && game.moveTargets().contains(step)) {
             assertTrue(game.moveTo(step));

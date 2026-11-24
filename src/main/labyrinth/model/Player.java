@@ -14,6 +14,8 @@ public final class Player {
     private int found;
 
     /**
+     * Creates a player, standing on his starting corner with none of his treasures found.
+     *
      * @param id         : index of the player, which also gives the colour of the pawn
      * @param name       : name of the player
      * @param home       : starting position, where the player must come back after having found all the treasures
@@ -28,6 +30,8 @@ public final class Player {
     }
 
     /**
+     * Gives the index of the player.
+     *
      * @return the index of the player
      */
     public int id() {
@@ -35,6 +39,8 @@ public final class Player {
     }
 
     /**
+     * Gives the name of the player.
+     *
      * @return the name of the player
      */
     public String name() {
@@ -42,6 +48,8 @@ public final class Player {
     }
 
     /**
+     * Gives the starting corner of the player.
+     *
      * @return the starting position
      */
     public Position home() {
@@ -49,6 +57,8 @@ public final class Player {
     }
 
     /**
+     * Gives the position of the pawn.
+     *
      * @return the position of the pawn
      */
     public Position position() {
@@ -60,6 +70,8 @@ public final class Player {
     }
 
     /**
+     * Gives the hand of the player.
+     *
      * @return all the treasures of the player, in the order in which they must be found
      */
     public List<Integer> objectives() {
@@ -67,6 +79,8 @@ public final class Player {
     }
 
     /**
+     * Counts the treasures that the player has found.
+     *
      * @return how many of the treasures have already been found
      */
     public int foundCount() {
@@ -74,6 +88,8 @@ public final class Player {
     }
 
     /**
+     * Tells whether the player has found all of his treasures.
+     *
      * @return true if all the treasures have been found
      */
     public boolean hasFoundAll() {
@@ -81,6 +97,8 @@ public final class Player {
     }
 
     /**
+     * Gives the treasure that the player is looking for.
+     *
      * @return the number of the next treasure to find; it must not be called if all of them have been found
      */
     public int currentObjective() {

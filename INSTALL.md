@@ -35,7 +35,7 @@ Vous pouvez également, bien entendu, utiliser votre IDE préféré pour exécut
 
 ### Tests
 
-Les tests unitaires (JUnit 5) portent sur les règles du jeu. Avec le [JAR « console » de JUnit](https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/) :
+Les tests unitaires (JUnit 5) portent sur les règles du jeu et sur l'interface (dessin, souris, clavier, sans ouvrir de fenêtre). Ils doivent être lancés depuis la racine du projet, où se trouvent les images. Avec le [JAR « console » de JUnit](https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/) :
 
 ```sh
 javac -encoding UTF-8 -cp bin:junit-platform-console-standalone.jar -d bin-test $(find src/test -name "*.java")

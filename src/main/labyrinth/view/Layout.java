@@ -1,81 +1,85 @@
 package labyrinth.view;
 
+import labyrinth.model.Board;
 import labyrinth.model.Direction;
 import labyrinth.model.Position;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Where everything is drawn. The game is designed for a 1920x1080 screen; the coordinates below are expressed in
  * this "canvas", which is scaled to the actual size of the window.
  */
-public final class Layout {
-    /**
-     * Width of the canvas.
-     */
-    public static final int WIDTH = 1920;
-    /**
-     * Height of the canvas.
-     */
-    public static final int HEIGHT = 1080;
-    /**
-     * Width and height of a tile.
-     */
-    public static final int TILE_SIZE = 128;
-    /**
-     * Width and height of the board.
-     */
-    public static final int BOARD_SIZE = 896;
-    /**
-     * Left side of the board.
-     */
-    public static final int BOARD_X = (WIDTH - BOARD_SIZE) / 2;
-    /**
-     * Top side of the board.
-     */
-    public static final int BOARD_Y = (HEIGHT - BOARD_SIZE) / 2;
-    /**
-     * Width of a card in a hand.
-     */
-    public static final int CARD_WIDTH = 60;
-    /**
-     * Height of a card in a hand.
-     */
-    public static final int CARD_HEIGHT = 100;
+final class Layout {
+    static final int WIDTH = 1920;
+    static final int HEIGHT = 1080;
+    static final int TILE_SIZE = 128;
+    static final int BOARD_SIZE = 896;
+    static final int BOARD_X = (WIDTH - BOARD_SIZE) / 2;
+    static final int BOARD_Y = (HEIGHT - BOARD_SIZE) / 2;
+    static final int CARD_WIDTH = 60;
+    static final int CARD_HEIGHT = 100;
     /**
      * Gap between the cards of a hand.
      */
-    public static final int CARD_STEP = -8;
+    static final int CARD_STEP = -8;
+    static final int PORTRAIT_SIZE = 90;
+    static final int ARROW_SIZE = 50;
+    static final int ARROW_ICON_SIZE = 32;
     /**
-     * Width and height of the portrait of a player.
+     * Space between the border of a tile and the frame showing that the pawn can go there.
      */
-    public static final int PORTRAIT_SIZE = 90;
-    /**
-     * Width and height of the arrow buttons.
-     */
-    public static final int ARROW_SIZE = 50;
-    /**
-     * Width and height of the picture drawn in an arrow button.
-     */
-    public static final int ARROW_ICON_SIZE = 32;
+    static final int FRAME_INSET = 10;
 
     /**
      * Where the spare tile is shown.
      */
-    public static final Rectangle SPARE_TILE = new Rectangle(BOARD_X + BOARD_SIZE + 120, (HEIGHT - TILE_SIZE) / 2, TILE_SIZE, TILE_SIZE);
-    /**
-     * The button turning the spare tile.
-     */
-    public static final Rectangle ROTATE_BUTTON = new Rectangle(1532, 626, 130, 30);
-    /**
-     * The button quitting the game.
-     */
-    public static final Rectangle EXIT_BUTTON = new Rectangle(1870, 13, 35, 35);
+    static final Rectangle SPARE_TILE = new Rectangle(BOARD_X + BOARD_SIZE + 120, (HEIGHT - TILE_SIZE) / 2, TILE_SIZE, TILE_SIZE);
+    static final Rectangle ROTATE_BUTTON = new Rectangle(1532, 626, 130, 30);
+    static final Rectangle EXIT_BUTTON = new Rectangle(1870, 13, 35, 35);
     /**
      * The panel telling who has to play.
      */
-    public static final Rectangle TURN_PANEL = new Rectangle(125, 400, 200, 275);
+    static final Rectangle TURN_PANEL = new Rectangle(125, 400, 200, 275);
+    /**
+     * Where the line explaining the keys of the keyboard is drawn.
+     */
+    static final Point KEYBOARD_HINT = new Point(18, HEIGHT - 36);
+
+    /**
+     * The twelve arrows around the board, in clockwise order from the top left: this is the order in which the
+     * keyboard goes through them.
+     */
+    static final List<Target.Push> PUSH_ARROWS;
+
+    private static final Map<Target.Push, Rectangle> ARROW_BOUNDS = new LinkedHashMap<>();
+
+    static {
+        int last = Board.SIZE - 2;
+        List<Target.Push> arrows = new ArrayList<>();
+        for (int i = 1; i <= last; i += 2) {
+            arrows.add(new Target.Push(Direction.DOWN, i));
+        }
+        for (int i = 1; i <= last; i += 2) {
+            arrows.add(new Target.Push(Direction.LEFT, i));
+        }
+        for (int i = last; i >= 1; i -= 2) {
+            arrows.add(new Target.Push(Direction.UP, i));
+        }
+        for (int i = last; i >= 1; i -= 2) {
+            arrows.add(new Target.Push(Direction.RIGHT, i));
+        }
+        for (Target.Push arrow : arrows) {
+            ARROW_BOUNDS.put(arrow, computeArrowBounds(arrow));
+        }
+        PUSH_ARROWS = Collections.unmodifiableList(arrows);
+    }
 
     private Layout() {
     }
@@ -84,8 +88,19 @@ public final class Layout {
      * @param position : a position on the board
      * @return the area of the tile at this position
      */
-    public static Rectangle tileBounds(Position position) {
+    static Rectangle tileBounds(Position position) {
         return new Rectangle(BOARD_X + position.col() * TILE_SIZE, BOARD_Y + position.row() * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    /**
+     * @param position : a position on the board
+     * @return the frame drawn on the tile at this position when the pawn can go there; it is also the area
+     * which reacts to the mouse
+     */
+    static Rectangle moveFrame(Position position) {
+        Rectangle tile = tileBounds(position);
+        tile.grow(-FRAME_INSET, -FRAME_INSET);
+        return tile;
     }
 
     /**
@@ -93,7 +108,7 @@ public final class Layout {
      *               top, 2 and 3 at the bottom)
      * @return the top left corner of his portrait
      */
-    public static Point portraitOrigin(int player) {
+    static Point portraitOrigin(int player) {
         int x = player % 2 == 0 ? BOARD_X - PORTRAIT_SIZE - 40 : BOARD_X + BOARD_SIZE + 40;
         int y = player < 2 ? BOARD_Y - PORTRAIT_SIZE / 4 : BOARD_Y + 18 + BOARD_SIZE - PORTRAIT_SIZE;
         return new Point(x, y);
@@ -103,20 +118,26 @@ public final class Layout {
      * @param player : the index of a player
      * @return the top left corner of the first card of his hand
      */
-    public static Point handOrigin(int player) {
+    static Point handOrigin(int player) {
         int x = player % 2 == 0 ? BOARD_X - 180 : BOARD_X + BOARD_SIZE + 120;
         int y = player < 2 ? BOARD_Y + 30 : BOARD_Y + BOARD_SIZE - 90;
         return new Point(x, y);
     }
 
     /**
-     * @param direction : the direction of push
-     * @param index     : the index of the pushed row or column
-     * @return the area of the arrow button, outside of the board: it is at the side from which the spare tile enters
+     * @param arrow : one of the {@link #PUSH_ARROWS}
+     * @return the area of the arrow button
      */
-    public static Rectangle arrowBounds(Direction direction, int index) {
-        int along = index * TILE_SIZE + (TILE_SIZE - ARROW_SIZE) / 2;
-        return switch (direction) {
+    static Rectangle arrowBounds(Target.Push arrow) {
+        return new Rectangle(ARROW_BOUNDS.get(arrow));
+    }
+
+    /**
+     * The arrow is outside of the board, at the side from which the spare tile enters.
+     */
+    private static Rectangle computeArrowBounds(Target.Push arrow) {
+        int along = arrow.index() * TILE_SIZE + (TILE_SIZE - ARROW_SIZE) / 2;
+        return switch (arrow.direction()) {
             case RIGHT -> new Rectangle(BOARD_X - 62, BOARD_Y + along, ARROW_SIZE, ARROW_SIZE);
             case LEFT -> new Rectangle(BOARD_X + BOARD_SIZE + 9, BOARD_Y + along, ARROW_SIZE, ARROW_SIZE);
             case DOWN -> new Rectangle(BOARD_X + along, BOARD_Y - 62, ARROW_SIZE, ARROW_SIZE);

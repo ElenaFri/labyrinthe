@@ -2,6 +2,7 @@ package labyrinth.view;
 
 import labyrinth.Resources;
 import labyrinth.model.Game;
+import labyrinth.model.Player;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -50,7 +51,8 @@ public final class GameWindow {
         game.addListener(() -> {
             if (game.phase() == Game.Phase.OVER) {
                 // Leave a moment to see the last move before announcing the winner.
-                Timer timer = new Timer(END_SCREEN_DELAY_MS, e -> show(new EndGamePanel(game.winner(), images, this::startNewGame, GameWindow::quit)));
+                Player winner = game.winner().orElseThrow();
+                Timer timer = new Timer(END_SCREEN_DELAY_MS, e -> show(new EndGamePanel(winner, images, this::startNewGame, GameWindow::quit)));
                 timer.setRepeats(false);
                 timer.start();
             }

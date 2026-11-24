@@ -19,6 +19,8 @@ public enum TileType {
     T_SHAPED;
 
     /**
+     * Tells whether one can go through a side of a tile of this shape.
+     *
      * @param side        : a side of the tile
      * @param orientation : number of clockwise quarter turns applied to the tile (0 to 3)
      * @return true if one can go through the given side

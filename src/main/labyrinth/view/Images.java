@@ -17,7 +17,7 @@ import java.util.Map;
  * All the pictures of the game, loaded once and kept in the size in which they are drawn, so that drawing a
  * frame never has to read, merge, rotate or scale an image.
  */
-public final class Images {
+final class Images {
     private static final String IMG = "res/img/";
 
     private final BufferedImage background;
@@ -37,7 +37,7 @@ public final class Images {
     /**
      * Loads the pictures which are always needed.
      */
-    public Images() {
+    Images() {
         background = scale(Resources.image(IMG + "screens/main_screen.jpg"), Layout.WIDTH, Layout.HEIGHT);
         board = scale(Resources.image(IMG + "screens/gameboard.png"), Layout.BOARD_SIZE, Layout.BOARD_SIZE);
         for (TileType type : TileType.values()) {
@@ -59,14 +59,14 @@ public final class Images {
     /**
      * @return the wooden table, in the size of the game
      */
-    public BufferedImage background() {
+    BufferedImage background() {
         return background;
     }
 
     /**
      * @return the board, in its drawing size
      */
-    public BufferedImage board() {
+    BufferedImage board() {
         return board;
     }
 
@@ -74,17 +74,17 @@ public final class Images {
      * @param direction : a direction of push
      * @return the arrow showing this direction
      */
-    public BufferedImage arrow(Direction direction) {
+    BufferedImage arrow(Direction direction) {
         return arrows.get(direction);
     }
 
     /**
      * @param tile : a tile
      * @return the picture of this tile, with its treasure if any, turned according to its orientation,
-     * in the size {@link Layout#TILE_SIZE}
+     * in the size of the tiles of the board
      */
-    public BufferedImage tile(Tile tile) {
-        int key = (tile.type().ordinal() * 4 + tile.orientation()) * (Board.TREASURE_COUNT + 1) + tile.treasure() + 1;
+    BufferedImage tile(Tile tile) {
+        int key = tileKey(tile);
         BufferedImage image = tiles[key];
         if (image == null) {
             image = composeTile(tile);
@@ -94,11 +94,19 @@ public final class Images {
     }
 
     /**
+     * @param tile : a tile
+     * @return a number which is different for each look of a tile (shape, orientation, treasure)
+     */
+    static int tileKey(Tile tile) {
+        return (tile.type().ordinal() * 4 + tile.orientation()) * (Board.TREASURE_COUNT + 1) + tile.treasure() + 1;
+    }
+
+    /**
      * @param player : the index of a player
      * @param size   : the width and height of the picture to get
      * @return the portrait of the player
      */
-    public BufferedImage portrait(int player, int size) {
+    BufferedImage portrait(int player, int size) {
         return portraitsBySize.computeIfAbsent(size * 10 + player, k -> scale(portraits[player], size, size));
     }
 
@@ -107,7 +115,7 @@ public final class Images {
      * @param size   : the width and height of the picture to get
      * @return the pawn of the player
      */
-    public BufferedImage piece(int player, int size) {
+    BufferedImage piece(int player, int size) {
         return piecesBySize.computeIfAbsent(size * 10 + player, k -> scale(pieces[player], size, size));
     }
 
@@ -115,15 +123,15 @@ public final class Images {
      * @return a card showing nothing: the cards of a hand but the first one are partly hidden by the next
      * one, so that they do not need to show their treasure
      */
-    public BufferedImage blankCard() {
+    BufferedImage blankCard() {
         return cardFace;
     }
 
     /**
      * @param treasure : the number of a treasure
-     * @return the card of this treasure, in the size {@link Layout#CARD_WIDTH} x {@link Layout#CARD_HEIGHT}
+     * @return the card of this treasure, in the size of the cards of a hand
      */
-    public BufferedImage card(int treasure) {
+    BufferedImage card(int treasure) {
         BufferedImage image = cards[treasure];
         if (image == null) {
             if (cardTreasures[treasure] == null) {

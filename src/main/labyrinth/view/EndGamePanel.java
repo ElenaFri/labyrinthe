@@ -17,7 +17,7 @@ import java.awt.geom.RoundRectangle2D;
  * The last screen: announces the winner, and proposes to play again or to quit.
  */
 @SuppressWarnings("serial")
-public final class EndGamePanel extends ScaledPanel {
+final class EndGamePanel extends ScaledPanel {
     private static final int PORTRAIT_SIZE = 200;
 
     private final Player winner;
@@ -33,7 +33,7 @@ public final class EndGamePanel extends ScaledPanel {
      * @param onNewGame : what to do when the players want to play again
      * @param onQuit    : what to do when the players want to quit
      */
-    public EndGamePanel(Player winner, Images images, Runnable onNewGame, Runnable onQuit) {
+    EndGamePanel(Player winner, Images images, Runnable onNewGame, Runnable onQuit) {
         this.winner = winner;
         this.images = images;
         this.onNewGame = onNewGame;

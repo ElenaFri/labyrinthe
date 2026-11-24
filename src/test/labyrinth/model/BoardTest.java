@@ -12,8 +12,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -81,15 +79,14 @@ class BoardTest {
         Board board = newBoard();
         Set<Integer> found = new HashSet<>();
         for (int treasure = 0; treasure < Board.TREASURE_COUNT; treasure++) {
-            Position position = board.positionOfTreasure(treasure);
-            assertNotNull(position);
+            Position position = board.positionOfTreasure(treasure).orElseThrow();
             found.add(treasure);
             boolean corner = (position.row() % 6 == 0) && (position.col() % 6 == 0);
             assertFalse(corner);
         }
         assertEquals(Board.TREASURE_COUNT, found.size());
         assertFalse(board.spareTile().hasTreasure());
-        assertNull(board.positionOfTreasure(Board.TREASURE_COUNT));
+        assertTrue(board.positionOfTreasure(Board.TREASURE_COUNT).isEmpty());
     }
 
     @Test

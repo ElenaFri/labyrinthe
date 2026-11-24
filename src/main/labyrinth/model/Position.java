@@ -9,6 +9,8 @@ package labyrinth.model;
 public record Position(int row, int col) {
 
     /**
+     * Gives the neighbouring position in a direction.
+     *
      * @param direction : the direction to go to
      * @return the neighbouring position in this direction (possibly outside of the board)
      */
@@ -17,6 +19,8 @@ public record Position(int row, int col) {
     }
 
     /**
+     * Tells whether the position is inside of the board.
+     *
      * @return true if the position is inside of the board
      */
     public boolean isOnBoard() {

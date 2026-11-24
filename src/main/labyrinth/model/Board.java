@@ -3,12 +3,15 @@ package labyrinth.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
  * The 7x7 board of the labyrinth, and the spare tile used to push its rows and columns.
  * <p>
  * Tiles are fixed on the even rows and columns; only the odd rows and columns can be pushed.
+ * <p>
+ * The board can be read by anybody, but only the {@link Game} can change it.
  */
 public final class Board {
     /**
@@ -34,13 +37,15 @@ public final class Board {
      *
      * @param random : source of randomness
      */
-    public Board(Random random) {
+    Board(Random random) {
         placeFixedTiles(random);
         placeMovableTiles(random);
         placeTreasures(random);
     }
 
     /**
+     * Gives the tile at a position.
+     *
      * @param position : a position on the board
      * @return the tile at this position
      */
@@ -49,6 +54,8 @@ public final class Board {
     }
 
     /**
+     * Gives the tile which is out of the board, ready to be pushed in.
+     *
      * @return the tile which is out of the board, ready to be pushed in
      */
     public Tile spareTile() {
@@ -56,6 +63,8 @@ public final class Board {
     }
 
     /**
+     * Tells whether a row or a column can be pushed.
+     *
      * @param index : the index of a row or of a column
      * @return true if this row or column can be pushed
      */
@@ -71,7 +80,7 @@ public final class Board {
      * @param index     : the index of the row or of the column; it must be {@linkplain #isPushable(int) pushable}
      * @throws IllegalArgumentException if the row or column cannot be pushed
      */
-    public void push(Direction direction, int index) {
+    void push(Direction direction, int index) {
         if (!isPushable(index)) {
             throw new IllegalArgumentException("Cannot push the line " + index);
         }
@@ -110,6 +119,8 @@ public final class Board {
     }
 
     /**
+     * Tells whether one can go from a tile to the next one in a direction.
+     *
      * @param from      : a position on the board
      * @param direction : the direction in which one wants to go
      * @return true if the position next to <code>from</code> in this direction is on the board and connected to it
@@ -120,6 +131,8 @@ public final class Board {
     }
 
     /**
+     * Lists the neighbours of a tile to which one can directly go.
+     *
      * @param from : a position on the board
      * @return the neighbouring positions to which one can directly go
      */
@@ -134,18 +147,20 @@ public final class Board {
     }
 
     /**
+     * Finds where a treasure is.
+     *
      * @param treasure : the number of a treasure
-     * @return the position of the tile bearing this treasure, or null if it lies on the spare tile
+     * @return the position of the tile bearing this treasure, or nothing if it lies on the spare tile
      */
-    public Position positionOfTreasure(int treasure) {
+    public Optional<Position> positionOfTreasure(int treasure) {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
                 if (tiles[row][col].treasure() == treasure) {
-                    return new Position(row, col);
+                    return Optional.of(new Position(row, col));
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     private static Position entryOf(Direction direction, int index) {

@@ -1,0 +1,207 @@
+package labyrinth.view;
+
+import labyrinth.model.Direction;
+import labyrinth.model.Game;
+import labyrinth.model.Position;
+import labyrinth.model.Tile;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * Tests of the main screen, without any window: the panel is drawn in an image and fed with mouse and key events.
+ * They must be run from the root of the project, where the pictures are.
+ */
+class GamePanelTest {
+    private static Images images;
+
+    private Game game;
+    private GamePanel panel;
+    private int quitRequests;
+
+    @BeforeAll
+    static void loadImages() {
+        System.setProperty("java.awt.headless", "true");
+        images = new Images();
+    }
+
+    @BeforeEach
+    void openGame() {
+        game = new Game(new Random(7));
+        panel = new GamePanel(game, images, () -> quitRequests++);
+        panel.setSize(Layout.WIDTH, Layout.HEIGHT);
+    }
+
+    private BufferedImage draw(int width, int height) {
+        panel.setSize(width, height);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = image.createGraphics();
+        panel.paint(g);
+        g.dispose();
+        return image;
+    }
+
+    private void click(double canvasX, double canvasY) {
+        double scale = Math.min((double) panel.getWidth() / Layout.WIDTH, (double) panel.getHeight() / Layout.HEIGHT);
+        double offsetX = (panel.getWidth() - Layout.WIDTH * scale) / 2;
+        double offsetY = (panel.getHeight() - Layout.HEIGHT * scale) / 2;
+        int x = (int) Math.round(offsetX + canvasX * scale);
+        int y = (int) Math.round(offsetY + canvasY * scale);
+        panel.dispatchEvent(new MouseEvent(panel, MouseEvent.MOUSE_PRESSED, 0L, 0, x, y, 1, false, MouseEvent.BUTTON1));
+    }
+
+    private void clickOn(Rectangle area) {
+        click(area.getCenterX(), area.getCenterY());
+    }
+
+    private void press(String key) {
+        panel.getActionMap().get(key).actionPerformed(new ActionEvent(panel, ActionEvent.ACTION_PERFORMED, key));
+    }
+
+    @Test
+    void drawsTheGameInAnySize() {
+        BufferedImage big = draw(Layout.WIDTH, Layout.HEIGHT);
+        // The table is not the same colour as the board, which is not the same as the spare tile...
+        int table = big.getRGB(5, 5);
+        int board = big.getRGB(Layout.BOARD_X + 64, Layout.BOARD_Y + 64);
+        int spare = big.getRGB((int) Layout.SPARE_TILE.getCenterX(), (int) Layout.SPARE_TILE.getCenterY());
+        assertNotEquals(table, board);
+        assertNotEquals(table, spare);
+
+        draw(1280, 720);
+        draw(400, 700);
+    }
+
+    @Test
+    void aClickOnAnArrowPushesTheSpareTile() {
+        Tile spare = game.board().spareTile();
+        clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));
+
+        assertEquals(Game.Phase.MOVE, game.phase());
+        assertSame(spare, game.board().tileAt(new Position(3, 0)));
+    }
+
+    @Test
+    void clicksFollowTheScaleAndTheCentringOfTheCanvas() {
+        for (int[] size : new int[][]{{960, 540}, {960, 700}, {2560, 1440}, {600, 1000}}) {
+            Game fresh = new Game(new Random(7));
+            panel = new GamePanel(fresh, images, () -> quitRequests++);
+            game = fresh;
+            panel.setSize(size[0], size[1]);
+
+            clickOn(Layout.arrowBounds(new Target.Push(Direction.DOWN, 3)));
+
+            assertEquals(Game.Phase.MOVE, game.phase(), size[0] + "x" + size[1]);
+        }
+    }
+
+    @Test
+    void aClickBesideTheArrowsDoesNothing() {
+        click(5, 5);
+        click(Layout.BOARD_X + 10, Layout.BOARD_Y + 10);
+        assertEquals(Game.Phase.PUSH, game.phase());
+    }
+
+    @Test
+    void anArrowCanOnlyBeUsedOncePerTurn() {
+        clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));
+        Tile spare = game.board().spareTile();
+
+        clickOn(Layout.arrowBounds(new Target.Push(Direction.DOWN, 1)));
+
+        assertSame(spare, game.board().spareTile());
+    }
+
+    @Test
+    void theRotateButtonTurnsTheSpareTile() {
+        int before = game.board().spareTile().orientation();
+        clickOn(Layout.ROTATE_BUTTON);
+        assertEquals((before + 1) % 4, game.board().spareTile().orientation());
+    }
+
+    @Test
+    void theExitButtonAsksToQuit() {
+        clickOn(Layout.EXIT_BUTTON);
+        assertEquals(1, quitRequests);
+    }
+
+    @Test
+    void theKeyboardChoosesAnArrowThenPushes() {
+        Tile spare = game.board().spareTile();
+        press("LEFT");   // the first press selects the last arrow in clockwise order: the one pushing row 1 to the right
+        press("ENTER");
+
+        assertEquals(Game.Phase.MOVE, game.phase());
+        assertSame(spare, game.board().tileAt(new Position(1, 0)));
+    }
+
+    @Test
+    void theKeyboardGoesThroughTheArrowsInClockwiseOrder() {
+        Tile spare = game.board().spareTile();
+        press("RIGHT");  // the first arrow: top of the board, column 1, pushing down
+        press("RIGHT");  // the second one: column 3
+        press("SPACE");
+
+        assertSame(spare, game.board().tileAt(new Position(0, 3)));
+    }
+
+    @Test
+    void enterDoesNothingWithoutASelectedArrow() {
+        press("ENTER");
+        assertEquals(Game.Phase.PUSH, game.phase());
+    }
+
+    @Test
+    void theKeyboardTurnsTheSpareTile() {
+        int before = game.board().spareTile().orientation();
+        press("R");
+        assertEquals((before + 1) % 4, game.board().spareTile().orientation());
+    }
+
+    @Test
+    void theKeyboardMovesThePawnAndEndsTheTurn() {
+        // A game where Alice can leave her corner whatever the push of the third row.
+        Game found = null;
+        for (long seed = 0; seed < 200 && found == null; seed++) {
+            Game candidate = new Game(new Random(seed));
+            Position corner = new Position(0, 0);
+            if (candidate.board().canPass(corner, Direction.RIGHT)) {
+                found = candidate;
+            }
+        }
+        game = found;
+        panel = new GamePanel(game, images, () -> quitRequests++);
+        panel.setSize(Layout.WIDTH, Layout.HEIGHT);
+
+        clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));
+        press("D");
+        assertEquals(new Position(0, 1), game.currentPlayer().position());
+
+        press("ENTER");
+        assertEquals("Bob", game.currentPlayer().name());
+        assertEquals(Game.Phase.PUSH, game.phase());
+    }
+
+    @Test
+    void theKeyboardCannotWalkThroughWalls() {
+        clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));
+        Position start = game.currentPlayer().position();
+        // Alice is in the top left corner: nothing can be at her left or above her.
+        press("LEFT");
+        press("UP");
+        assertEquals(start, game.currentPlayer().position());
+        assertTrue(game.moveTargets().contains(start));
+    }
+}

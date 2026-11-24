@@ -1,6 +1,5 @@
 package labyrinth.view;
 
-import labyrinth.model.Board;
 import labyrinth.model.Direction;
 import labyrinth.model.Player;
 import labyrinth.model.Tile;
@@ -54,8 +53,7 @@ final class Sprites {
      * place of the tile
      */
     BufferedImage spareTile(Tile tile) {
-        int key = (tile.type().ordinal() * 4 + tile.orientation()) * (Board.TREASURE_COUNT + 1) + tile.treasure() + 1;
-        return spareTiles.computeIfAbsent(key, k -> {
+        return spareTiles.computeIfAbsent(Images.tileKey(tile), k -> {
             int size = Layout.TILE_SIZE;
             BufferedImage sprite = newImage(size + 2 * SPARE_MARGIN + 10, size + 2 * SPARE_MARGIN + 12);
             Graphics2D g = antialiased(sprite);
@@ -97,7 +95,7 @@ final class Sprites {
 
     /**
      * @param player : a player
-     * @return the panel telling that it is the turn of this player, of the size {@link Layout#TURN_PANEL}
+     * @return the panel telling that it is the turn of this player
      */
     BufferedImage turnPanel(Player player) {
         return turnPanels.computeIfAbsent(player.id(), k -> {
@@ -129,7 +127,7 @@ final class Sprites {
     /**
      * @param direction : a direction of push
      * @param enabled   : false for the faded arrow, shown when the push is not possible
-     * @return the arrow, centred in an area of the size {@link Layout#ARROW_SIZE}
+     * @return the arrow, centred in an area of the size of the arrow buttons
      */
     BufferedImage arrow(Direction direction, boolean enabled) {
         return arrows.computeIfAbsent(direction.ordinal() * 2 + (enabled ? 1 : 0), k -> {

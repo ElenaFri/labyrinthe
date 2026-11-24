@@ -2,12 +2,32 @@ A31 - Projet "Labyrinthe"
 =========================
 
 
-Jouer en ligne
---------------
+Comment jouer
+-------------
 
-Le jeu peut être joué directement dans le navigateur : [https://elenafri.github.io/labyrinthe/](https://elenafri.github.io/labyrinthe/).
+### Lancer le jeu
 
-Il s'agit du programme Java d'origine, exécuté dans le navigateur grâce à [CheerpJ](https://cheerpj.com/) (voir `web/index.html` et `.github/workflows/pages.yml`).
+- **En ligne** : ouvrez [https://elenafri.github.io/labyrinthe/](https://elenafri.github.io/labyrinthe/) et cliquez sur **▶ Jouer**. Le premier chargement prend quelques secondes. Un bouton **Musique** permet de couper ou remettre le son.
+- **En local** : voir [`INSTALL.md`](INSTALL.md).
+
+Le jeu se joue à **4 joueurs sur le même écran** (Alice, Bob, Charlie et Eve, chacun avec sa couleur), à tour de rôle.
+
+### But du jeu
+
+Chaque joueur doit trouver, dans l'ordre, tous ses trésors (sa carte objectif est affichée à gauche), puis **revenir à sa case de départ**. Le premier qui y parvient gagne.
+
+### Déroulement d'un tour
+
+1. *(facultatif)* Cliquez sur **TOURNER** pour faire pivoter de 90° la tuile supplémentaire, affichée à droite.
+2. Cliquez sur une **flèche** autour du plateau pour insérer la tuile et pousser la rangée ou colonne correspondante.
+3. Déplacez votre pion **case par case** en cliquant sur les cases voisines accessibles (cadre rouge ; vert sous la souris).
+4. Pour terminer votre tour, cliquez sur **votre case actuelle** : c'est au joueur suivant.
+
+Un message s'affiche à chaque trésor trouvé, et un écran de fin annonce le vainqueur, avec la possibilité de relancer une partie.
+
+> Le plateau est conçu pour un écran 1920×1080 ; sur un écran plus petit, il est automatiquement réduit dans la version en ligne.
+
+La version en ligne exécute le programme Java d'origine dans le navigateur grâce à [CheerpJ](https://cheerpj.com/) (voir `web/index.html` et `.github/workflows/pages.yml`).
 La Javadoc est disponible sur [https://elenafri.github.io/labyrinthe/doc/](https://elenafri.github.io/labyrinthe/doc/).
 
 Les règles du jeu

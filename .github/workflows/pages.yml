@@ -47,7 +47,7 @@ jobs:
           mkdir site
           cp web/index.html web/preload.json site/
           cp build/labyrinthe.jar site/
-          cp res/img/screens/labyrintheBox.jpg site/
+          cp res/img/screens/labyrintheBox.jpg res/icon.png site/
           javadoc -quiet -d site/doc -sourcepath src/main -subpackages labyrinth -encoding UTF-8 -docencoding UTF-8 -charset UTF-8
 
       - name: Convertir la musique (wav de 130 Mo -> mp3)

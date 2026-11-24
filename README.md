@@ -23,3 +23,12 @@ Trouver, dans l'ordre, tous ses trésors (la carte objectif est affichée à gau
 2. Cliquer sur une **flèche** autour du plateau pour insérer la tuile et pousser la rangée (on ne peut pas annuler la poussée du joueur précédent).
 3. Déplacer son pion en cliquant sur les cases accessibles (cadre rouge).
 4. Cliquer sur **sa case actuelle** pour passer la main au joueur suivant.
+
+Au clavier
+----------
+
+Tout se joue aussi sans la souris :
+
+- **Pousser la tuile** : les flèches du clavier (ou ZQSD / WASD) choisissent la flèche du plateau (la sélection est entourée en vert), **Entrée** ou **Espace** pousse. **R** tourne la tuile.
+- **Déplacer son pion** : les flèches (ou ZQSD / WASD) le déplacent d'une case, **Entrée** ou **Espace** termine le tour.
+- **Écran de fin** : **Entrée** pour une nouvelle partie, **Échap** pour quitter.

@@ -1,12 +1,15 @@
 package labyrinth.view;
 
+import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -14,6 +17,7 @@ import java.awt.event.MouseEvent;
  * A panel drawing a {@link Layout#WIDTH} x {@link Layout#HEIGHT} canvas, scaled to fit its size and centred.
  * Subclasses draw and handle the mouse in the coordinates of the canvas, whatever the size of the window.
  */
+@SuppressWarnings("serial")
 abstract class ScaledPanel extends JPanel {
     private double scale = 1;
     private int offsetX;
@@ -42,6 +46,22 @@ abstract class ScaledPanel extends JPanel {
         };
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
+    }
+
+    /**
+     * Makes a key trigger an action, whichever component has the focus in the window.
+     *
+     * @param key    : the key, as in {@link KeyStroke#getKeyStroke(String)} (for example "LEFT" or "ENTER")
+     * @param action : what to do when the key is pressed
+     */
+    protected final void bindKey(String key, Runnable action) {
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), key);
+        getActionMap().put(key, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                action.run();
+            }
+        });
     }
 
     /**

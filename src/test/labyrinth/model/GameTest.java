@@ -157,6 +157,35 @@ class GameTest {
     }
 
     @Test
+    void canStepInADirectionAndEndTheTurnWithoutTheMouse() {
+        Game game = newGame();
+        assertFalse(game.step(Direction.RIGHT), "cannot move before pushing");
+        assertFalse(game.endTurn(), "cannot end the turn before pushing");
+
+        game.push(Direction.RIGHT, 1);
+        Player alice = game.currentPlayer();
+        Position start = new Position(2, 1);
+        alice.moveTo(start);
+        connect(game.board(), start, Direction.RIGHT);
+
+        assertTrue(game.step(Direction.RIGHT));
+        assertEquals(new Position(2, 2), alice.position());
+        assertFalse(game.step(Direction.LEFT), "cannot step back right away");
+
+        // A wall: turn the tile on the other side so that it is closed towards us.
+        Tile below = game.board().tileAt(new Position(3, 2));
+        while (below.isOpen(Direction.UP)) {
+            below.rotateClockwise();
+        }
+        assertFalse(game.step(Direction.DOWN));
+        assertEquals(new Position(2, 2), alice.position());
+
+        assertTrue(game.endTurn());
+        assertEquals("Bob", game.currentPlayer().name());
+        assertEquals(Game.Phase.PUSH, game.phase());
+    }
+
+    @Test
     void findingTheCurrentTreasureMovesToTheNextOne() {
         for (long seed = 0; seed < 50; seed++) {
             Game game = new Game(new Random(seed));

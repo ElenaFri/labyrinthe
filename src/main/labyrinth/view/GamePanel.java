@@ -31,6 +31,7 @@ import java.util.Objects;
  * Everything which never changes (table, board, portraits) is drawn once in an image; each frame then only
  * draws pictures which are already in the right size, so a frame is very cheap.
  */
+@SuppressWarnings("serial")
 public final class GamePanel extends ScaledPanel implements GameListener {
     private static final Color NAVY = Palette.NAVY;
     private static final Color BEIGE = Palette.BEIGE;
@@ -52,6 +53,7 @@ public final class GamePanel extends ScaledPanel implements GameListener {
     private BufferedImage staticLayer;
     private Point mouse;
     private Object hovered;
+    private Arrow selectedArrow;
     private String toast;
 
     /**
@@ -66,16 +68,88 @@ public final class GamePanel extends ScaledPanel implements GameListener {
         this.onQuit = onQuit;
         toastTimer.setRepeats(false);
 
-        for (int index = 1; index < Board.SIZE; index += 2) {
-            for (Direction direction : Direction.values()) {
-                arrows.add(new Arrow(direction, index, Layout.arrowBounds(direction, index)));
-            }
+        // The arrows in clockwise order from the top left, which is the order of the keyboard selection.
+        int last = Board.SIZE - 2;
+        for (int i = 1; i <= last; i += 2) {
+            addArrow(Direction.DOWN, i);
+        }
+        for (int i = 1; i <= last; i += 2) {
+            addArrow(Direction.LEFT, i);
+        }
+        for (int i = last; i >= 1; i -= 2) {
+            addArrow(Direction.UP, i);
+        }
+        for (int i = last; i >= 1; i -= 2) {
+            addArrow(Direction.RIGHT, i);
         }
         game.addListener(this);
+        bindKeys();
+    }
+
+    private void addArrow(Direction direction, int index) {
+        arrows.add(new Arrow(direction, index, Layout.arrowBounds(direction, index)));
+    }
+
+    /**
+     * The keyboard does everything the mouse does. The arrow keys (or WASD, or ZQSD) choose where to push the spare
+     * tile, then move the pawn; Enter or Space pushes the spare tile, then ends the turn; R turns the spare tile.
+     */
+    private void bindKeys() {
+        bindDirectionKeys(Direction.UP, "UP", "W", "Z");
+        bindDirectionKeys(Direction.DOWN, "DOWN", "S");
+        bindDirectionKeys(Direction.LEFT, "LEFT", "A", "Q");
+        bindDirectionKeys(Direction.RIGHT, "RIGHT", "D");
+        bindKey("ENTER", this::confirm);
+        bindKey("SPACE", this::confirm);
+        bindKey("R", game::rotateSpare);
+    }
+
+    private void bindDirectionKeys(Direction direction, String... keys) {
+        for (String key : keys) {
+            bindKey(key, () -> onDirectionKey(direction));
+        }
+    }
+
+    private void onDirectionKey(Direction direction) {
+        if (game.phase() == Game.Phase.MOVE) {
+            game.step(direction);
+        } else if (game.phase() == Game.Phase.PUSH) {
+            // Up and left go to the previous arrow, down and right to the next one.
+            selectArrow(direction == Direction.UP || direction == Direction.LEFT ? -1 : 1);
+        }
+    }
+
+    private void confirm() {
+        if (game.phase() == Game.Phase.MOVE) {
+            game.endTurn();
+        } else if (game.phase() == Game.Phase.PUSH && selectedArrow != null) {
+            game.push(selectedArrow.direction(), selectedArrow.index());
+        }
+    }
+
+    /**
+     * Selects the next (or previous) arrow among the ones which can be used.
+     */
+    private void selectArrow(int step) {
+        List<Arrow> usable = arrows.stream().filter(this::canUse).toList();
+        if (usable.isEmpty()) {
+            return;
+        }
+        int current = usable.indexOf(selectedArrow);
+        int next = current < 0 ? (step > 0 ? 0 : usable.size() - 1) : Math.floorMod(current + step, usable.size());
+        selectedArrow = usable.get(next);
+        repaint();
+    }
+
+    private boolean canUse(Arrow arrow) {
+        return game.canPush(arrow.direction(), arrow.index());
     }
 
     @Override
     public void gameChanged() {
+        if (selectedArrow != null && !canUse(selectedArrow)) {
+            selectedArrow = null;
+        }
         updateHover();
         repaint();
     }
@@ -137,7 +211,7 @@ public final class GamePanel extends ScaledPanel implements GameListener {
             return rotateButton;
         }
         for (Arrow arrow : arrows) {
-            if (arrow.bounds().contains(point) && game.canPush(arrow.direction(), arrow.index())) {
+            if (arrow.bounds().contains(point) && canUse(arrow)) {
                 return arrow;
             }
         }
@@ -187,6 +261,7 @@ public final class GamePanel extends ScaledPanel implements GameListener {
         paintMoveTargets(g);
         paintArrows(g);
         paintTurnPanel(g);
+        paintKeyboardHint(g);
         rotateButton.paint(g);
         exitButton.paint(g);
         paintToast(g);
@@ -301,8 +376,19 @@ public final class GamePanel extends ScaledPanel implements GameListener {
 
     private void paintArrows(Graphics2D g) {
         for (Arrow arrow : arrows) {
-            boolean enabled = game.canPush(arrow.direction(), arrow.index());
-            g.drawImage(sprites.arrow(arrow.direction(), enabled), arrow.bounds().x, arrow.bounds().y, null);
+            g.drawImage(sprites.arrow(arrow.direction(), canUse(arrow)), arrow.bounds().x, arrow.bounds().y, null);
+        }
+        if (selectedArrow != null) {
+            Rectangle bounds = selectedArrow.bounds();
+            g.setColor(Color.GREEN);
+            g.setStroke(new BasicStroke(3));
+            g.drawRoundRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10);
+        }
+    }
+
+    private void paintKeyboardHint(Graphics2D g) {
+        if (game.phase() != Game.Phase.OVER) {
+            g.drawImage(sprites.keyboardHint(game.phase() == Game.Phase.PUSH), 18, Layout.HEIGHT - 36, null);
         }
     }
 

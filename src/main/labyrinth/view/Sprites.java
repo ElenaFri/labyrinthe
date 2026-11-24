@@ -7,6 +7,7 @@ import labyrinth.model.Tile;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -41,6 +42,7 @@ final class Sprites {
     private final Map<Integer, BufferedImage> pawns = new HashMap<>();
     private final Map<Integer, BufferedImage> turnPanels = new HashMap<>();
     private final Map<Integer, BufferedImage> arrows = new HashMap<>();
+    private final Map<Integer, BufferedImage> hints = new HashMap<>();
 
     Sprites(Images images) {
         this.images = images;
@@ -136,6 +138,33 @@ final class Sprites {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, enabled ? 1f : DISABLED_ARROW_OPACITY));
             int margin = (Layout.ARROW_SIZE - Layout.ARROW_ICON_SIZE) / 2;
             g.drawImage(images.arrow(direction), margin, margin, null);
+            g.dispose();
+            return sprite;
+        });
+    }
+
+    /**
+     * @param push : true to explain how to push the spare tile with the keyboard, false to explain how to move
+     * @return a line of text telling which keys to use
+     */
+    BufferedImage keyboardHint(boolean push) {
+        return hints.computeIfAbsent(push ? 1 : 0, k -> {
+            String text = push
+                    ? "Clavier : flèches = choisir où pousser · Entrée = pousser · R = tourner la tuile"
+                    : "Clavier : flèches = déplacer le pion · Entrée = finir le tour";
+            Font font = new Font("Arial", Font.PLAIN, 16);
+            BufferedImage probe = newImage(1, 1);
+            Graphics2D measure = probe.createGraphics();
+            int width = measure.getFontMetrics(font).stringWidth(text) + 24;
+            measure.dispose();
+
+            BufferedImage sprite = newImage(width, 24);
+            Graphics2D g = antialiased(sprite);
+            g.setFont(font);
+            g.setColor(new Color(0, 0, 0, 190));
+            g.drawString(text, 3, 19);
+            g.setColor(Color.WHITE);
+            g.drawString(text, 2, 18);
             g.dispose();
             return sprite;
         });

@@ -12,7 +12,7 @@ import java.util.Set;
  * <p>
  * A turn has two phases. First the player may {@linkplain #rotateSpare() turn the spare tile}, then must
  * {@linkplain #push(Direction, int) push it into the board}. Then the player {@linkplain #moveTo(Position) moves
- * the pawn}, one tile at a time, and ends the turn by "moving" onto the tile where the pawn already stands.
+ * the pawn}, one tile at a time, and {@linkplain #endTurn() ends the turn}.
  * <p>
  * The first player who has found all of his treasures and comes back to his starting corner wins.
  */
@@ -214,6 +214,25 @@ public final class Game {
         }
         fireChanged();
         return true;
+    }
+
+    /**
+     * Moves the pawn of the current player by one tile, in a direction.
+     *
+     * @param direction : the direction in which to go
+     * @return false (and nothing happens) if the pawn cannot go there
+     */
+    public boolean step(Direction direction) {
+        return phase == Phase.MOVE && moveTo(currentPlayer().position().step(direction));
+    }
+
+    /**
+     * Ends the turn of the current player, leaving the pawn where it is.
+     *
+     * @return false (and nothing happens) if the turn cannot end yet, because the spare tile has not been pushed
+     */
+    public boolean endTurn() {
+        return phase == Phase.MOVE && moveTo(currentPlayer().position());
     }
 
     private void collectTreasureAndCheckVictory() {

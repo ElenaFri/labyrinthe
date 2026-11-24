@@ -8,20 +8,30 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
- * A button drawn on a {@link ScaledPanel}: a beige slab with a raised border and a label.
+ * A button drawn on a {@link ScaledPanel}: a slab with a raised border and a label.
  */
 final class PanelButton {
     private final Rectangle bounds;
     private final String label;
     private final Font font;
     private final Color background;
+    private final Color bevel;
     private final Color foreground;
 
-    PanelButton(Rectangle bounds, String label, int fontSize, Color background, Color foreground) {
+    /**
+     * @param bounds     : where the button is
+     * @param label      : its text
+     * @param fontSize   : the size of the text
+     * @param background : the colour of its face
+     * @param bevel      : the colour from which the light and the dark sides of its border are made
+     * @param foreground : the colour of its text
+     */
+    PanelButton(Rectangle bounds, String label, int fontSize, Color background, Color bevel, Color foreground) {
         this.bounds = bounds;
         this.label = label;
         this.font = new Font("Arial", Font.BOLD, fontSize);
         this.background = background;
+        this.bevel = bevel;
         this.foreground = foreground;
     }
 
@@ -34,8 +44,8 @@ final class PanelButton {
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
         // Raised border: light on the top and left sides, dark on the bottom and right sides.
-        Color light = Palette.BEIGE.brighter();
-        Color dark = Palette.BEIGE.darker();
+        Color light = bevel.brighter();
+        Color dark = bevel.darker();
         int right = bounds.x + bounds.width;
         int bottom = bounds.y + bounds.height;
         g.setColor(light);

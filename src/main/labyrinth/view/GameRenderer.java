@@ -30,12 +30,9 @@ import java.util.Set;
  */
 final class GameRenderer {
     private static final Font NAME_FONT = new Font("Arial", Font.BOLD, 12);
-    private static final Font TOAST_FONT = new Font("Arial", Font.BOLD, 22);
     private static final Color LINE_FILL = new Color(255, 215, 90, 60);
     private static final Color LINE_BORDER = new Color(255, 215, 90, 170);
     private static final BasicStroke FRAME_STROKE = new BasicStroke(2);
-    private static final int TOAST_WIDTH = 700;
-    private static final int TOAST_HEIGHT = 120;
 
     /**
      * What the screen shows besides the game itself.
@@ -45,14 +42,23 @@ final class GameRenderer {
      * @param moveTargets   : the tiles to which the pawn can go
      * @param toast         : a message to show over the board, if any
      */
-    record ViewState(Target hovered, Target.Push selectedArrow, Set<Position> moveTargets, String toast) {
+    record ViewState(Target hovered, Target.Push selectedArrow, Set<Position> moveTargets, Toast toast) {
+    }
+
+    /**
+     * A message shown over the board.
+     *
+     * @param title    : the first line, in big letters
+     * @param subtitle : the second line
+     */
+    record Toast(String title, String subtitle) {
     }
 
     private final Game game;
     private final Images images;
     private final Sprites sprites;
-    private final PanelButton rotateButton = new PanelButton(Layout.ROTATE_BUTTON, "TOURNER", 20, Palette.BEIGE, Palette.NAVY);
-    private final PanelButton exitButton = new PanelButton(Layout.EXIT_BUTTON, "x", 10, Palette.SHADOW, Palette.BEIGE);
+    private final PanelButton rotateButton = new PanelButton(Layout.ROTATE_BUTTON, "TOURNER", 20, Palette.BEIGE, Palette.BEIGE, Palette.NAVY);
+    private final PanelButton exitButton = new PanelButton(Layout.EXIT_BUTTON, "x", 10, Palette.SHADOW, Palette.BEIGE, Palette.BEIGE);
     private BufferedImage staticLayer;
 
     // The board layer: the table, the board with its tiles, the portraits and the hands, in the resolution of the
@@ -328,19 +334,8 @@ final class GameRenderer {
         }
     }
 
-    private void paintToast(Graphics2D g, String message) {
-        int x = (Layout.WIDTH - TOAST_WIDTH) / 2;
-        int y = (Layout.HEIGHT - TOAST_HEIGHT) / 2;
-        g.setColor(Palette.ORANGE);
-        g.fillRoundRect(x, y, TOAST_WIDTH, TOAST_HEIGHT, 20, 20);
-        g.setColor(Palette.MINT);
-        g.setStroke(new BasicStroke(5));
-        g.drawRoundRect(x + 2, y + 2, TOAST_WIDTH - 4, TOAST_HEIGHT - 4, 20, 20);
-
-        g.setFont(TOAST_FONT);
-        g.setColor(Palette.NAVY);
-        FontMetrics metrics = g.getFontMetrics();
-        g.drawString(message, x + (TOAST_WIDTH - metrics.stringWidth(message)) / 2,
-                y + (TOAST_HEIGHT - metrics.getHeight()) / 2 + metrics.getAscent());
+    private void paintToast(Graphics2D g, Toast toast) {
+        BufferedImage message = sprites.message(toast.title(), toast.subtitle());
+        g.drawImage(message, (Layout.WIDTH - message.getWidth()) / 2, (Layout.HEIGHT - message.getHeight()) / 2, null);
     }
 }

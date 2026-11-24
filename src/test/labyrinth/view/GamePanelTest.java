@@ -202,6 +202,26 @@ class GamePanelTest {
     }
 
     @Test
+    void findingATreasureShowsAMessageOverTheBoard() {
+        int x = Layout.WIDTH / 2;
+        int y = Layout.HEIGHT / 2;
+        BufferedImage hidden = draw(Layout.WIDTH, Layout.HEIGHT);
+        int before = hidden.getRGB(x, y);
+
+        panel.objectiveFound(game.currentPlayer());
+        BufferedImage shown = draw(Layout.WIDTH, Layout.HEIGHT);
+
+        // The message is a navy panel with a gold frame, drawn in the middle of the screen, in any size of window.
+        assertNotEquals(before, shown.getRGB(x, y));
+        assertNotEquals(before, shown.getRGB(x - 300, y - 20));
+        int blue = shown.getRGB(x - 300, y - 40) & 0xFF;
+        int red = (shown.getRGB(x - 300, y - 40) >> 16) & 0xFF;
+        assertTrue(blue > red, "navy, not orange");
+        assertEquals(hidden.getRGB(5, 5), shown.getRGB(5, 5), "nothing else changes");
+        panel.removeNotify();
+    }
+
+    @Test
     void aClickOnAnArrowPushesTheSpareTile() {
         Tile spare = game.board().spareTile();
         clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));

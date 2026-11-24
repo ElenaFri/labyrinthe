@@ -29,7 +29,7 @@ final class GamePanel extends ScaledPanel implements GameListener {
     private Point mouse;
     private Target hovered;
     private Target.Push selectedArrow;
-    private String toast;
+    private GameRenderer.Toast toast;
     private Set<Position> moveTargets = Set.of();
 
     /**
@@ -61,7 +61,7 @@ final class GamePanel extends ScaledPanel implements GameListener {
 
     @Override
     public void objectiveFound(Player player) {
-        toast = "Félicitations, " + player.name() + " ! Objectif trouvé !";
+        toast = new GameRenderer.Toast("Félicitations, " + player.name() + " !", "Objectif trouvé !");
         toastTimer.restart();
     }
 

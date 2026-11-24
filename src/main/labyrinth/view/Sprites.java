@@ -32,15 +32,29 @@ final class Sprites {
      * Extra pixels around the tile in the image returned by {@link #pawn(int, boolean)}.
      */
     static final int PAWN_MARGIN = 2;
+    /**
+     * Size of the panel of a message, without the shadow.
+     */
+    static final int MESSAGE_WIDTH = 720;
+    static final int MESSAGE_HEIGHT = 140;
+    /**
+     * Extra pixels around the panel in the image returned by {@link #message(String, String)}.
+     */
+    static final int MESSAGE_MARGIN = 12;
 
     private static final int PAWN_SIZE = 90;
     private static final int CURRENT_PAWN_SIZE = 130;
     private static final int TURN_PORTRAIT_SIZE = 176;
     private static final double HIGHLIGHT_SCALE = 1.12;
+    private static final Font MESSAGE_TITLE_FONT = new Font("Arial", Font.BOLD, 32);
+    private static final Font MESSAGE_SUBTITLE_FONT = new Font("Arial", Font.BOLD, 24);
     private static final Font TURN_FONT = new Font("Arial", Font.PLAIN, 18);
     private static final Font HINT_FONT = new Font("Arial", Font.PLAIN, 16);
 
     private final Images images;
+    private BufferedImage message;
+    private String messageTitle;
+    private String messageSubtitle;
     // Arrays rather than maps: looking a sprite up is done for each frame, and must not allocate anything.
     private final BufferedImage[] spareTiles = new BufferedImage[Images.TILE_KEY_COUNT];
     private final BufferedImage[] pawns = new BufferedImage[Images.PLAYER_COUNT * 2];
@@ -222,8 +236,8 @@ final class Sprites {
             dark = new Color(245, 195, 70);
             outline = Palette.NAVY;
         } else if (active) {
-            light = new Color(255, 224, 130);
-            dark = new Color(222, 165, 50);
+            light = Palette.GOLD_LIGHT;
+            dark = Palette.GOLD_DARK;
             outline = Palette.NAVY;
         } else {
             light = new Color(205, 205, 205, 200);
@@ -303,6 +317,65 @@ final class Sprites {
         g.drawString(text, 3, 19);
         g.setColor(Color.WHITE);
         g.drawString(text, 2, 18);
+        g.dispose();
+        return sprite;
+    }
+
+    /**
+     * Draws a panel with a navy background and a gold frame, with a shadow under it: the look of the messages.
+     *
+     * @param g      : graphics to draw with
+     * @param x      : left of the panel
+     * @param y      : top of the panel
+     * @param width  : width of the panel
+     * @param height : height of the panel
+     * @param arc    : diameter of the rounded corners
+     */
+    static void paintGoldPanel(Graphics2D g, int x, int y, int width, int height, int arc) {
+        g.setColor(new Color(0, 0, 0, 120));
+        g.fill(new RoundRectangle2D.Double(x, y + 8, width, height, arc, arc));
+        g.setPaint(new GradientPaint(0, y, Palette.NAVY_LIGHT, 0, y + height, Palette.NAVY_DARK));
+        g.fill(new RoundRectangle2D.Double(x, y, width, height, arc, arc));
+        g.setPaint(new GradientPaint(0, y, Palette.GOLD_LIGHT, 0, y + height, Palette.GOLD_DARK));
+        g.setStroke(new BasicStroke(5));
+        g.draw(new RoundRectangle2D.Double(x + 2.5, y + 2.5, width - 5, height - 5, arc - 4, arc - 4));
+        g.setColor(new Color(255, 224, 130, 90));
+        g.setStroke(new BasicStroke(1.5f));
+        g.draw(new RoundRectangle2D.Double(x + 10, y + 10, width - 20, height - 20, Math.max(arc - 12, 4), Math.max(arc - 12, 4)));
+    }
+
+    /**
+     * @param title    : the first line, in big letters
+     * @param subtitle : the second line
+     * @return a message over a gold panel, of the size {@link #MESSAGE_WIDTH} x {@link #MESSAGE_HEIGHT} plus
+     * {@link #MESSAGE_MARGIN} pixels around, for the shadow
+     */
+    BufferedImage message(String title, String subtitle) {
+        if (message == null || !title.equals(messageTitle) || !subtitle.equals(messageSubtitle)) {
+            message = drawMessage(title, subtitle);
+            messageTitle = title;
+            messageSubtitle = subtitle;
+        }
+        return message;
+    }
+
+    private static BufferedImage drawMessage(String title, String subtitle) {
+        BufferedImage sprite = newImage(MESSAGE_WIDTH + 2 * MESSAGE_MARGIN, MESSAGE_HEIGHT + 2 * MESSAGE_MARGIN + 8);
+        Graphics2D g = antialiased(sprite);
+        paintGoldPanel(g, MESSAGE_MARGIN, MESSAGE_MARGIN, MESSAGE_WIDTH, MESSAGE_HEIGHT, 28);
+
+        g.setFont(MESSAGE_TITLE_FONT);
+        int centre = MESSAGE_MARGIN + MESSAGE_WIDTH / 2;
+        int titleX = centre - g.getFontMetrics().stringWidth(title) / 2;
+        int titleY = MESSAGE_MARGIN + 66;
+        g.setColor(new Color(0, 0, 0, 170));
+        g.drawString(title, titleX + 2, titleY + 2);
+        g.setColor(Palette.CREAM);
+        g.drawString(title, titleX, titleY);
+
+        g.setFont(MESSAGE_SUBTITLE_FONT);
+        g.setColor(Palette.GOLD_LIGHT);
+        g.drawString(subtitle, centre - g.getFontMetrics().stringWidth(subtitle) / 2, MESSAGE_MARGIN + 106);
         g.dispose();
         return sprite;
     }

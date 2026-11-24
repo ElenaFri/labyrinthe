@@ -143,6 +143,65 @@ class GamePanelTest {
     }
 
     @Test
+    void aPartialRedrawGivesTheSamePixelsAsAFullOne() {
+        for (int[] size : new int[][]{{Layout.WIDTH, Layout.HEIGHT}, {1280, 720}, {700, 650}}) {
+            panel.setSize(size[0], size[1]);
+            Rectangle area = new Rectangle(size[0] / 4, size[1] / 5, size[0] / 3, size[1] / 4);
+            BufferedImage full = draw(size[0], size[1]);
+
+            int untouched = 0xFF123456;
+            BufferedImage partial = new BufferedImage(size[0], size[1], BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = partial.createGraphics();
+            g.setColor(new java.awt.Color(untouched));
+            g.fillRect(0, 0, size[0], size[1]);
+            g.setClip(area);
+            panel.paint(g);
+            g.dispose();
+
+            for (int y = 0; y < size[1]; y += 3) {
+                for (int x = 0; x < size[0]; x += 3) {
+                    int expected = area.contains(x, y) ? full.getRGB(x, y) : untouched;
+                    assertEquals(expected, partial.getRGB(x, y), size[0] + "x" + size[1] + " at " + x + "," + y);
+                }
+            }
+        }
+    }
+
+    @Test
+    void theDrawingFollowsTheChangesOfTheGame() {
+        BufferedImage before = draw(Layout.WIDTH, Layout.HEIGHT);
+        Rectangle row = Layout.lineBounds(new Target.Push(Direction.RIGHT, 3));
+        int[] rowBefore = before.getRGB(row.x, row.y, row.width, row.height, null, 0, row.width);
+
+        clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));
+        BufferedImage after = draw(Layout.WIDTH, Layout.HEIGHT);
+
+        assertFalse(Arrays.equals(rowBefore, after.getRGB(row.x, row.y, row.width, row.height, null, 0, row.width)),
+                "the pushed row is drawn again");
+        Rectangle untouched = Layout.lineBounds(new Target.Push(Direction.RIGHT, 5));
+        assertTrue(Arrays.equals(before.getRGB(untouched.x, untouched.y, untouched.width, 30, null, 0, untouched.width),
+                after.getRGB(untouched.x, untouched.y, untouched.width, 30, null, 0, untouched.width)));
+    }
+
+    @Test
+    void aPanelWhichIsRemovedCanBeGarbageCollected() throws InterruptedException {
+        // The message shown when a treasure is found has a timer: it must not keep the panel (and its big images
+        // in memory) alive once the panel has been removed from the window.
+        GamePanel removed = new GamePanel(new Game(new Random(1)), images, () -> { });
+        removed.setSize(Layout.WIDTH, Layout.HEIGHT);
+        removed.objectiveFound(game.currentPlayer());
+        removed.removeNotify();
+        java.lang.ref.WeakReference<GamePanel> reference = new java.lang.ref.WeakReference<>(removed);
+        removed = null;
+
+        for (int i = 0; i < 20 && reference.get() != null; i++) {
+            System.gc();
+            Thread.sleep(50);
+        }
+        assertEquals(null, reference.get());
+    }
+
+    @Test
     void aClickOnAnArrowPushesTheSpareTile() {
         Tile spare = game.board().spareTile();
         clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));

@@ -21,7 +21,10 @@ public enum Direction {
      */
     LEFT(0, -1);
 
-    private static final Direction[] VALUES = values();
+    /**
+     * All the directions, without the copy that {@link #values()} makes at each call.
+     */
+    static final Direction[] VALUES = values();
 
     private final int rowStep;
     private final int colStep;

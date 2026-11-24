@@ -14,10 +14,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.TexturePaint;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Draws the main screen of a {@link Game}, in the coordinates of the canvas.
@@ -30,6 +33,7 @@ final class GameRenderer {
     private static final Font TOAST_FONT = new Font("Arial", Font.BOLD, 22);
     private static final Color LINE_FILL = new Color(255, 215, 90, 60);
     private static final Color LINE_BORDER = new Color(255, 215, 90, 170);
+    private static final BasicStroke FRAME_STROKE = new BasicStroke(2);
     private static final int TOAST_WIDTH = 700;
     private static final int TOAST_HEIGHT = 120;
 
@@ -38,9 +42,10 @@ final class GameRenderer {
      *
      * @param hovered       : what is under the mouse, if anything
      * @param selectedArrow : the arrow selected with the keyboard, if any
+     * @param moveTargets   : the tiles to which the pawn can go
      * @param toast         : a message to show over the board, if any
      */
-    record ViewState(Target hovered, Target.Push selectedArrow, String toast) {
+    record ViewState(Target hovered, Target.Push selectedArrow, Set<Position> moveTargets, String toast) {
     }
 
     private final Game game;
@@ -49,6 +54,15 @@ final class GameRenderer {
     private final PanelButton rotateButton = new PanelButton(Layout.ROTATE_BUTTON, "TOURNER", 20, Palette.BEIGE, Palette.NAVY);
     private final PanelButton exitButton = new PanelButton(Layout.EXIT_BUTTON, "x", 10, Palette.SHADOW, Palette.BEIGE);
     private BufferedImage staticLayer;
+
+    // The board layer: the table, the board with its tiles, the portraits and the hands, in the resolution of the
+    // screen. It only changes when a tile or a hand does, so it is drawn again only then; a frame is then a single
+    // copy of it, whatever the size of the window.
+    private final int[] looks = new int[Board.SIZE * Board.SIZE + Images.PLAYER_COUNT];
+    private final int[] drawnLooks = new int[looks.length];
+    private BufferedImage backdrop;
+    private BufferedImage boardLayer;
+    private boolean boardLayerUpToDate;
 
     GameRenderer(Game game, Images images) {
         this.game = game;
@@ -63,19 +77,14 @@ final class GameRenderer {
      * @param state : what to show besides the game
      */
     void paint(Graphics2D g, ViewState state) {
-        if (staticLayer == null) {
-            staticLayer = drawStaticLayer();
-        }
-        g.drawImage(staticLayer, 0, 0, null);
-        paintTiles(g);
+        paintBoardLayer(g);
         Target.Push highlighted = state.hovered() instanceof Target.Push push ? push : state.selectedArrow();
         if (highlighted != null) {
             paintLineHighlight(g, highlighted);
         }
         paintSpareTile(g);
         paintPawns(g);
-        paintHands(g);
-        paintMoveFrames(g, state.hovered());
+        paintMoveFrames(g, state);
         paintArrows(g, highlighted);
         g.drawImage(sprites.turnPanel(game.currentPlayer()), Layout.TURN_PANEL.x, Layout.TURN_PANEL.y, null);
         rotateButton.paint(g);
@@ -83,6 +92,89 @@ final class GameRenderer {
         if (state.toast() != null) {
             paintToast(g, state.toast());
         }
+    }
+
+    /**
+     * Copies the board layer, which is first made again if the window has another size or if a tile or a hand
+     * has changed.
+     *
+     * @param g : graphics whose transform scales the canvas to the window
+     */
+    private void paintBoardLayer(Graphics2D g) {
+        AffineTransform transform = g.getTransform();
+        int width = (int) Math.round(Layout.WIDTH * transform.getScaleX());
+        int height = (int) Math.round(Layout.HEIGHT * transform.getScaleY());
+        if (width < 1 || height < 1) {
+            return;
+        }
+        if (backdrop == null || backdrop.getWidth() != width || backdrop.getHeight() != height) {
+            backdrop = scaledStaticLayer(width, height);
+            boardLayer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            boardLayerUpToDate = false;
+        }
+        fillLooks();
+        if (!boardLayerUpToDate || !Arrays.equals(looks, drawnLooks)) {
+            drawBoardLayer();
+            System.arraycopy(looks, 0, drawnLooks, 0, looks.length);
+            boardLayerUpToDate = true;
+        }
+
+        // The layer is in the pixels of the window: it is copied without any scaling.
+        Graphics2D device = (Graphics2D) g.create();
+        try {
+            device.setTransform(AffineTransform.getTranslateInstance(Math.round(transform.getTranslateX()), Math.round(transform.getTranslateY())));
+            device.drawImage(boardLayer, 0, 0, null);
+        } finally {
+            device.dispose();
+        }
+    }
+
+    /**
+     * Notes how every tile and every hand looks. Comparing this with what was drawn is cheaper than drawing again,
+     * and cannot miss a change, whatever the way it happened.
+     */
+    private void fillLooks() {
+        Board board = game.board();
+        int i = 0;
+        for (int row = 0; row < Board.SIZE; row++) {
+            for (int col = 0; col < Board.SIZE; col++) {
+                looks[i++] = Images.tileKey(board.tileAt(Position.of(row, col)));
+            }
+        }
+        List<Player> players = game.players();
+        for (int p = 0; p < players.size(); p++) {
+            looks[i++] = players.get(p).foundCount();
+        }
+    }
+
+    private BufferedImage scaledStaticLayer(int width, int height) {
+        BufferedImage layer = staticLayer();
+        if (width == layer.getWidth() && height == layer.getHeight()) {
+            return layer;
+        }
+        BufferedImage scaled = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = scaled.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(layer, 0, 0, width, height, null);
+        g.dispose();
+        return scaled;
+    }
+
+    private void drawBoardLayer() {
+        Graphics2D g = boardLayer.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(backdrop, 0, 0, null);
+        g.scale((double) boardLayer.getWidth() / Layout.WIDTH, (double) boardLayer.getHeight() / Layout.HEIGHT);
+        paintTiles(g);
+        paintHands(g);
+        g.dispose();
+    }
+
+    private BufferedImage staticLayer() {
+        if (staticLayer == null) {
+            staticLayer = drawStaticLayer();
+        }
+        return staticLayer;
     }
 
     /**
@@ -135,15 +227,11 @@ final class GameRenderer {
     }
 
     private void paintTiles(Graphics2D g) {
-        Rectangle clip = g.getClipBounds();
         Board board = game.board();
         for (int row = 0; row < Board.SIZE; row++) {
             for (int col = 0; col < Board.SIZE; col++) {
-                int x = Layout.BOARD_X + col * Layout.TILE_SIZE;
-                int y = Layout.BOARD_Y + row * Layout.TILE_SIZE;
-                if (clip.intersects(x, y, Layout.TILE_SIZE, Layout.TILE_SIZE)) {
-                    g.drawImage(images.tile(board.tileAt(new Position(row, col))), x, y, null);
-                }
+                g.drawImage(images.tile(board.tileAt(Position.of(row, col))),
+                        Layout.BOARD_X + col * Layout.TILE_SIZE, Layout.BOARD_Y + row * Layout.TILE_SIZE, null);
             }
         }
     }
@@ -189,11 +277,12 @@ final class GameRenderer {
         }
     }
 
-    private void paintMoveFrames(Graphics2D g, Target hovered) {
-        g.setStroke(new BasicStroke(2));
-        for (Position position : game.moveTargets()) {
+    private void paintMoveFrames(Graphics2D g, ViewState state) {
+        g.setStroke(FRAME_STROKE);
+        Position hovered = state.hovered() instanceof Target.Move move ? move.position() : null;
+        for (Position position : state.moveTargets()) {
             Rectangle frame = Layout.moveFrame(position);
-            g.setColor(new Target.Move(position).equals(hovered) ? Color.GREEN : Color.RED);
+            g.setColor(position.equals(hovered) ? Color.GREEN : Color.RED);
             g.drawRect(frame.x + 1, frame.y + 1, frame.width - 2, frame.height - 2);
         }
     }

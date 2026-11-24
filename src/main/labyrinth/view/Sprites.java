@@ -17,8 +17,6 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Things which are drawn with shapes and text (shadows, frames, labels), drawn once in images. Drawing a frame
@@ -39,13 +37,16 @@ final class Sprites {
     private static final int CURRENT_PAWN_SIZE = 130;
     private static final int TURN_PORTRAIT_SIZE = 176;
     private static final double HIGHLIGHT_SCALE = 1.12;
+    private static final Font TURN_FONT = new Font("Arial", Font.PLAIN, 18);
+    private static final Font HINT_FONT = new Font("Arial", Font.PLAIN, 16);
 
     private final Images images;
-    private final Map<Integer, BufferedImage> spareTiles = new HashMap<>();
-    private final Map<Integer, BufferedImage> pawns = new HashMap<>();
-    private final Map<Integer, BufferedImage> turnPanels = new HashMap<>();
-    private final Map<Integer, BufferedImage> arrows = new HashMap<>();
-    private final Map<Integer, BufferedImage> hints = new HashMap<>();
+    // Arrays rather than maps: looking a sprite up is done for each frame, and must not allocate anything.
+    private final BufferedImage[] spareTiles = new BufferedImage[Images.TILE_KEY_COUNT];
+    private final BufferedImage[] pawns = new BufferedImage[Images.PLAYER_COUNT * 2];
+    private final BufferedImage[] turnPanels = new BufferedImage[Images.PLAYER_COUNT];
+    private final BufferedImage[] arrows = new BufferedImage[Direction.values().length * ArrowState.values().length];
+    private final BufferedImage[] hints = new BufferedImage[2];
 
     Sprites(Images images) {
         this.images = images;
@@ -57,19 +58,25 @@ final class Sprites {
      * place of the tile
      */
     BufferedImage spareTile(Tile tile) {
-        return spareTiles.computeIfAbsent(Images.tileKey(tile), k -> {
-            int size = Layout.TILE_SIZE;
-            BufferedImage sprite = newImage(size + 2 * SPARE_MARGIN + 10, size + 2 * SPARE_MARGIN + 12);
-            Graphics2D g = antialiased(sprite);
-            g.setColor(Palette.SHADOW);
-            g.fill(new RoundRectangle2D.Double(SPARE_MARGIN + 10, SPARE_MARGIN + 12, size, size, 20, 20));
-            g.drawImage(images.tile(tile), SPARE_MARGIN, SPARE_MARGIN, null);
-            g.setColor(Palette.NAVY);
-            g.setStroke(new BasicStroke(4));
-            g.draw(new RoundRectangle2D.Double(SPARE_MARGIN, SPARE_MARGIN, size, size, 50, 50));
-            g.dispose();
-            return sprite;
-        });
+        int key = Images.tileKey(tile);
+        if (spareTiles[key] == null) {
+            spareTiles[key] = drawSpareTile(tile);
+        }
+        return spareTiles[key];
+    }
+
+    private BufferedImage drawSpareTile(Tile tile) {
+        int size = Layout.TILE_SIZE;
+        BufferedImage sprite = newImage(size + 2 * SPARE_MARGIN + 10, size + 2 * SPARE_MARGIN + 12);
+        Graphics2D g = antialiased(sprite);
+        g.setColor(Palette.SHADOW);
+        g.fill(new RoundRectangle2D.Double(SPARE_MARGIN + 10, SPARE_MARGIN + 12, size, size, 20, 20));
+        g.drawImage(images.tile(tile), SPARE_MARGIN, SPARE_MARGIN, null);
+        g.setColor(Palette.NAVY);
+        g.setStroke(new BasicStroke(4));
+        g.draw(new RoundRectangle2D.Double(SPARE_MARGIN, SPARE_MARGIN, size, size, 50, 50));
+        g.dispose();
+        return sprite;
     }
 
     /**
@@ -78,23 +85,29 @@ final class Sprites {
      * @return the pawn and its shadow, to draw {@value #PAWN_MARGIN} pixels left of and above the tile
      */
     BufferedImage pawn(int player, boolean current) {
-        return pawns.computeIfAbsent(player * 2 + (current ? 1 : 0), k -> {
-            int size = Layout.TILE_SIZE;
-            BufferedImage sprite = newImage(size + 2 * PAWN_MARGIN, size + 2 * PAWN_MARGIN);
-            Graphics2D g = antialiased(sprite);
-            g.setColor(Palette.SHADOW);
-            g.fillOval(PAWN_MARGIN + 35, PAWN_MARGIN + 35, PAWN_SIZE - 22, PAWN_SIZE - 24);
-            if (current) {
-                int x = PAWN_MARGIN + (size - CURRENT_PAWN_SIZE) / 2;
-                g.fillOval(x + 20, x + 20, CURRENT_PAWN_SIZE - 30, CURRENT_PAWN_SIZE - 32);
-                g.drawImage(images.piece(player, CURRENT_PAWN_SIZE), x, x, null);
-            } else {
-                int x = PAWN_MARGIN + (size - PAWN_SIZE) / 2;
-                g.drawImage(images.piece(player, PAWN_SIZE), x, x, null);
-            }
-            g.dispose();
-            return sprite;
-        });
+        int key = player * 2 + (current ? 1 : 0);
+        if (pawns[key] == null) {
+            pawns[key] = drawPawn(player, current);
+        }
+        return pawns[key];
+    }
+
+    private BufferedImage drawPawn(int player, boolean current) {
+        int size = Layout.TILE_SIZE;
+        BufferedImage sprite = newImage(size + 2 * PAWN_MARGIN, size + 2 * PAWN_MARGIN);
+        Graphics2D g = antialiased(sprite);
+        g.setColor(Palette.SHADOW);
+        g.fillOval(PAWN_MARGIN + 35, PAWN_MARGIN + 35, PAWN_SIZE - 22, PAWN_SIZE - 24);
+        if (current) {
+            int x = PAWN_MARGIN + (size - CURRENT_PAWN_SIZE) / 2;
+            g.fillOval(x + 20, x + 20, CURRENT_PAWN_SIZE - 30, CURRENT_PAWN_SIZE - 32);
+            g.drawImage(images.piece(player, CURRENT_PAWN_SIZE), x, x, null);
+        } else {
+            int x = PAWN_MARGIN + (size - PAWN_SIZE) / 2;
+            g.drawImage(images.piece(player, PAWN_SIZE), x, x, null);
+        }
+        g.dispose();
+        return sprite;
     }
 
     /**
@@ -102,30 +115,35 @@ final class Sprites {
      * @return the panel telling that it is the turn of this player
      */
     BufferedImage turnPanel(Player player) {
-        return turnPanels.computeIfAbsent(player.id(), k -> {
-            int width = Layout.TURN_PANEL.width;
-            int height = Layout.TURN_PANEL.height;
-            BufferedImage sprite = newImage(width, height);
-            Graphics2D g = antialiased(sprite);
-            g.setColor(Palette.BEIGE);
-            g.fillRect(0, 0, width, height);
-            g.setColor(Palette.PANEL_BORDER);
-            g.setStroke(new BasicStroke(2));
-            g.drawRect(1, 1, width - 2, height - 2);
-            g.drawImage(images.portrait(player.id(), TURN_PORTRAIT_SIZE), (width - TURN_PORTRAIT_SIZE) / 2, 12, null);
+        if (turnPanels[player.id()] == null) {
+            turnPanels[player.id()] = drawTurnPanel(player);
+        }
+        return turnPanels[player.id()];
+    }
 
-            g.setFont(new Font("Arial", Font.PLAIN, 18));
-            g.setColor(Palette.NAVY);
-            FontMetrics metrics = g.getFontMetrics();
-            String[] lines = {"C'est à toi de jouer,", player.name() + " !"};
-            int y = 12 + TURN_PORTRAIT_SIZE + 12 + metrics.getAscent();
-            for (String line : lines) {
-                g.drawString(line, (width - metrics.stringWidth(line)) / 2, y);
-                y += metrics.getHeight();
-            }
-            g.dispose();
-            return sprite;
-        });
+    private BufferedImage drawTurnPanel(Player player) {
+        int width = Layout.TURN_PANEL.width;
+        int height = Layout.TURN_PANEL.height;
+        BufferedImage sprite = newImage(width, height);
+        Graphics2D g = antialiased(sprite);
+        g.setColor(Palette.BEIGE);
+        g.fillRect(0, 0, width, height);
+        g.setColor(Palette.PANEL_BORDER);
+        g.setStroke(new BasicStroke(2));
+        g.drawRect(1, 1, width - 2, height - 2);
+        g.drawImage(images.portrait(player.id(), TURN_PORTRAIT_SIZE), (width - TURN_PORTRAIT_SIZE) / 2, 12, null);
+
+        g.setFont(TURN_FONT);
+        g.setColor(Palette.NAVY);
+        FontMetrics metrics = g.getFontMetrics();
+        String[] lines = {"C'est à toi de jouer,", player.name() + " !"};
+        int y = 12 + TURN_PORTRAIT_SIZE + 12 + metrics.getAscent();
+        for (String line : lines) {
+            g.drawString(line, (width - metrics.stringWidth(line)) / 2, y);
+            y += metrics.getHeight();
+        }
+        g.dispose();
+        return sprite;
     }
 
     /**
@@ -147,7 +165,12 @@ final class Sprites {
         /**
          * The push is not allowed because it would undo the previous one.
          */
-        FORBIDDEN
+        FORBIDDEN;
+
+        /**
+         * All the states, without the copy that {@link #values()} makes at each call.
+         */
+        static final ArrowState[] VALUES = values();
     }
 
     /**
@@ -156,8 +179,11 @@ final class Sprites {
      * @return the arrow, in an area of the size of the arrow buttons
      */
     BufferedImage arrow(Direction direction, ArrowState state) {
-        return arrows.computeIfAbsent(direction.ordinal() * ArrowState.values().length + state.ordinal(),
-                k -> drawArrow(direction, state));
+        int key = direction.ordinal() * ArrowState.VALUES.length + state.ordinal();
+        if (arrows[key] == null) {
+            arrows[key] = drawArrow(direction, state);
+        }
+        return arrows[key];
     }
 
     /**
@@ -254,26 +280,31 @@ final class Sprites {
      * @return a line of text telling which keys to use
      */
     BufferedImage keyboardHint(boolean push) {
-        return hints.computeIfAbsent(push ? 1 : 0, k -> {
-            String text = push
-                    ? "Clavier : flèches = choisir où pousser · Entrée = pousser · R = tourner la tuile"
-                    : "Clavier : flèches = déplacer le pion · Entrée = finir le tour";
-            Font font = new Font("Arial", Font.PLAIN, 16);
-            BufferedImage probe = newImage(1, 1);
-            Graphics2D measure = probe.createGraphics();
-            int width = measure.getFontMetrics(font).stringWidth(text) + 24;
-            measure.dispose();
+        int key = push ? 1 : 0;
+        if (hints[key] == null) {
+            hints[key] = drawKeyboardHint(push);
+        }
+        return hints[key];
+    }
 
-            BufferedImage sprite = newImage(width, 24);
-            Graphics2D g = antialiased(sprite);
-            g.setFont(font);
-            g.setColor(new Color(0, 0, 0, 190));
-            g.drawString(text, 3, 19);
-            g.setColor(Color.WHITE);
-            g.drawString(text, 2, 18);
-            g.dispose();
-            return sprite;
-        });
+    private static BufferedImage drawKeyboardHint(boolean push) {
+        String text = push
+                ? "Clavier : flèches = choisir où pousser · Entrée = pousser · R = tourner la tuile"
+                : "Clavier : flèches = déplacer le pion · Entrée = finir le tour";
+        BufferedImage probe = newImage(1, 1);
+        Graphics2D measure = probe.createGraphics();
+        int width = measure.getFontMetrics(HINT_FONT).stringWidth(text) + 24;
+        measure.dispose();
+
+        BufferedImage sprite = newImage(width, 24);
+        Graphics2D g = antialiased(sprite);
+        g.setFont(HINT_FONT);
+        g.setColor(new Color(0, 0, 0, 190));
+        g.drawString(text, 3, 19);
+        g.setColor(Color.WHITE);
+        g.drawString(text, 2, 18);
+        g.dispose();
+        return sprite;
     }
 
     private static BufferedImage newImage(int width, int height) {

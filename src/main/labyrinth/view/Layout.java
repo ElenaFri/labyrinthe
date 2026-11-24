@@ -133,10 +133,10 @@ final class Layout {
 
     /**
      * @param arrow : one of the {@link #PUSH_ARROWS}
-     * @return the area of the arrow button
+     * @return the area of the arrow button; the rectangle is shared, so it must not be modified
      */
     static Rectangle arrowBounds(Target.Push arrow) {
-        return new Rectangle(ARROW_BOUNDS.get(arrow));
+        return ARROW_BOUNDS.get(arrow);
     }
 
     /**

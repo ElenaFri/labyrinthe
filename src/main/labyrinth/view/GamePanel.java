@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * The main screen: shows a {@link Game} (drawn by a {@link GameRenderer}) and turns the mouse clicks and the keys
@@ -29,6 +30,7 @@ final class GamePanel extends ScaledPanel implements GameListener {
     private Target hovered;
     private Target.Push selectedArrow;
     private String toast;
+    private Set<Position> moveTargets = Set.of();
 
     /**
      * @param game   : the game to show; the panel keeps itself up to date when the game changes
@@ -42,12 +44,14 @@ final class GamePanel extends ScaledPanel implements GameListener {
         toastTimer.setRepeats(false);
         game.addListener(this);
         bindKeys();
+        moveTargets = game.moveTargets();
     }
 
     // ---- The game changes
 
     @Override
     public void gameChanged() {
+        moveTargets = game.moveTargets();
         if (selectedArrow != null && !canUse(selectedArrow)) {
             selectedArrow = null;
         }
@@ -109,7 +113,7 @@ final class GamePanel extends ScaledPanel implements GameListener {
                 return arrow;
             }
         }
-        for (Position position : game.moveTargets()) {
+        for (Position position : moveTargets) {
             if (Layout.moveFrame(position).contains(point)) {
                 return new Target.Move(position);
             }
@@ -221,6 +225,6 @@ final class GamePanel extends ScaledPanel implements GameListener {
 
     @Override
     protected void paintCanvas(Graphics2D g) {
-        renderer.paint(g, new GameRenderer.ViewState(hovered, selectedArrow, toast));
+        renderer.paint(g, new GameRenderer.ViewState(hovered, selectedArrow, moveTargets, toast));
     }
 }

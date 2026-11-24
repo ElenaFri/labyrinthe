@@ -138,7 +138,7 @@ public final class Board {
      */
     public List<Position> connectedNeighbours(Position from) {
         List<Position> neighbours = new ArrayList<>(4);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Direction.VALUES) {
             if (canPass(from, direction)) {
                 neighbours.add(from.step(direction));
             }

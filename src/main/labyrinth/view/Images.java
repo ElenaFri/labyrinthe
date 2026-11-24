@@ -21,16 +21,25 @@ final class Images {
     private static final int RAW_CARD_WIDTH = 150;
     private static final int RAW_CARD_HEIGHT = 237;
     private static final int RAW_TREASURE_SIZE = 128;
+    /**
+     * Number of players.
+     */
+    static final int PLAYER_COUNT = 4;
+    /**
+     * Number of different looks of a tile (see {@link #tileKey(Tile)}).
+     */
+    static final int TILE_KEY_COUNT = TileType.values().length * 4 * (Board.TREASURE_COUNT + 1);
 
     private final BufferedImage background;
     private final BufferedImage board;
     private final BufferedImage[] tileBases = new BufferedImage[TileType.values().length];
     private final BufferedImage[] tileTreasures = new BufferedImage[Board.TREASURE_COUNT];
     private final BufferedImage[] cardTreasures = new BufferedImage[Board.TREASURE_COUNT];
-    private final BufferedImage[] tiles = new BufferedImage[TileType.values().length * 4 * (Board.TREASURE_COUNT + 1)];
+    private final BufferedImage[] rawTreasures = new BufferedImage[Board.TREASURE_COUNT];
+    private final BufferedImage[] tiles = new BufferedImage[TILE_KEY_COUNT];
     private final BufferedImage[] cards = new BufferedImage[Board.TREASURE_COUNT];
-    private final BufferedImage[] portraits = new BufferedImage[4];
-    private final BufferedImage[] pieces = new BufferedImage[4];
+    private final BufferedImage[] portraits = new BufferedImage[PLAYER_COUNT];
+    private final BufferedImage[] pieces = new BufferedImage[PLAYER_COUNT];
     private final Map<Integer, BufferedImage> portraitsBySize = new HashMap<>();
     private final Map<Integer, BufferedImage> piecesBySize = new HashMap<>();
     private final BufferedImage cardFace;
@@ -140,8 +149,14 @@ final class Images {
         return image;
     }
 
+    /**
+     * The picture of a treasure is needed twice (on the tiles, and on the cards): it is read only once.
+     */
     private BufferedImage rawTreasure(int treasure) {
-        return Resources.image(IMG + "treasures/treasure" + treasure + ".png");
+        if (rawTreasures[treasure] == null) {
+            rawTreasures[treasure] = Resources.image(IMG + "treasures/treasure" + treasure + ".png");
+        }
+        return rawTreasures[treasure];
     }
 
     private BufferedImage composeTile(Tile tile) {

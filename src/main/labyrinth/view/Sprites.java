@@ -4,13 +4,17 @@ import labyrinth.model.Direction;
 import labyrinth.model.Player;
 import labyrinth.model.Tile;
 
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -34,7 +38,7 @@ final class Sprites {
     private static final int PAWN_SIZE = 90;
     private static final int CURRENT_PAWN_SIZE = 130;
     private static final int TURN_PORTRAIT_SIZE = 176;
-    private static final float DISABLED_ARROW_OPACITY = 0.35f;
+    private static final double HIGHLIGHT_SCALE = 1.12;
 
     private final Images images;
     private final Map<Integer, BufferedImage> spareTiles = new HashMap<>();
@@ -125,20 +129,124 @@ final class Sprites {
     }
 
     /**
-     * @param direction : a direction of push
-     * @param enabled   : false for the faded arrow, shown when the push is not possible
-     * @return the arrow, centred in an area of the size of the arrow buttons
+     * How an arrow around the board looks.
      */
-    BufferedImage arrow(Direction direction, boolean enabled) {
-        return arrows.computeIfAbsent(direction.ordinal() * 2 + (enabled ? 1 : 0), k -> {
-            BufferedImage sprite = newImage(Layout.ARROW_SIZE, Layout.ARROW_SIZE);
-            Graphics2D g = sprite.createGraphics();
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, enabled ? 1f : DISABLED_ARROW_OPACITY));
-            int margin = (Layout.ARROW_SIZE - Layout.ARROW_ICON_SIZE) / 2;
-            g.drawImage(images.arrow(direction), margin, margin, null);
-            g.dispose();
-            return sprite;
-        });
+    enum ArrowState {
+        /**
+         * The push is possible.
+         */
+        NORMAL,
+        /**
+         * The push is possible and the mouse (or the keyboard) is on it.
+         */
+        HIGHLIGHTED,
+        /**
+         * The push is not possible now.
+         */
+        DISABLED,
+        /**
+         * The push is not allowed because it would undo the previous one.
+         */
+        FORBIDDEN
+    }
+
+    /**
+     * @param direction : a direction of push
+     * @param state     : how the arrow looks
+     * @return the arrow, in an area of the size of the arrow buttons
+     */
+    BufferedImage arrow(Direction direction, ArrowState state) {
+        return arrows.computeIfAbsent(direction.ordinal() * ArrowState.values().length + state.ordinal(),
+                k -> drawArrow(direction, state));
+    }
+
+    /**
+     * An arrow head with a gold body and a navy outline, like the printed ones of the real board.
+     * <p>
+     * The body is always drawn pointing up, then turned like a picture: this keeps the gradient in a direction that
+     * every Java implementation (including the one which runs in a web page) draws, and makes the shadow fall
+     * towards the bottom right whatever the direction of the arrow.
+     */
+    private static BufferedImage drawArrow(Direction direction, ArrowState state) {
+        int size = Layout.ARROW_SIZE;
+        double centre = size / 2.0;
+        boolean active = state == ArrowState.NORMAL || state == ArrowState.HIGHLIGHTED;
+        boolean highlighted = state == ArrowState.HIGHLIGHTED;
+        AffineTransform rotation = AffineTransform.getQuadrantRotateInstance(direction.ordinal(), centre, centre);
+
+        Path2D.Double head = new Path2D.Double();
+        head.moveTo(centre, 7);
+        head.lineTo(43, 41);
+        head.lineTo(centre, 33);
+        head.lineTo(7, 41);
+        head.closePath();
+        AffineTransform zoom = new AffineTransform();
+        if (highlighted) {
+            zoom.translate(centre, centre);
+            zoom.scale(HIGHLIGHT_SCALE, HIGHLIGHT_SCALE);
+            zoom.translate(-centre, -centre);
+        }
+        Shape upright = zoom.createTransformedShape(head);
+
+        Color light;
+        Color dark;
+        Color outline;
+        if (highlighted) {
+            light = new Color(255, 240, 170);
+            dark = new Color(245, 195, 70);
+            outline = Palette.NAVY;
+        } else if (active) {
+            light = new Color(255, 224, 130);
+            dark = new Color(222, 165, 50);
+            outline = Palette.NAVY;
+        } else {
+            light = new Color(205, 205, 205, 200);
+            dark = new Color(150, 150, 150, 200);
+            outline = new Color(70, 70, 70, 200);
+        }
+
+        BufferedImage body = newImage(size, size);
+        Graphics2D b = antialiased(body);
+        Point2D tip = zoom.transform(new Point2D.Double(centre, 7), null);
+        Point2D tail = zoom.transform(new Point2D.Double(centre, 41), null);
+        b.setPaint(new GradientPaint(tip, light, tail, dark));
+        b.fill(upright);
+        b.setColor(outline);
+        b.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        b.draw(upright);
+        b.dispose();
+
+        BufferedImage sprite = newImage(size, size);
+        Graphics2D g = antialiased(sprite);
+        Shape shape = rotation.createTransformedShape(upright);
+        if (highlighted) {
+            // A glow around the arrow.
+            g.setColor(new Color(255, 220, 90, 55));
+            g.setStroke(new BasicStroke(14, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g.draw(shape);
+            g.setColor(new Color(255, 220, 90, 110));
+            g.setStroke(new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g.draw(shape);
+        }
+        if (active) {
+            g.translate(2, 3);
+            g.setColor(Palette.SHADOW);
+            g.fill(shape);
+            g.translate(-2, -3);
+        }
+        g.drawImage(body, rotation, null);
+
+        if (state == ArrowState.FORBIDDEN) {
+            // A bar across the arrow: it cannot be used.
+            Shape bar = rotation.createTransformedShape(new RoundRectangle2D.Double(12, 22, 26, 8, 6, 6));
+            g.setColor(new Color(200, 50, 50, 235));
+            g.fill(bar);
+            g.setColor(new Color(255, 255, 255, 220));
+            g.setStroke(new BasicStroke(1.5f));
+            g.draw(bar);
+        }
+        g.dispose();
+        return sprite;
     }
 
     /**

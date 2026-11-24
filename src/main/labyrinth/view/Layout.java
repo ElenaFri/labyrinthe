@@ -31,7 +31,6 @@ final class Layout {
     static final int CARD_STEP = -8;
     static final int PORTRAIT_SIZE = 90;
     static final int ARROW_SIZE = 50;
-    static final int ARROW_ICON_SIZE = 32;
     /**
      * Space between the border of a tile and the frame showing that the pawn can go there.
      */
@@ -130,6 +129,18 @@ final class Layout {
      */
     static Rectangle arrowBounds(Target.Push arrow) {
         return new Rectangle(ARROW_BOUNDS.get(arrow));
+    }
+
+    /**
+     * @param arrow : one of the {@link #PUSH_ARROWS}
+     * @return the area of the board covered by the row or column that this arrow pushes
+     */
+    static Rectangle lineBounds(Target.Push arrow) {
+        boolean horizontal = arrow.direction() == Direction.LEFT || arrow.direction() == Direction.RIGHT;
+        int along = arrow.index() * TILE_SIZE;
+        return horizontal
+                ? new Rectangle(BOARD_X, BOARD_Y + along, BOARD_SIZE, TILE_SIZE)
+                : new Rectangle(BOARD_X + along, BOARD_Y, TILE_SIZE, BOARD_SIZE);
     }
 
     /**

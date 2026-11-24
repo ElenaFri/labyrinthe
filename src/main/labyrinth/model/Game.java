@@ -185,9 +185,19 @@ public final class Game {
      * the row or column must be pushable, and the previous push must not be undone
      */
     public boolean canPush(Direction direction, int index) {
-        return phase == Phase.PUSH
-                && Board.isPushable(index)
-                && !new Push(direction, index).equals(lastPush == null ? null : lastPush.reverse());
+        return phase == Phase.PUSH && Board.isPushable(index) && !undoesLastPush(direction, index);
+    }
+
+    /**
+     * Tells whether a push would put the spare tile back where the previous player has just taken it out, which
+     * the rules forbid.
+     *
+     * @param direction : the direction in which the tiles would move
+     * @param index     : the index of the row or of the column
+     * @return true if this push is the opposite of the previous one
+     */
+    public boolean undoesLastPush(Direction direction, int index) {
+        return lastPush != null && new Push(direction, index).equals(lastPush.reverse());
     }
 
     /**

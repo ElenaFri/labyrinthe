@@ -101,6 +101,9 @@ class GameTest {
         game.moveTo(game.currentPlayer().position());
 
         assertFalse(game.canPush(Direction.LEFT, 3));
+        assertTrue(game.undoesLastPush(Direction.LEFT, 3));
+        assertFalse(game.undoesLastPush(Direction.RIGHT, 3));
+        assertFalse(game.undoesLastPush(Direction.LEFT, 1));
         assertFalse(game.push(Direction.LEFT, 3));
         assertTrue(game.canPush(Direction.RIGHT, 3));
         assertTrue(game.canPush(Direction.LEFT, 1));

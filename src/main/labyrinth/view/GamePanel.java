@@ -120,20 +120,22 @@ final class GamePanel extends ScaledPanel implements GameListener {
     private void updateHover() {
         Target target = targetAt(mouse);
         if (!Objects.equals(target, hovered)) {
-            repaintFrame(hovered);
+            repaintTarget(hovered);
             hovered = target;
-            repaintFrame(hovered);
+            repaintTarget(hovered);
             setCursor(Cursor.getPredefinedCursor(target == null ? Cursor.DEFAULT_CURSOR : Cursor.HAND_CURSOR));
         }
     }
 
     /**
-     * The only thing which changes in the look of the screen when the mouse moves is the colour of the frame of the
-     * tile under the mouse, so nothing else needs to be redrawn.
+     * What changes in the look of the screen when the mouse (or the keyboard selection) moves is limited to the frame
+     * of a tile, or to an arrow and the row or column that it shows, so only this is redrawn.
      */
-    private void repaintFrame(Target target) {
+    private void repaintTarget(Target target) {
         if (target instanceof Target.Move move) {
             repaintCanvas(Layout.moveFrame(move.position()));
+        } else if (target instanceof Target.Push arrow) {
+            repaintCanvas(Layout.lineBounds(arrow).union(Layout.arrowBounds(arrow)));
         }
     }
 
@@ -186,8 +188,9 @@ final class GamePanel extends ScaledPanel implements GameListener {
         }
         int current = usable.indexOf(selectedArrow);
         int next = current < 0 ? (step > 0 ? 0 : usable.size() - 1) : Math.floorMod(current + step, usable.size());
+        repaintTarget(selectedArrow);
         selectedArrow = usable.get(next);
-        repaint();
+        repaintTarget(selectedArrow);
     }
 
     // ---- Doing things

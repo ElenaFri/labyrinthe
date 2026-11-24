@@ -2,7 +2,6 @@ package labyrinth.view;
 
 import labyrinth.Resources;
 import labyrinth.model.Board;
-import labyrinth.model.Direction;
 import labyrinth.model.Tile;
 import labyrinth.model.TileType;
 
@@ -31,7 +30,6 @@ final class Images {
     private final BufferedImage[] pieces = new BufferedImage[4];
     private final Map<Integer, BufferedImage> portraitsBySize = new HashMap<>();
     private final Map<Integer, BufferedImage> piecesBySize = new HashMap<>();
-    private final Map<Direction, BufferedImage> arrows = new HashMap<>();
     private final BufferedImage cardFace;
 
     /**
@@ -50,10 +48,6 @@ final class Images {
             pieces[i] = Resources.image(IMG + "pieces/piece_" + i + ".png");
         }
         cardFace = scale(Resources.image(IMG + "cards/cardFront.png"), Layout.CARD_WIDTH, Layout.CARD_HEIGHT);
-        arrows.put(Direction.RIGHT, Resources.image(IMG + "arrows/arrowD.png"));
-        arrows.put(Direction.LEFT, Resources.image(IMG + "arrows/arrowG.png"));
-        arrows.put(Direction.UP, Resources.image(IMG + "arrows/arrowH.png"));
-        arrows.put(Direction.DOWN, Resources.image(IMG + "arrows/arrowB.png"));
     }
 
     /**
@@ -68,14 +62,6 @@ final class Images {
      */
     BufferedImage board() {
         return board;
-    }
-
-    /**
-     * @param direction : a direction of push
-     * @return the arrow showing this direction
-     */
-    BufferedImage arrow(Direction direction) {
-        return arrows.get(direction);
     }
 
     /**

@@ -28,6 +28,8 @@ import java.util.List;
 final class GameRenderer {
     private static final Font NAME_FONT = new Font("Arial", Font.BOLD, 12);
     private static final Font TOAST_FONT = new Font("Arial", Font.BOLD, 22);
+    private static final Color LINE_FILL = new Color(255, 215, 90, 60);
+    private static final Color LINE_BORDER = new Color(255, 215, 90, 170);
     private static final int TOAST_WIDTH = 700;
     private static final int TOAST_HEIGHT = 120;
 
@@ -66,11 +68,15 @@ final class GameRenderer {
         }
         g.drawImage(staticLayer, 0, 0, null);
         paintTiles(g);
+        Target.Push highlighted = state.hovered() instanceof Target.Push push ? push : state.selectedArrow();
+        if (highlighted != null) {
+            paintLineHighlight(g, highlighted);
+        }
         paintSpareTile(g);
         paintPawns(g);
         paintHands(g);
         paintMoveFrames(g, state.hovered());
-        paintArrows(g, state.selectedArrow());
+        paintArrows(g, highlighted);
         g.drawImage(sprites.turnPanel(game.currentPlayer()), Layout.TURN_PANEL.x, Layout.TURN_PANEL.y, null);
         paintKeyboardHint(g);
         rotateButton.paint(g);
@@ -193,17 +199,31 @@ final class GameRenderer {
         }
     }
 
-    private void paintArrows(Graphics2D g, Target.Push selected) {
+    /**
+     * Shows which row or column an arrow would push, before the player chooses it.
+     */
+    private void paintLineHighlight(Graphics2D g, Target.Push arrow) {
+        Rectangle line = Layout.lineBounds(arrow);
+        g.setColor(LINE_FILL);
+        g.fill(line);
+        g.setColor(LINE_BORDER);
+        g.setStroke(new BasicStroke(3));
+        g.drawRect(line.x + 1, line.y + 1, line.width - 2, line.height - 2);
+    }
+
+    private void paintArrows(Graphics2D g, Target.Push highlighted) {
         for (Target.Push arrow : Layout.PUSH_ARROWS) {
             Rectangle bounds = Layout.arrowBounds(arrow);
-            g.drawImage(sprites.arrow(arrow.direction(), game.canPush(arrow.direction(), arrow.index())), bounds.x, bounds.y, null);
+            g.drawImage(sprites.arrow(arrow.direction(), arrowState(arrow, highlighted)), bounds.x, bounds.y, null);
         }
-        if (selected != null) {
-            Rectangle bounds = Layout.arrowBounds(selected);
-            g.setColor(Color.GREEN);
-            g.setStroke(new BasicStroke(3));
-            g.drawRoundRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1, 10, 10);
+    }
+
+    private Sprites.ArrowState arrowState(Target.Push arrow, Target.Push highlighted) {
+        if (game.canPush(arrow.direction(), arrow.index())) {
+            return arrow.equals(highlighted) ? Sprites.ArrowState.HIGHLIGHTED : Sprites.ArrowState.NORMAL;
         }
+        boolean forbidden = game.phase() == Game.Phase.PUSH && game.undoesLastPush(arrow.direction(), arrow.index());
+        return forbidden ? Sprites.ArrowState.FORBIDDEN : Sprites.ArrowState.DISABLED;
     }
 
     private void paintKeyboardHint(Graphics2D g) {

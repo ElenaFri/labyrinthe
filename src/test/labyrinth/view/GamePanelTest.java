@@ -84,6 +84,41 @@ class GamePanelTest {
         draw(400, 700);
     }
 
+    private void moveMouseTo(Rectangle area) {
+        panel.dispatchEvent(new MouseEvent(panel, MouseEvent.MOUSE_MOVED, 0L, 0, (int) area.getCenterX(), (int) area.getCenterY(), 0, false));
+    }
+
+    @Test
+    void pointingAtAnArrowShowsTheRowItWouldPush() {
+        Target.Push arrow = new Target.Push(Direction.RIGHT, 3);
+        Rectangle row = Layout.lineBounds(arrow);
+        int insideX = row.x + row.width / 2;
+        int insideY = row.y + 2;     // the border of the highlight, whatever the tile below
+        int outsideY = Layout.lineBounds(new Target.Push(Direction.RIGHT, 1)).y + 2;
+
+        BufferedImage before = draw(Layout.WIDTH, Layout.HEIGHT);
+        moveMouseTo(Layout.arrowBounds(arrow));
+        BufferedImage during = draw(Layout.WIDTH, Layout.HEIGHT);
+        panel.dispatchEvent(new MouseEvent(panel, MouseEvent.MOUSE_EXITED, 0L, 0, 0, 0, 0, false));
+        BufferedImage after = draw(Layout.WIDTH, Layout.HEIGHT);
+
+        assertNotEquals(before.getRGB(insideX, insideY), during.getRGB(insideX, insideY));
+        assertEquals(before.getRGB(insideX, outsideY), during.getRGB(insideX, outsideY));
+        assertEquals(before.getRGB(insideX, insideY), after.getRGB(insideX, insideY));
+    }
+
+    @Test
+    void theArrowSelectedWithTheKeyboardShowsItsRowToo() {
+        Rectangle row = Layout.lineBounds(new Target.Push(Direction.DOWN, 1));
+        int x = row.x + 2;
+        int y = row.y + row.height / 2;
+        BufferedImage before = draw(Layout.WIDTH, Layout.HEIGHT);
+
+        press("RIGHT");   // the first arrow: the top one of column 1
+
+        assertNotEquals(before.getRGB(x, y), draw(Layout.WIDTH, Layout.HEIGHT).getRGB(x, y));
+    }
+
     @Test
     void aClickOnAnArrowPushesTheSpareTile() {
         Tile spare = game.board().spareTile();

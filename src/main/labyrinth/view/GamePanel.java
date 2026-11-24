@@ -215,6 +215,11 @@ final class GamePanel extends ScaledPanel implements GameListener {
     }
 
     @Override
+    protected void paintOverlay(Graphics2D g, int width, int height) {
+        renderer.paintKeyboardHint(g, height);
+    }
+
+    @Override
     protected void paintCanvas(Graphics2D g) {
         renderer.paint(g, new GameRenderer.ViewState(hovered, selectedArrow, toast));
     }

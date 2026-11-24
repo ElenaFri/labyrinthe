@@ -78,7 +78,6 @@ final class GameRenderer {
         paintMoveFrames(g, state.hovered());
         paintArrows(g, highlighted);
         g.drawImage(sprites.turnPanel(game.currentPlayer()), Layout.TURN_PANEL.x, Layout.TURN_PANEL.y, null);
-        paintKeyboardHint(g);
         rotateButton.paint(g);
         exitButton.paint(g);
         if (state.toast() != null) {
@@ -226,9 +225,17 @@ final class GameRenderer {
         return forbidden ? Sprites.ArrowState.FORBIDDEN : Sprites.ArrowState.DISABLED;
     }
 
-    private void paintKeyboardHint(Graphics2D g) {
+    /**
+     * Draws the line explaining the keys of the keyboard, at the bottom left of the window (not of the canvas, which
+     * may be smaller than the window), at the level of the sound button of the web page.
+     *
+     * @param g      : graphics in the coordinates of the window
+     * @param height : height of the window
+     */
+    void paintKeyboardHint(Graphics2D g, int height) {
         if (game.phase() != Game.Phase.OVER) {
-            g.drawImage(sprites.keyboardHint(game.phase() == Game.Phase.PUSH), Layout.KEYBOARD_HINT.x, Layout.KEYBOARD_HINT.y, null);
+            BufferedImage hint = sprites.keyboardHint(game.phase() == Game.Phase.PUSH);
+            g.drawImage(hint, Layout.HINT_MARGIN_LEFT, height - Layout.HINT_MIDDLE_ABOVE_BOTTOM - hint.getHeight() / 2, null);
         }
     }
 

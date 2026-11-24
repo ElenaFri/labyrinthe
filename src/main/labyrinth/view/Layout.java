@@ -50,9 +50,14 @@ final class Layout {
      */
     static final Rectangle TURN_PANEL = new Rectangle(125, 400, 200, 275);
     /**
-     * Where the line explaining the keys of the keyboard is drawn.
+     * Distance between the left of the window and the line explaining the keys of the keyboard.
      */
-    static final Point KEYBOARD_HINT = new Point(18, HEIGHT - 36);
+    static final int HINT_MARGIN_LEFT = 8;
+    /**
+     * Distance between the bottom of the window and the middle of that line. The sound button of the web page is
+     * at the same level, on the other side.
+     */
+    static final int HINT_MIDDLE_ABOVE_BOTTOM = 22;
 
     /**
      * The twelve arrows around the board, in clockwise order from the top left: this is the order in which the

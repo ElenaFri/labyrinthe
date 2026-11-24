@@ -13,9 +13,11 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -117,6 +119,27 @@ class GamePanelTest {
         press("RIGHT");   // the first arrow: the top one of column 1
 
         assertNotEquals(before.getRGB(x, y), draw(Layout.WIDTH, Layout.HEIGHT).getRGB(x, y));
+    }
+
+    @Test
+    void theKeyboardHintIsAtTheBottomLeftOfTheWindowWhateverItsShape() {
+        // In a window which is not as wide as the canvas, there are black bars above and below the canvas: the hint
+        // is the only thing which can be drawn in the one at the bottom.
+        int width = 800;
+        int height = 600;
+        int y = height - Layout.HINT_MIDDLE_ABOVE_BOTTOM;
+        assertTrue(y > (height + Layout.HEIGHT * width / Layout.WIDTH) / 2, "the line is in the bar");
+
+        BufferedImage push = draw(width, height);
+        clickOn(Layout.arrowBounds(new Target.Push(Direction.RIGHT, 3)));
+        BufferedImage move = draw(width, height);
+
+        int black = 0xFF000000;
+        int[] pushPixels = push.getRGB(0, y - 12, 480, 24, null, 0, 480);
+        int[] movePixels = move.getRGB(0, y - 12, 480, 24, null, 0, 480);
+        assertTrue(Arrays.stream(pushPixels).anyMatch(p -> p != black), "the hint is drawn");
+        assertFalse(Arrays.equals(pushPixels, movePixels), "it depends on the phase of the turn");
+        assertEquals(black, push.getRGB(width - 5, y));
     }
 
     @Test

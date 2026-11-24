@@ -72,6 +72,17 @@ abstract class ScaledPanel extends JPanel {
     protected abstract void paintCanvas(Graphics2D g);
 
     /**
+     * Draws what must keep its size and its place in the window, whatever the scale of the canvas (a line of
+     * text, for example). It is drawn over the canvas.
+     *
+     * @param g      : graphics in the coordinates of the window
+     * @param width  : width of the window
+     * @param height : height of the window
+     */
+    protected void paintOverlay(Graphics2D g, int width, int height) {
+    }
+
+    /**
      * Called when the mouse moves.
      *
      * @param point : position of the mouse in the canvas
@@ -124,6 +135,14 @@ abstract class ScaledPanel extends JPanel {
             paintCanvas(g2);
         } finally {
             g2.dispose();
+        }
+
+        Graphics2D overlay = (Graphics2D) g.create();
+        try {
+            overlay.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            paintOverlay(overlay, getWidth(), getHeight());
+        } finally {
+            overlay.dispose();
         }
     }
 

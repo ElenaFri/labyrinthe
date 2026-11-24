@@ -20,9 +20,7 @@ labyrinthe
 │   │   	└── Resources.java          # Accès aux ressources
 │   └── test/                   # Tests unitaires
 ├── web/                     # Page de la version web
-├── uml/                     # Diagrammes de classes (obsolètes)
 ├── INSTALL.md               # Compilation, lancement, tests
 ├── PROJECT_TREE.md          # Ce fichier, présentant la structure du dépot
-├── README.md                # Présentation et règles
-└── REPORT.md                # Rapport sur la première phase de développement
+└── README.md                # Présentation et règles
 ```

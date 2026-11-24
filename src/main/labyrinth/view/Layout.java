@@ -23,12 +23,15 @@ final class Layout {
     static final int BOARD_SIZE = 896;
     static final int BOARD_X = (WIDTH - BOARD_SIZE) / 2;
     static final int BOARD_Y = (HEIGHT - BOARD_SIZE) / 2;
-    static final int CARD_WIDTH = 60;
-    static final int CARD_HEIGHT = 100;
+    /**
+     * Size of a card of a hand, in the proportions of the picture of the card (150x237).
+     */
+    static final int CARD_WIDTH = 72;
+    static final int CARD_HEIGHT = 114;
     /**
      * Gap between the cards of a hand.
      */
-    static final int CARD_STEP = -8;
+    static final int CARD_STEP = -9;
     static final int PORTRAIT_SIZE = 90;
     static final int ARROW_SIZE = 50;
     /**
@@ -118,8 +121,8 @@ final class Layout {
      * @return the top left corner of the first card of his hand
      */
     static Point handOrigin(int player) {
-        int x = player % 2 == 0 ? BOARD_X - 180 : BOARD_X + BOARD_SIZE + 120;
-        int y = player < 2 ? BOARD_Y + 30 : BOARD_Y + BOARD_SIZE - 90;
+        int x = player % 2 == 0 ? BOARD_X - 196 : BOARD_X + BOARD_SIZE + 120;
+        int y = player < 2 ? BOARD_Y + 30 : BOARD_Y + BOARD_SIZE - 96;
         return new Point(x, y);
     }
 

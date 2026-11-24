@@ -18,6 +18,9 @@ import java.util.Map;
  */
 final class Images {
     private static final String IMG = "res/img/";
+    private static final int RAW_CARD_WIDTH = 150;
+    private static final int RAW_CARD_HEIGHT = 237;
+    private static final int RAW_TREASURE_SIZE = 128;
 
     private final BufferedImage background;
     private final BufferedImage board;
@@ -121,8 +124,10 @@ final class Images {
         BufferedImage image = cards[treasure];
         if (image == null) {
             if (cardTreasures[treasure] == null) {
-                // The picture of the treasure is 128x128 on a 150x237 card, which is drawn in 60x100.
-                cardTreasures[treasure] = scale(rawTreasure(treasure), 51, 54);
+                // The picture of the treasure is 128x128 on a 150x237 card: same proportions on the card of a hand.
+                cardTreasures[treasure] = scale(rawTreasure(treasure),
+                        Math.round(RAW_TREASURE_SIZE * (float) Layout.CARD_WIDTH / RAW_CARD_WIDTH),
+                        Math.round(RAW_TREASURE_SIZE * (float) Layout.CARD_HEIGHT / RAW_CARD_HEIGHT));
             }
             BufferedImage symbol = cardTreasures[treasure];
             image = new BufferedImage(cardFace.getWidth(), cardFace.getHeight(), BufferedImage.TYPE_INT_ARGB);

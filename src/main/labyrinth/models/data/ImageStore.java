@@ -1,5 +1,6 @@
 package labyrinth.models.data;
 
+import labyrinth.Resources;
 import labyrinth.models.game.Card;
 import labyrinth.views.helpers.ImageHelper;
 
@@ -282,7 +283,7 @@ public class ImageStore {
      */
     private BufferedImage loadImage(String path) {
         try {
-            File file = new File(path);
+            File file = Resources.file(path);
             if (file.exists()) {
                 return ImageIO.read(file);
             } else {
@@ -305,7 +306,7 @@ public class ImageStore {
      */
     public BufferedImage getCardBackImage() {
         try {
-            return ImageIO.read(new File("res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
+            return ImageIO.read(Resources.file("res/img/cards/cardBack.png"));  // Chemin vers l'image du dos de la carte
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -321,7 +322,7 @@ public class ImageStore {
     public BufferedImage getCardImage(Card card) {
         try {
             String cardImagePath = getCardImagePath(card);  // Logic to get the correct path based on card data
-            return ImageIO.read(new File(cardImagePath));
+            return ImageIO.read(Resources.file(cardImagePath));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

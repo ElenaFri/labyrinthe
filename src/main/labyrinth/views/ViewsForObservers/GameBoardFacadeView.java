@@ -1,5 +1,6 @@
 package labyrinth.views.ViewsForObservers;
 
+import labyrinth.Resources;
 import labyrinth.controllers.GameFacadeController;
 import labyrinth.controllers.GameboardController;
 import labyrinth.controllers.TourController;
@@ -430,7 +431,7 @@ public class GameBoardFacadeView extends JPanel implements GameBoardObserver, Ga
      */
     private JButton createArrowButton(String imagePath, int index, String direction) {
 
-        JButton button = new JButton(new ImageIcon(imagePath));
+        JButton button = new JButton(new ImageIcon(Resources.path(imagePath)));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);

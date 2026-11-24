@@ -2,6 +2,14 @@ A31 - Projet "Labyrinthe"
 =========================
 
 
+Jouer en ligne
+--------------
+
+Le jeu peut être joué directement dans le navigateur : [https://elenafri.github.io/labyrinthe/](https://elenafri.github.io/labyrinthe/).
+
+Il s'agit du programme Java d'origine, exécuté dans le navigateur grâce à [CheerpJ](https://cheerpj.com/) (voir `web/index.html` et `.github/workflows/pages.yml`).
+La Javadoc est disponible sur [https://elenafri.github.io/labyrinthe/doc/](https://elenafri.github.io/labyrinthe/doc/).
+
 Les règles du jeu
 -----------------
 

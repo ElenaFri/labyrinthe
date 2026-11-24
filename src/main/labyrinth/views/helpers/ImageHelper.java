@@ -1,10 +1,11 @@
 package labyrinth.views.helpers;
 
+import labyrinth.Resources;
+
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -21,13 +22,13 @@ public class ImageHelper {
      * @return an image combining the foreground image over the background image
      */
     public static BufferedImage merge(String backgroundPath, String... foregroundPaths) throws IOException {
-        BufferedImage image1 = ImageIO.read(new File(backgroundPath));
+        BufferedImage image1 = ImageIO.read(Resources.file(backgroundPath));
         BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = mergedImage.createGraphics();
         g2d.drawImage(image1, 0, 0, null);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
         for (String path : foregroundPaths) {
-            BufferedImage image2 = ImageIO.read(new File(path));
+            BufferedImage image2 = ImageIO.read(Resources.file(path));
             g2d.drawImage(image2, 0, 0, null);
         }
         g2d.dispose();
@@ -45,7 +46,7 @@ public class ImageHelper {
      * @throws IOException if an error occurs while reading any of the image files
      */
     public static BufferedImage merge_central(String backgroundPath, String... foregroundPaths) throws IOException {
-        BufferedImage image1 = ImageIO.read(new File(backgroundPath));
+        BufferedImage image1 = ImageIO.read(Resources.file(backgroundPath));
         BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = mergedImage.createGraphics();
 
@@ -55,7 +56,7 @@ public class ImageHelper {
 
         // Pour chaque chemin d'image de premier plan (foreground)
         for (String path : foregroundPaths) {
-            BufferedImage image2 = ImageIO.read(new File(path));
+            BufferedImage image2 = ImageIO.read(Resources.file(path));
             // Calculer les coordonnées pour centrer l'image de premier plan
             int x = (mergedImage.getWidth() - image2.getWidth()) / 2; // Centrer horizontalement
             int y = (mergedImage.getHeight() - image2.getHeight()) / 2; // Centrer verticalement

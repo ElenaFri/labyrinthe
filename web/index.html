@@ -40,9 +40,7 @@
     button:hover { background: #f5c94d; }
     #stage {
       position: fixed;
-      left: 0;
-      top: 0;
-      transform-origin: 0 0;
+      inset: 0;
       visibility: hidden;
     }
     #toolbar {
@@ -70,7 +68,7 @@
 </head>
 <body>
   <div id="intro">
-    <img src="res/img/screens/labyrintheBox.jpg" alt="Boîte du jeu Labyrinthe" />
+    <img src="labyrintheBox.jpg" alt="Boîte du jeu Labyrinthe" />
     <h1>Labyrinthe</h1>
     <p>
       Quatre joueurs, un plateau qui bouge : retrouvez vos trésors avant les autres !
@@ -96,66 +94,13 @@
   <audio id="music" src="music.mp3" loop preload="none"></audio>
 
   <script type="module">
-    // Dimensions pour lesquelles l'interface du jeu a été dessinée.
-    const GAME_WIDTH = 1920;
-    const GAME_HEIGHT = 1080;
-
     const $ = (id) => document.getElementById(id);
     const music = $("music");
     const stage = $("stage");
 
     // Dossier de la page : CheerpJ expose la racine du serveur sous /app/, et
     // sur GitHub Pages le site est dans un sous-dossier (/<depot>/).
-    const baseDir = location.pathname.replace(/[^/]*$/, "");
-    const appDir = "/app" + baseDir;
-
-    // Le jeu est dessiné pour 1920x1080 : on l'adapte à la fenêtre avec une
-    // transformation CSS. CheerpJ calcule la position de la souris à partir des
-    // rectangles et des coordonnées du navigateur, qui sont alors réduits ; on
-    // les « dé-réduit » pour que Java voie des coordonnées à l'échelle 1:1.
-    let scale = 1;
-    let originX = 0;
-    let originY = 0;
-
-    const nativeRect = Element.prototype.getBoundingClientRect;
-    Element.prototype.getBoundingClientRect = function () {
-      const r = nativeRect.call(this);
-      if (scale === 1 || !stage.contains(this)) return r;
-      const x = (v) => (v - originX) / scale + originX;
-      const y = (v) => (v - originY) / scale + originY;
-      return new DOMRect(x(r.left), y(r.top), r.width / scale, r.height / scale);
-    };
-
-    for (const type of ["pointerdown", "pointermove", "pointerup", "mousedown", "mouseup", "mousemove", "click", "dblclick", "contextmenu", "wheel"]) {
-      stage.addEventListener(type, (e) => {
-        if (scale === 1 || e.rescaled) return;
-        e.stopImmediatePropagation();
-        e.preventDefault();
-        const init = {
-          bubbles: true, cancelable: true, composed: true, view: window,
-          detail: e.detail, screenX: e.screenX, screenY: e.screenY,
-          clientX: (e.clientX - originX) / scale + originX,
-          clientY: (e.clientY - originY) / scale + originY,
-          ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey,
-          button: e.button, buttons: e.buttons, relatedTarget: e.relatedTarget,
-          deltaX: e.deltaX, deltaY: e.deltaY, deltaZ: e.deltaZ, deltaMode: e.deltaMode,
-          pointerId: e.pointerId, pointerType: e.pointerType, isPrimary: e.isPrimary,
-          width: e.width, height: e.height, pressure: e.pressure,
-        };
-        const copy = type === "wheel" ? new WheelEvent(type, init)
-          : type.startsWith("pointer") ? new PointerEvent(type, init)
-          : new MouseEvent(type, init);
-        copy.rescaled = true;
-        e.target.dispatchEvent(copy);
-      }, true);
-    }
-
-    function fitStage() {
-      scale = Math.min(1, window.innerWidth / GAME_WIDTH, window.innerHeight / GAME_HEIGHT);
-      originX = (window.innerWidth - GAME_WIDTH * scale) / 2;
-      originY = (window.innerHeight - GAME_HEIGHT * scale) / 2;
-      stage.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
-    }
+    const appDir = "/app" + location.pathname.replace(/[^/]*$/, "");
 
     $("mute").addEventListener("click", () => {
       if (music.paused) {
@@ -175,18 +120,19 @@
       // Le clic est le geste utilisateur qui autorise le son.
       music.play().catch(() => {});
 
+      // Liste des parties du runtime Java dont le jeu a besoin (voir README, « Mettre à jour preload.json »)
+      // : elles sont téléchargées en parallèle au lieu d'être demandées une à une.
+      const preloadResources = await fetch("preload.json").then((r) => (r.ok ? r.json() : undefined), () => undefined);
+
       await cheerpjInit({
         version: 17,
         status: "none",
-        javaProperties: ["labyrinth.base=" + appDir, "labyrinth.web=true"],
+        javaProperties: ["labyrinth.web=true"],
+        preloadResources,
       });
 
       $("status").textContent = "Démarrage du jeu…";
-      stage.style.width = GAME_WIDTH + "px";
-      stage.style.height = GAME_HEIGHT + "px";
-      cheerpjCreateDisplay(GAME_WIDTH, GAME_HEIGHT, stage);
-      fitStage();
-      window.addEventListener("resize", fitStage);
+      cheerpjCreateDisplay(-1, -1, stage);
 
       $("intro").style.display = "none";
       stage.style.visibility = "visible";

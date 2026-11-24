@@ -14,32 +14,45 @@ Un message de félicitations est affiché à chaque nouveau trésor, ou objectif
 
 Pour améliorer votre expérience utilisateur, pensez à activer votre sortie son si vous aimez un fond de musique avec votre jeu :-)
 
-###  Compilation
+### Compilation
 
-Pour compiler « Labyrinthe » à la main, depuis la racine du projet :
+Pour compiler « Labyrinthe » à la main, depuis la racine du projet (Java 17 ou plus) :
 
-```aiignore
-find src -name "*.java" -print | xargs javac -d bin
+```sh
+mkdir -p bin
+javac -encoding UTF-8 -d bin $(find src/main -name "*.java")
 ```
 
 ### Lancement
 
-Si vous avez compilé à la main, il suffit d'exécuter depuis le répertoire source `src` (l'ensemble des classes sera compilé grâce aux _import_) :
+Toujours depuis la racine du projet (le jeu y cherche son dossier `res/`) :
 
-```aiignore
+```sh
 java -cp bin labyrinth.Labyrinth
 ```
 
-Vous pouvez également, bien entendu, utiliser votre IDE préféré pour exécuter le fichier `qlabyrinth/Labyrinth`.
+Vous pouvez également, bien entendu, utiliser votre IDE préféré pour exécuter la classe `labyrinth.Labyrinth`.
 
-### Java Doc
+### Tests
 
-La documentation est disponible dans le répertoire `doc/`.
+Les tests unitaires (JUnit 5) portent sur les règles du jeu. Avec le [JAR « console » de JUnit](https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/) :
 
-Pour modifier / re-générer la Java Doc en ligne de commande, lancez depuis la racine du projet :
-
-```aiignore
-javadoc -d ./doc -sourcepath ./src/main -subpackages labyrinth
+```sh
+javac -encoding UTF-8 -cp bin:junit-platform-console-standalone.jar -d bin-test $(find src/test -name "*.java")
+java -jar junit-platform-console-standalone.jar execute -cp bin:bin-test --scan-classpath bin-test
 ```
 
-Ceci dit, rien n'empêche d'utiliser les fonctionnalités de votre IDE pour ce faire.
+### Javadoc
+
+Elle n'est pas conservée dans le dépôt : elle est générée à chaque déploiement et publiée sur [https://elenafri.github.io/labyrinthe/doc/](https://elenafri.github.io/labyrinthe/doc/).
+Pour la générer en local, depuis la racine du projet :
+
+```sh
+javadoc -d doc -sourcepath src/main -subpackages labyrinth -encoding UTF-8 -docencoding UTF-8 -charset UTF-8
+```
+
+### Version web
+
+La version web (`web/index.html`) exécute le jeu avec [CheerpJ](https://cheerpj.com/). Elle est construite et déployée par `.github/workflows/pages.yml`.
+
+`web/preload.json` liste les parties du runtime Java dont le jeu a besoin, pour qu'elles soient téléchargées en parallèle au démarrage. Après un changement important du code, on peut la régénérer : ouvrir la page, jouer un tour, puis exécuter `cjGetRuntimeResources()` dans la console du navigateur et enregistrer le résultat (en JSON, sans les guillemets englobants).

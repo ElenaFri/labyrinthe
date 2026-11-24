@@ -28,17 +28,27 @@ jobs:
       - name: Compiler le jeu
         run: |
           mkdir -p build/classes
-          javac --release 17 -encoding UTF-8 -d build/classes -sourcepath src/main src/main/labyrinth/Labyrinth.java
+          javac --release 17 -encoding UTF-8 -Xlint:all -d build/classes $(find src/main -name '*.java')
+
+      - name: Tests
+        run: |
+          mkdir -p build/test-classes
+          curl -sSfLo build/junit.jar https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.11.4/junit-platform-console-standalone-1.11.4.jar
+          javac --release 17 -encoding UTF-8 -cp build/classes:build/junit.jar -d build/test-classes $(find src/test -name '*.java')
+          java -jar build/junit.jar execute -cp build/classes:build/test-classes --scan-classpath build/test-classes
+
+      - name: Empaqueter le jeu (avec ses images)
+        run: |
           printf 'Main-Class: labyrinth.Labyrinth\n' > build/manifest.txt
-          jar cfm build/labyrinthe.jar build/manifest.txt -C build/classes .
+          jar cfm build/labyrinthe.jar build/manifest.txt -C build/classes . res/img res/icon.png
 
       - name: Assembler le site
         run: |
-          mkdir -p site/res
-          cp web/index.html site/
+          mkdir site
+          cp web/index.html web/preload.json site/
           cp build/labyrinthe.jar site/
-          cp -r res/img res/icon.png site/res/
-          cp -r doc site/doc
+          cp res/img/screens/labyrintheBox.jpg site/
+          javadoc -quiet -d site/doc -sourcepath src/main -subpackages labyrinth -encoding UTF-8 -docencoding UTF-8 -charset UTF-8
 
       - name: Convertir la musique (wav de 130 Mo -> mp3)
         run: |

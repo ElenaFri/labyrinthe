@@ -20,6 +20,6 @@ Trouver, dans l'ordre, tous ses trésors (la carte objectif est affichée à gau
 ----------
 
 1. *(Facultatif)* Cliquer sur **TOURNER** pour pivoter la tuile supplémentaire.
-2. Cliquer sur une **flèche** autour du plateau pour insérer la tuile et pousser la rangée.
+2. Cliquer sur une **flèche** autour du plateau pour insérer la tuile et pousser la rangée (on ne peut pas annuler la poussée du joueur précédent).
 3. Déplacer son pion en cliquant sur les cases accessibles (cadre rouge).
 4. Cliquer sur **sa case actuelle** pour passer la main au joueur suivant.

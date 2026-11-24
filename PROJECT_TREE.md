@@ -4,23 +4,25 @@
 
 Le schéma ci-dessous représente la structure de ce projet de développement.
 
-```angular2html
-a-31-labyrinthe
-├── doc/                     # Documentation du projet
+```
+labyrinthe
+├── .github/workflows/       # Déploiement sur GitHub Pages
 ├── res/                     # Ressources du projet
 │   ├── img/                    # Images
-│   └── sfx/                    # Effets sonores
+│   └── snd/                    # Musique
 ├── src/                     # Dossier source
-│   ├── main/                   # Code source principal, développé suivant le patron MVC
-│   │   └── labyrinth/				# Package racine
-│   │   	├── controllers/            # Classes controleurs
-│   │   	├── models/                 # Classes modèles
-│   │   	├── views/                  # Classes vue
-│   │   	└── Labyrinth.java         # Classe « main »
+│   ├── main/                   # Code source principal
+│   │   └── labyrinth/              # Package racine
+│   │   	├── model/                  # Règles du jeu (sans aucune dépendance à l'interface)
+│   │   	├── view/                   # Interface graphique (Swing)
+│   │   	├── Labyrinth.java          # Classe « main »
+│   │   	├── MusicPlayer.java        # Musique de fond
+│   │   	└── Resources.java          # Accès aux ressources
 │   └── test/                   # Tests unitaires
-├── uml/                     # Diagrammes de classes
-├── .gitignore               # Fichiers à ignorer par Git
+├── web/                     # Page de la version web
+├── uml/                     # Diagrammes de classes (obsolètes)
+├── INSTALL.md               # Compilation, lancement, tests
 ├── PROJECT_TREE.md          # Ce fichier, présentant la structure du dépot
-├── README.md                # Cahier des charges
+├── README.md                # Présentation et règles
 └── REPORT.md                # Rapport sur la première phase de développement
 ```

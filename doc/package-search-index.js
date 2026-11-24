@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"labyrinth"},{"l":"labyrinth.controllers"},{"l":"labyrinth.models.data"},{"l":"labyrinth.models.game"},{"l":"labyrinth.models.geometry"},{"l":"labyrinth.models.observers"},{"l":"labyrinth.models.tiles"},{"l":"labyrinth.views.helpers"},{"l":"labyrinth.views.ViewsForObservers"}];updateSearchResults();
